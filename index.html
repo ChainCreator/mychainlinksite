@@ -1679,7 +1679,15 @@
         };
 
         // ========== SUPABASE CLIENT ==========
-        let supabase = null;
+        let supabase = null;// Temporary fix - override supabase to handle missing rows
+const originalFrom = supabase.from.bind(supabase);
+supabase.from = (table) => {
+    const query = originalFrom(table);
+    const originalSingle = query.single.bind(query);
+    query.single = () => query.maybeSingle();
+    return query;
+};
+
 
         function initSupabase() {
             try {
@@ -3239,6 +3247,34 @@
                     .subscribe();
             }
         }
+// FIX FOR MOBILE - Override the broken functions
+window.updateProfile = async function(updates, createPost = false, postCaption = '') {
+    if (!state.currentUser) return;
+    try {
+        const { data, error } = await supabase
+            .from('profiles')
+            .update(updates)
+            .eq('id', state.currentUser.id)
+            .select()
+            .maybeSingle();  // FIXED!
+            
+        if (error) throw error;
+        
+        state.currentProfile = data;
+        
+        if (createPost && updates.avatar_url) {
+            await createPost(postCaption || 'Updated my profile!', null, [], 'default', true, true);
+        }
+        
+        showToast('Updated!', 'success');
+        return data;
+    } catch (error) {
+        showToast(error.message, 'error');
+        return null;
+    }
+};
+
+window.loadUserProfile = async
 
         // Start the app
         init();
