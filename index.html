@@ -16,6 +16,336 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script>
+        <script>
+    // SUPABASE CONFIG - YOUR CREDENTIALS
+    const SUPABASE_URL = 'https://etdntphbptcuzfnkqhev.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_iq9YfZpqKe_aUqoxJAIVyg_0ZUR_KQY';
+    
+    // Initialize Supabase safely
+    let supabase;
+    try {
+        supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } catch (e) {
+        console.log('Supabase init failed, using demo mode');
+        supabase = null;
+    }
+    
+    // REMOVE HIDDEN CLASS IMMEDIATELY
+    document.getElementById('app').classList.remove('hidden-until-load');
+    
+    const demoUsers = [
+        { id: 1, username: 'alex_design', first_name: 'Alex', last_name: 'Chen', avatar: 'https://i.pravatar.cc/150?img=11', bio: 'Digital artist & creator 🎨', theme: 'pastel-blue', followers: 1234, following: 567, subscribers: 89 },
+        { id: 2, username: 'sarah_music', first_name: 'Sarah', last_name: 'Johnson', avatar: 'https://i.pravatar.cc/150?img=5', bio: 'Musician | Producer 🎵', theme: 'pastel-pink', followers: 3456, following: 234, subscribers: 234 }
+    ];
+
+    let demoPosts = [
+        { id: 1, user_id: 1, content: 'Just finished this new design! What do you think? 🎨', font_style: 'font-default', created_at: new Date(Date.now() - 3600000).toISOString(), media: ['https://picsum.photos/seed/art1/600/400'], reactions: { love: 12, like: 34, dislike: 2, repeat: 8 }, comments: [{ user: demoUsers[1], text: 'Amazing work! 🔥', time: '30m ago', approved: true }] },
+        { id: 2, user_id: 2, content: 'New track dropping tonight! Stay tuned 🎵', font_style: 'font-cursive', created_at: new Date(Date.now() - 7200000).toISOString(), media: [], reactions: { love: 45, like: 67, dislike: 0, repeat: 23 }, comments: [] }
+    ];
+
+    const App = {
+        isDemo: false,
+        currentUser: null,
+        currentView: 'auth',
+        selectedPost: null,
+        activeChat: null,
+        
+        async init() {
+            // Show auth immediately so page isn't blank
+            document.getElementById('auth-view').classList.remove('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+            
+            this.updateDailyQuote();
+            
+            // Try Supabase if available
+            if (supabase) {
+                try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (session) {
+                        this.currentUser = session.user;
+                        this.isDemo = false;
+                        this.showMainApp();
+                    }
+                } catch (e) {
+                    console.log('Auth check failed');
+                }
+            }
+        },
+
+        updateDailyQuote() {
+            const quotes = [
+                "The future belongs to those who believe in the beauty of their dreams.",
+                "Create your own sunshine."
+            ];
+            const el = document.getElementById('daily-quote');
+            if (el) el.textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+        },
+
+        demoMode: {
+            activate() {
+                App.isDemo = true;
+                App.currentUser = { ...demoUsers[0], email: 'demo@chainlink.app', id: 1 };
+                document.body.classList.add('demo-active');
+                document.getElementById('demo-banner').classList.remove('hidden');
+                document.getElementById('nav-demo-badge').classList.remove('hidden');
+                App.showMainApp();
+                App.feed.load();
+            },
+            
+            toggle() {
+                if (App.isDemo) {
+                    App.isDemo = false;
+                    App.currentUser = null;
+                    document.body.classList.remove('demo-active');
+                    document.getElementById('demo-banner').classList.add('hidden');
+                    document.getElementById('nav-demo-badge').classList.add('hidden');
+                    App.router.navigate('auth');
+                    document.getElementById('auth-view').classList.remove('hidden');
+                    document.getElementById('login-form').classList.remove('hidden');
+                } else {
+                    this.activate();
+                }
+            }
+        },
+
+        auth: {
+            toggleAuthMode() {
+                const loginForm = document.getElementById('login-form');
+                const signupForm = document.getElementById('signup-form');
+                
+                if (loginForm.classList.contains('hidden')) {
+                    loginForm.classList.remove('hidden');
+                    signupForm.classList.add('hidden');
+                } else {
+                    loginForm.classList.add('hidden');
+                    signupForm.classList.remove('hidden');
+                }
+            },
+
+            togglePassword(id) {
+                const input = document.getElementById(id);
+                input.type = input.type === 'password' ? 'text' : 'password';
+            },
+
+            async handleLogin(e) {
+                e.preventDefault();
+                if (!supabase) {
+                    alert('Supabase not connected - using demo mode');
+                    App.demoMode.activate();
+                    return;
+                }
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) {
+                    alert(error.message);
+                    return;
+                }
+                App.currentUser = data.user;
+                App.isDemo = false;
+                App.showMainApp();
+            },
+
+            async handleSignup(e) {
+                e.preventDefault();
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                
+                if (!supabase) {
+                    App.demoMode.activate();
+                    return;
+                }
+                
+                const { data, error } = await supabase.auth.signUp({ email, password });
+                if (error) {
+                    alert(error.message);
+                    return;
+                }
+                
+                document.getElementById('signup-form').classList.add('hidden');
+                document.getElementById('auth-alternatives').classList.add('hidden');
+                document.getElementById('tfa-section').classList.remove('hidden');
+                
+                const canvas = document.getElementById('qr-canvas');
+                if (canvas && typeof QRCode !== 'undefined') {
+                    QRCode.toCanvas(canvas, `otpauth://totp/CHAINLink:${email}?secret=DEMO123456&issuer=CHAINLink`, { width: 150 });
+                }
+            },
+
+            verify2FA() {
+                App.showMainApp();
+            },
+
+            async logout() {
+                if (supabase) await supabase.auth.signOut();
+                App.currentUser = null;
+                App.isDemo = false;
+                document.body.classList.remove('demo-active');
+                document.getElementById('demo-banner').classList.add('hidden');
+                App.router.navigate('auth');
+                document.getElementById('auth-view').classList.remove('hidden');
+                document.getElementById('login-form').classList.remove('hidden');
+            }
+        },
+
+        showMainApp() {
+            document.getElementById('auth-view').classList.add('hidden');
+            document.getElementById('main-nav').classList.remove('hidden');
+            App.router.navigate('feed');
+        },
+
+        router: {
+            navigate(view) {
+                ['auth', 'feed', 'live', 'messages', 'profile'].forEach(v => {
+                    document.getElementById(`${v}-view`).classList.add('hidden');
+                });
+                document.getElementById(`${view}-view`).classList.remove('hidden');
+                App.currentView = view;
+                
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    if (btn.dataset.view === view) {
+                        btn.classList.add('text-chain-yellow');
+                        btn.classList.remove('text-gray-400');
+                    } else {
+                        btn.classList.remove('text-chain-yellow');
+                        btn.classList.add('text-gray-400');
+                    }
+                });
+                
+                if (view === 'feed') App.feed.load();
+                if (view === 'profile') App.profile.load();
+            }
+        },
+
+        feed: {
+            load() {
+                const container = document.getElementById('feed-posts');
+                if (!container) return;
+                container.innerHTML = '';
+                demoPosts.forEach(post => {
+                    const user = demoUsers.find(u => u.id === post.user_id) || App.currentUser;
+                    const postEl = App.feed.createPostElement(post, user);
+                    container.appendChild(postEl);
+                });
+                if (App.currentUser) {
+                    const avatar = document.getElementById('current-user-avatar');
+                    if (avatar) avatar.src = App.currentUser.avatar || 'https://i.pravatar.cc/150?img=12';
+                }
+            },
+
+            createPostElement(post, user) {
+                const div = document.createElement('div');
+                div.className = 'bg-chain-charcoal border border-chain-gray rounded-xl p-4 post-card animate-fade-in';
+                const timeAgo = App.utils.timeAgo(post.created_at);
+                const fontClass = post.font_style || 'font-default';
+                
+                div.innerHTML = `
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <img src="${user.avatar}" class="w-10 h-10 rounded-full bg-chain-gray">
+                            <div>
+                                <div class="font-bold text-white">${user.first_name} ${user.last_name}</div>
+                                <div class="text-xs text-gray-400">@${user.username} · ${timeAgo}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="${fontClass} text-white text-lg mb-2">${post.content}</div>
+                    <div class="flex items-center justify-between mt-4 pt-3 border-t border-chain-gray">
+                        <div class="flex space-x-4">
+                            <button class="flex items-center space-x-1 text-gray-400 hover:text-red-400">
+                                <i class="fas fa-heart"></i>
+                                <span class="text-sm">${post.reactions.love}</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-gray-400 hover:text-chain-yellow">
+                                <i class="fas fa-comment"></i>
+                                <span class="text-sm">${post.comments.length}</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return div;
+            }
+        },
+
+        posts: {
+            create() {
+                const content = document.getElementById('post-content').value;
+                if (!content.trim()) return;
+                const newPost = {
+                    id: Date.now(),
+                    user_id: App.currentUser?.id || 1,
+                    content: content,
+                    font_style: 'font-default',
+                    created_at: new Date().toISOString(),
+                    media: [],
+                    reactions: { love: 0, like: 0, dislike: 0, repeat: 0 },
+                    comments: []
+                };
+                demoPosts.unshift(newPost);
+                App.feed.load();
+                document.getElementById('post-content').value = '';
+            },
+            
+            toggleSchedule() {
+                document.getElementById('schedule-picker').classList.toggle('hidden');
+            }
+        },
+
+        profile: {
+            load() {
+                if (!App.currentUser) return;
+                const user = App.currentUser;
+                const nameEl = document.getElementById('profile-name');
+                const usernameEl = document.getElementById('profile-username');
+                if (nameEl) nameEl.textContent = `${user.first_name || 'User'} ${user.last_name || ''}`;
+                if (usernameEl) usernameEl.textContent = `@${user.username || 'user'}`;
+                
+                const postsGrid = document.getElementById('profile-posts-grid');
+                if (postsGrid) {
+                    postsGrid.innerHTML = '';
+                    const userPosts = demoPosts.filter(p => p.user_id === (user.id || 1));
+                    userPosts.forEach(post => {
+                        const div = document.createElement('div');
+                        div.className = 'bg-chain-dark border border-chain-gray rounded-lg p-4';
+                        div.innerHTML = `<p class="text-white mb-2">${post.content}</p>`;
+                        postsGrid.appendChild(div);
+                    });
+                }
+            },
+            
+            openEditModal() {
+                document.getElementById('edit-profile-modal').classList.remove('hidden');
+            },
+            
+            closeEditModal() {
+                document.getElementById('edit-profile-modal').classList.add('hidden');
+            },
+            
+            saveEdit() {
+                App.profile.closeEditModal();
+                App.profile.load();
+            }
+        },
+
+        utils: {
+            timeAgo(date) {
+                const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+                if (seconds < 60) return 'Just now';
+                const minutes = Math.floor(seconds / 60);
+                if (minutes < 60) return `${minutes}m ago`;
+                return `${Math.floor(minutes / 60)}h ago`;
+            }
+        }
+    };
+
+    window.App = App;
+    // Initialize when ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => App.init());
+    } else {
+        App.init();
+
         tailwind.config = {
             darkMode: 'class',
             theme: {
