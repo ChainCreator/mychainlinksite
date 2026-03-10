@@ -3,24 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- FIXED CSP: Added cdn.jsdelivr.net and removed unsafe restrictions -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.spotify.com https://accounts.google.com; frame-src 'self' https://accounts.google.com https://open.spotify.com;">
-    
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: blob:; connect-src 'self' https://etdntphbptcuzfnkqhev.supabase.co wss://etdntphbptcuzfnkqhev.supabase.co https://api.spotify.com https://accounts.google.com https://api.microlink.io; frame-src 'self' https://accounts.google.com https://open.spotify.com;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>CHAIN⛓️Link - Link up with your friends</title>
     <meta name="description" content="Join for free today. The next generation social platform.">
     <meta name="theme-color" content="#0D0D0D">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@400;500&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -36,23 +30,31 @@
                         display: ['Playfair Display', 'serif'],
                         mono: ['Roboto Mono', 'monospace'],
                         cursive: ['Dancing Script', 'cursive']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-in-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'gradient': 'gradient 3s ease infinite'
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                        gradient: { '0%, 100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } }
                     }
                 }
             }
         }
     </script>
-
     <style>
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #0D0D0D; }
         ::-webkit-scrollbar-thumb { background: #2D2D2D; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #F4D03F; }
-        
         .post-card { contain: content; content-visibility: auto; contain-intrinsic-height: auto 300px; }
         .glass { background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(244, 208, 63, 0.1); }
         .font-default { font-family: 'Inter', sans-serif; }
-        .font-display { font-family: 'Playfair Display', serif; }
-        .font-mono { font-family: 'Roboto Mono', monospace; }
+        .font-display { font-family: 'Playfair Display', 'serif'; }
+        .font-mono { font-family: 'Roboto Mono', 'monospace'; }
         .font-cursive { font-family: 'Dancing Script', 'cursive'; }
         input[type="file"] { display: none; }
         .live-pulse { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); animation: livePulse 2s infinite; }
@@ -61,1331 +63,1087 @@
         .demo-banner { background: linear-gradient(90deg, #8B5CF6, #EC4899, #8B5CF6); background-size: 200% 200%; animation: gradient 3s ease infinite; }
         .demo-active #app { padding-top: 40px; }
         @media (min-width: 768px) { .demo-active #app { padding-top: 0; } .demo-active main { padding-top: 40px; } }
-        @keyframes gradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
         .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .youtube-preview { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 12px; overflow: hidden; margin-top: 8px; cursor: pointer; }
+        .youtube-preview img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .youtube-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 40px; background: rgba(255,0,0,0.9); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+        .link-preview { margin-top: 8px; border: 1px solid #2D2D2D; border-radius: 12px; overflow: hidden; background: #0D0D0D; max-width: 300px; cursor: pointer; transition: all 0.2s; }
+        .link-preview:hover { border-color: #F4D03F; transform: translateY(-2px); }
+        .link-preview-image { width: 100%; height: 140px; object-fit: cover; background: #1A1A1A; }
+        .link-preview-content { padding: 12px; }
+        .link-preview-domain { font-size: 11px; color: #F4D03F; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+        .link-preview-title { font-size: 14px; font-weight: 600; color: white; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .message-link { color: #F4D03F; text-decoration: underline; text-underline-offset: 2px; }
+        .story-ring { background: linear-gradient(45deg, #F4D03F, #FF6B6B, #F4D03F); padding: 2px; border-radius: 50%; }
+        .story-ring:hover { transform: scale(1.05); transition: transform 0.2s; }
+        .subscription-badge { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; font-weight: bold; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+        .tier-1 { background: linear-gradient(135deg, #C0C0C0, #808080); }
+        .tier-2 { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .tier-3 { background: linear-gradient(135deg, #B9F2FF, #00CED1); }
+        .theme-pink { border-color: #FFB3BA !important; }
+        .theme-blue { border-color: #BAE1FF !important; }
+        .theme-green { border-color: #BAFFC9 !important; }
+        .theme-purple { border-color: #E6BAFF !important; }
+        .theme-orange { border-color: #FFDFBA !important; }
+        .theme-yellow { border-color: #FFFFBA !important; }
     </style>
 </head>
 <body class="bg-chain-dark text-gray-100 font-sans antialiased overflow-x-hidden">
-
     <noscript>
         <div class="fixed inset-0 bg-chain-dark z-50 flex items-center justify-center p-4">
             <div class="text-center">
                 <i class="fas fa-exclamation-triangle text-chain-yellow text-5xl mb-4"></i>
                 <h1 class="text-2xl font-bold mb-2">JavaScript Required</h1>
-                <p class="text-gray-400">CHAIN⛓️Link requires JavaScript to function.</p>
+                <p class="text-gray-400">CHAIN⛓️Link requires JavaScript to function securely.</p>
             </div>
         </div>
     </noscript>
 
-    <div id="demo-banner" class="hidden fixed top-0 left-0 right-0 demo-banner text-white text-center py-2 z-50 shadow-lg transform transition-all duration-300">
+    <div id="demo-banner" class="hidden fixed top-0 left-0 right-0 demo-banner text-white text-center py-2 z-50 shadow-lg">
         <div class="flex items-center justify-center space-x-2 text-sm font-medium px-4">
             <i class="fas fa-flask animate-pulse"></i>
             <span class="uppercase tracking-wider font-bold">Demo Mode Active</span>
-            <button onclick="demoMode.toggle()" class="ml-4 px-3 py-1 bg-white/20 hover:bg-white/30 rounded-full transition text-xs backdrop-blur-sm border border-white/20">Exit Demo</button>
+            <span class="hidden md:inline opacity-80">• Sample data loaded</span>
+            <button onclick="window.App.demoMode.toggle()" class="ml-4 px-3 py-1 bg-white/20 hover:bg-white/30 rounded-full transition text-xs backdrop-blur-sm border border-white/20">Exit Demo</button>
         </div>
     </div>
 
-    <div id="app" class="hidden-until-load min-h-screen flex flex-col transition-all duration-300">
-        
+    <div id="app" class="hidden-until-load min-h-screen flex flex-col">
         <nav id="main-nav" class="hidden fixed bottom-0 left-0 right-0 md:top-0 md:bottom-auto bg-chain-charcoal border-t md:border-b border-chain-gray md:border-t-0 z-40 glass">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex justify-around md:justify-between items-center h-16">
-                    <div class="hidden md:flex items-center space-x-2 cursor-pointer" onclick="router.navigate('feed')">
+                    <div class="hidden md:flex items-center space-x-2 cursor-pointer" onclick="window.App.router.navigate('feed')">
                         <span class="text-2xl font-bold text-chain-yellow">CHAIN⛓️Link</span>
-                        <span id="nav-demo-badge" class="hidden ml-2 px-2 py-0.5 bg-demo-purple/20 text-demo-purple text-[10px] rounded-full border border-demo-purple/30 uppercase tracking-wider font-bold">Demo</span>
+                        <span id="nav-demo-badge" class="hidden ml-2 px-2 py-0.5 bg-demo-purple/20 text-demo-purple text-[10px] rounded-full border border-demo-purple/30 uppercase font-bold">Demo</span>
                     </div>
-
                     <div class="flex justify-around w-full md:w-auto md:space-x-8">
-                        <button onclick="router.navigate('feed')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2" data-view="feed">
-                            <i class="fas fa-home text-xl"></i>
-                            <span class="text-xs md:text-sm font-medium">Feed</span>
-                        </button>
-                        <button onclick="router.navigate('live')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2 relative" data-view="live">
-                            <div class="relative">
-                                <i class="fas fa-video text-xl"></i>
-                                <span id="live-badge" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full live-pulse"></span>
-                            </div>
-                            <span class="text-xs md:text-sm font-medium">Live</span>
-                        </button>
-                        <button onclick="router.navigate('messages')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2 relative" data-view="messages">
-                            <div class="relative">
-                                <i class="fas fa-envelope text-xl"></i>
-                                <span id="msg-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-chain-yellow text-chain-dark text-xs rounded-full flex items-center justify-center font-bold">3</span>
-                            </div>
-                            <span class="text-xs md:text-sm font-medium">Messages</span>
-                        </button>
-                        <button onclick="router.navigate('profile')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2" data-view="profile">
-                            <i class="fas fa-user text-xl"></i>
-                            <span class="text-xs md:text-sm font-medium">Profile</span>
-                        </button>
+                        <button onclick="window.App.router.navigate('feed')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2" data-view="feed"><i class="fas fa-home text-xl"></i><span class="text-xs md:text-sm font-medium">Feed</span></button>
+                        <button onclick="window.App.router.navigate('live')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2 relative" data-view="live"><div class="relative"><i class="fas fa-video text-xl"></i><span id="live-badge" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full live-pulse"></span></div><span class="text-xs md:text-sm font-medium">Live</span></button>
+                        <button onclick="window.App.router.navigate('messages')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2 relative" data-view="messages"><div class="relative"><i class="fas fa-envelope text-xl"></i><span id="msg-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-chain-yellow text-chain-dark text-xs rounded-full flex items-center justify-center font-bold">3</span></div><span class="text-xs md:text-sm font-medium">Messages</span></button>
+                        <button onclick="window.App.router.navigate('profile')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2" data-view="profile"><i class="fas fa-user text-xl"></i><span class="text-xs md:text-sm font-medium">Profile</span></button>
                     </div>
-
                     <div class="hidden md:flex items-center space-x-4">
-                        <button id="demo-toggle-btn" onclick="demoMode.toggle()" class="text-gray-400 hover:text-demo-purple transition px-3 py-1.5 rounded-full border border-transparent hover:border-demo-purple/30 text-sm flex items-center space-x-1 bg-demo-purple/5">
-                            <i class="fas fa-flask"></i>
-                            <span>Demo Mode</span>
-                        </button>
-                        <button onclick="auth.logout()" class="text-gray-400 hover:text-red-400 transition p-2">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </button>
+                        <button id="demo-toggle-btn" onclick="window.App.demoMode.toggle()" class="text-gray-400 hover:text-demo-purple transition px-3 py-1.5 rounded-full border border-transparent hover:border-demo-purple/30 text-sm flex items-center space-x-1 bg-demo-purple/5"><i class="fas fa-flask"></i><span>Demo Mode</span></button>
+                        <button onclick="window.App.auth.logout()" class="text-gray-400 hover:text-red-400 transition p-2" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
                     </div>
                 </div>
             </div>
         </nav>
 
-        <main id="content" class="flex-1 pb-20 md:pt-20 md:pb-0 overflow-y-auto transition-all duration-300">
-            
+        <main id="content" class="flex-1 pb-20 md:pt-20 md:pb-0 overflow-y-auto">
+            <!-- Auth View -->
             <section id="auth-view" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
                 <div class="absolute inset-0 overflow-hidden pointer-events-none">
                     <div class="absolute top-0 left-1/4 w-96 h-96 bg-chain-yellow opacity-5 rounded-full blur-3xl"></div>
                     <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-demo-purple opacity-5 rounded-full blur-3xl"></div>
                 </div>
-
                 <div class="w-full max-w-md relative z-10">
-                    <div class="bg-chain-charcoal border border-chain-gray rounded-2xl p-8 shadow-2xl">
+                    <div class="bg-chain-charcoal border border-chain-gray rounded-2xl p-8 shadow-2xl relative">
                         <div class="text-center mb-8">
                             <h1 class="text-4xl font-bold text-chain-yellow mb-2">CHAIN⛓️Link</h1>
                             <p class="text-gray-400 text-sm" id="auth-subtitle">Link up with your friends</p>
                         </div>
-
-                        <div id="daily-quote" class="mb-6 p-4 bg-chain-dark rounded-lg border-l-4 border-chain-yellow italic text-gray-300 text-sm">
-                            "The future belongs to those who believe in the beauty of their dreams."
-                        </div>
-
+                        <div id="daily-quote" class="mb-6 p-4 bg-chain-dark rounded-lg border-l-4 border-chain-yellow italic text-gray-300 text-sm">"The future belongs to those who believe in the beauty of their dreams."</div>
+                        
                         <div id="auth-forms">
-                            <form id="login-form" class="space-y-4" onsubmit="auth.handleLogin(event)">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-400 mb-1">Email</label>
-                                    <input type="email" id="login-email" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-chain-yellow focus:ring-1 focus:ring-chain-yellow transition" placeholder="you@example.com">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-400 mb-1">Password</label>
-                                    <div class="relative">
-                                        <input type="password" id="login-password" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-chain-yellow focus:ring-1 focus:ring-chain-yellow transition" placeholder="••••••••">
-                                        <button type="button" onclick="auth.togglePassword('login-password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-white">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <button type="submit" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition transform hover:scale-[1.02] active:scale-[0.98]">Sign In</button>
+                            <form id="login-form" class="space-y-4" onsubmit="window.App.auth.handleLogin(event)">
+                                <div><label class="block text-sm font-medium text-gray-400 mb-1">Email</label><input type="email" id="login-email" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="you@example.com"></div>
+                                <div><label class="block text-sm font-medium text-gray-400 mb-1">Password</label><div class="relative"><input type="password" id="login-password" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="••••••••"><button type="button" onclick="window.App.auth.togglePassword('login-password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-white"><i class="fas fa-eye"></i></button></div></div>
+                                <button type="submit" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition transform hover:scale-[1.02]">Sign In</button>
                             </form>
-
-                            <form id="signup-form" class="hidden space-y-4" onsubmit="auth.handleSignup(event)">
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-medium text-gray-400 mb-1">First Name</label>
-                                        <input type="text" id="signup-firstname" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-medium text-gray-400 mb-1">Last Name</label>
-                                        <input type="text" id="signup-lastname" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition">
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-400 mb-1">Username</label>
-                                    <div class="relative">
-                                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">@</span>
-                                        <input type="text" id="signup-username" required class="w-full bg-chain-dark border border-chain-gray rounded-lg pl-8 pr-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="username">
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-400 mb-1">Email</label>
-                                    <input type="email" id="signup-email" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition">
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-medium text-gray-400 mb-1">Birthday</label>
-                                        <input type="date" id="signup-birthday" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-medium text-gray-400 mb-1">Gender</label>
-                                        <select id="signup-gender" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition">
-                                            <option value="">Select</option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                            <option value="non-binary">Non-binary</option>
-                                            <option value="prefer-not">Prefer not to say</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-400 mb-1">Password</label>
-                                    <input type="password" id="signup-password" required minlength="8" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="8+ characters">
-                                </div>
+                            
+                            <form id="signup-form" class="hidden space-y-4" onsubmit="window.App.auth.handleSignup(event)">
+                                <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-medium text-gray-400 mb-1">First Name</label><input type="text" id="signup-firstname" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition"></div><div><label class="block text-xs font-medium text-gray-400 mb-1">Last Name</label><input type="text" id="signup-lastname" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition"></div></div>
+                                <div><label class="block text-xs font-medium text-gray-400 mb-1">Username</label><div class="relative"><span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">@</span><input type="text" id="signup-username" required class="w-full bg-chain-dark border border-chain-gray rounded-lg pl-8 pr-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="username"></div></div>
+                                <div><label class="block text-xs font-medium text-gray-400 mb-1">Email</label><input type="email" id="signup-email" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition"></div>
+                                <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-medium text-gray-400 mb-1">Birthday</label><input type="date" id="signup-birthday" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition"></div><div><label class="block text-xs font-medium text-gray-400 mb-1">Gender</label><select id="signup-gender" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition"><option value="">Select</option><option value="male">Male</option><option value="female">Female</option><option value="non-binary">Non-binary</option><option value="prefer-not">Prefer not to say</option></select></div></div>
+                                <div><label class="block text-xs font-medium text-gray-400 mb-1">Password</label><input type="password" id="signup-password" required minlength="8" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="8+ characters"></div>
                                 <button type="submit" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition">Create Account</button>
                             </form>
-
-                            <div id="tfa-section" class="hidden text-center space-y-4">
-                                <div class="bg-white p-4 rounded-lg inline-block">
-                                    <canvas id="qr-canvas"></canvas>
+                            
+                            <div id="tfa-section" class="hidden text-center space-y-4"><div class="bg-white p-4 rounded-lg inline-block"><canvas id="qr-canvas"></canvas></div><p class="text-sm text-gray-400">Scan with your authenticator app</p><input type="text" id="tfa-code" placeholder="Enter 6-digit code" maxlength="6" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-center text-white tracking-widest font-mono text-lg focus:border-chain-yellow focus:outline-none"><button onclick="window.App.auth.verify2FA()" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition">Verify</button></div>
+                            
+                            <div id="auth-alternatives" class="mt-6">
+                                <div class="relative"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-chain-gray"></div></div><div class="relative flex justify-center text-sm"><span class="px-2 bg-chain-charcoal text-gray-500">Or continue with</span></div></div>
+                                <div class="mt-6 grid grid-cols-1 gap-3">
+                                    <button onclick="window.App.auth.socialLogin('google')" class="flex items-center justify-center px-4 py-2 border border-chain-gray rounded-lg hover:bg-chain-dark transition group"><img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-5 w-5 mr-2" alt="Google"><span class="text-sm font-medium text-gray-300 group-hover:text-white">Google</span></button>
                                 </div>
-                                <p class="text-sm text-gray-400">Scan with your authenticator app</p>
-                                <input type="text" id="tfa-code" placeholder="Enter 6-digit code" maxlength="6" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-center text-white tracking-widest font-mono text-lg focus:border-chain-yellow focus:outline-none">
-                                <button onclick="auth.verify2FA()" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition">Verify</button>
-                            </div>
-                        </div>
-
-                        <div id="social-auth" class="mt-6">
-                            <div class="relative">
-                                <div class="absolute inset-0 flex items-center">
-                                    <div class="w-full border-t border-chain-gray"></div>
+                                <div class="mt-6 text-center">
+                                    <button onclick="window.App.auth.toggleAuthMode()" id="auth-toggle" class="text-chain-yellow hover:text-yellow-400 text-sm font-medium">Don't have an account? Sign up</button>
                                 </div>
-                                <div class="relative flex justify-center text-sm">
-                                    <span class="px-2 bg-chain-charcoal text-gray-500">Or continue with</span>
+                                <div class="mt-4 text-center">
+                                    <button onclick="window.App.demoMode.activate()" class="text-demo-purple hover:text-demo-pink text-xs font-medium flex items-center justify-center mx-auto space-x-1"><i class="fas fa-flask"></i><span>Try Demo Mode</span></button>
                                 </div>
                             </div>
-                            <div class="mt-6 grid grid-cols-2 gap-3">
-                                <button onclick="auth.socialLogin('google')" class="flex items-center justify-center px-4 py-2 border border-chain-gray rounded-lg hover:bg-chain-dark transition group">
-                                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-5 w-5 mr-2" alt="Google">
-                                    <span class="text-sm font-medium text-gray-300 group-hover:text-white">Google</span>
-                                </button>
-                                <button onclick="auth.socialLogin('facebook')" class="flex items-center justify-center px-4 py-2 border border-chain-gray rounded-lg hover:bg-chain-dark transition group">
-                                    <i class="fab fa-facebook text-blue-500 mr-2 text-lg"></i>
-                                    <span class="text-sm font-medium text-gray-300 group-hover:text-white">Facebook</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 text-center">
-                            <p class="text-sm text-gray-400">
-                                <span id="auth-toggle-text">Don't have an account?</span>
-                                <button onclick="auth.toggleMode()" class="ml-1 text-chain-yellow hover:underline font-medium">
-                                    <span id="auth-toggle-btn">Sign up</span>
-                                </button>
-                            </p>
-                        </div>
-
-                        <div class="mt-8 text-center">
-                            <p class="text-xs text-gray-600">Join for free today</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="feed-view" class="hidden max-w-2xl mx-auto p-4 space-y-6">
-                <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-4 shadow-lg">
+            <!-- Feed View -->
+            <section id="feed-view" class="hidden max-w-2xl mx-auto px-4 py-4 space-y-6">
+                <div class="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
+                    <div class="flex flex-col items-center space-y-1 cursor-pointer" onclick="window.App.stories.create()">
+                        <div class="w-16 h-16 rounded-full bg-chain-dark border-2 border-dashed border-chain-yellow flex items-center justify-center hover:bg-chain-gray transition">
+                            <i class="fas fa-plus text-chain-yellow"></i>
+                        </div>
+                        <span class="text-xs text-gray-400">Add Story</span>
+                    </div>
+                    <div id="stories-container" class="flex space-x-4"></div>
+                </div>
+
+                <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-4">
                     <div class="flex space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-chain-yellow to-orange-500 flex items-center justify-center text-chain-dark font-bold" id="current-user-avatar">ME</div>
+                        <img id="current-user-avatar" src="https://i.pravatar.cc/150?img=12" class="w-10 h-10 rounded-full bg-chain-gray">
                         <div class="flex-1">
-                            <textarea id="post-content" rows="2" class="w-full bg-chain-dark border border-chain-gray rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-chain-yellow resize-none transition" placeholder="What's happening?"></textarea>
-                            
-                            <div class="flex items-center space-x-2 mt-2 overflow-x-auto pb-2">
-                                <span class="text-xs text-gray-500 whitespace-nowrap">Style:</span>
-                                <button onclick="postCreator.setFont('default')" class="font-btn px-3 py-1 rounded-full text-xs border border-chain-yellow bg-chain-yellow text-chain-dark font-medium transition">Default</button>
-                                <button onclick="postCreator.setFont('display')" class="font-btn px-3 py-1 rounded-full text-xs border border-chain-gray text-gray-400 hover:border-chain-yellow transition font-display">Display</button>
-                                <button onclick="postCreator.setFont('mono')" class="font-btn px-3 py-1 rounded-full text-xs border border-chain-gray text-gray-400 hover:border-chain-yellow transition font-mono">Mono</button>
-                                <button onclick="postCreator.setFont('cursive')" class="font-btn px-3 py-1 rounded-full text-xs border border-chain-gray text-gray-400 hover:border-chain-yellow transition font-cursive">Cursive</button>
-                                <button onclick="postCreator.setFont('bold')" class="font-btn px-3 py-1 rounded-full text-xs border border-chain-gray text-gray-400 hover:border-chain-yellow transition font-bold">Bold</button>
-                            </div>
-
-                            <div class="flex items-center justify-between mt-3 pt-3 border-t border-chain-gray">
-                                <div class="flex space-x-2">
-                                    <label class="cursor-pointer text-gray-400 hover:text-chain-yellow transition p-2 rounded-full hover:bg-chain-dark">
-                                        <i class="fas fa-image"></i>
-                                        <input type="file" accept="image/*" onchange="postCreator.handleImage(this)">
-                                    </label>
-                                    <label class="cursor-pointer text-gray-400 hover:text-chain-yellow transition p-2 rounded-full hover:bg-chain-dark">
-                                        <i class="fas fa-video"></i>
-                                        <input type="file" accept="video/*" onchange="postCreator.handleVideo(this)">
-                                    </label>
-                                    <button onclick="postCreator.toggleSchedule()" class="text-gray-400 hover:text-chain-yellow transition p-2 rounded-full hover:bg-chain-dark">
-                                        <i class="fas fa-clock"></i>
-                                    </button>
+                            <textarea id="post-content" rows="2" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-chain-yellow resize-none" placeholder="What's happening?"></textarea>
+                            <div class="mt-3 flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <select id="post-font" class="bg-chain-dark border border-chain-gray rounded-lg px-3 py-1 text-xs text-gray-300 focus:outline-none focus:border-chain-yellow">
+                                        <option value="font-default">Default</option>
+                                        <option value="font-display">Display</option>
+                                        <option value="font-mono">Mono</option>
+                                        <option value="font-cursive">Cursive</option>
+                                        <option value="font-bold">Bold</option>
+                                    </select>
+                                    <button onclick="document.getElementById('post-media').click()" class="text-gray-400 hover:text-chain-yellow transition p-2"><i class="fas fa-image"></i></button>
+                                    <button onclick="window.App.posts.toggleSchedule()" class="text-gray-400 hover:text-chain-yellow transition p-2" title="Schedule"><i class="fas fa-clock"></i></button>
+                                    <input type="file" id="post-media" accept="image/*,video/*" onchange="window.App.posts.handleMediaSelect(event)">
                                 </div>
-                                <button onclick="postCreator.submit()" class="bg-chain-yellow text-chain-dark px-6 py-2 rounded-full font-bold hover:bg-yellow-400 transition transform active:scale-95" id="post-btn">Post</button>
+                                <button onclick="window.App.posts.create()" class="bg-chain-yellow text-chain-dark px-6 py-2 rounded-lg font-bold hover:bg-yellow-400 transition disabled:opacity-50 disabled:cursor-not-allowed" id="post-btn">Post</button>
                             </div>
-
                             <div id="schedule-picker" class="hidden mt-3 p-3 bg-chain-dark rounded-lg border border-chain-gray">
                                 <label class="text-xs text-gray-400 block mb-1">Schedule for later:</label>
                                 <input type="datetime-local" id="post-schedule" class="bg-chain-charcoal border border-chain-gray rounded px-3 py-1 text-sm text-white">
                             </div>
-
-                            <div id="media-preview" class="hidden mt-3 relative">
-                                <img id="preview-img" class="rounded-lg max-h-64 w-full object-cover hidden">
-                                <video id="preview-video" class="rounded-lg max-h-64 w-full hidden" controls></video>
-                                <button onclick="postCreator.clearMedia()" class="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600 transition">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
+                            <div id="media-preview" class="hidden mt-3 grid grid-cols-2 gap-2"></div>
                         </div>
                     </div>
                 </div>
 
                 <div id="feed-posts" class="space-y-4"></div>
-                <div id="feed-sentinel" class="h-10 flex items-center justify-center text-gray-500">
-                    <i class="fas fa-circle-notch fa-spin mr-2"></i> Loading...
-                </div>
             </section>
 
-            <section id="profile-view" class="hidden max-w-4xl mx-auto">
-                <div class="bg-chain-charcoal border-b border-chain-gray">
-                    <div class="h-48 md:h-64 bg-gradient-to-r from-purple-900 via-chain-dark to-chain-yellow relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 2px 2px, rgba(244,208,63,0.15) 1px, transparent 0); background-size: 20px 20px;"></div>
-                        <img id="profile-cover-img" class="w-full h-full object-cover opacity-50 hidden" src="" alt="Cover">
+            <!-- Live View -->
+            <section id="live-view" class="hidden max-w-4xl mx-auto px-4 py-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">Live Streams</h2>
+                    <button onclick="window.App.live.startStream()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition"><i class="fas fa-video"></i><span>Go Live</span></button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-4 text-center">
+                        <div class="tier-1 text-chain-dark text-xs font-bold px-2 py-1 rounded inline-block mb-2">BASIC</div>
+                        <div class="text-2xl font-bold text-white">$4.99<span class="text-sm font-normal text-gray-400">/mo</span></div>
+                        <p class="text-xs text-gray-400 mt-2">Access to standard live streams</p>
                     </div>
-                    
-                    <div class="px-4 pb-4 relative">
-                        <div class="flex flex-col md:flex-row items-start md:items-end -mt-16 mb-4">
-                            <div class="relative">
-                                <div id="profile-avatar" class="w-32 h-32 rounded-full border-4 border-chain-charcoal bg-gradient-to-br from-pastel-pink to-pink-500 flex items-center justify-center text-4xl font-bold text-white shadow-xl overflow-hidden relative">
-                                    <span id="profile-avatar-text">KS</span>
-                                    <img id="profile-avatar-img" class="w-full h-full object-cover hidden absolute inset-0" src="" alt="Avatar">
-                                </div>
-                                <button onclick="profile.changeTheme()" class="absolute bottom-0 right-0 bg-chain-yellow text-chain-dark w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition" title="Change Theme">
-                                    <i class="fas fa-palette text-sm"></i>
-                                </button>
-                            </div>
-                            
-                            <div class="mt-4 md:mt-0 md:ml-4 flex-1 w-full">
-                                <div class="flex flex-col md:flex-row md:items-center justify-between">
-                                    <div>
-                                        <div class="flex items-center">
-                                            <h1 id="profile-name" class="text-2xl font-bold text-white">Kendal Symes</h1>
-                                            <span id="profile-demo-badge" class="hidden ml-2 px-2 py-1 bg-demo-purple/20 text-demo-purple text-xs rounded-full border border-demo-purple/30">
-                                                <i class="fas fa-flask mr-1"></i> Demo
-                                            </span>
-                                        </div>
-                                        <p id="profile-handle" class="text-gray-400">@kendaljenelle</p>
-                                    </div>
-                                    <div class="flex space-x-2 mt-3 md:mt-0">
-                                        <button onclick="profile.editProfile()" class="px-4 py-2 border border-chain-gray rounded-full text-sm font-medium hover:bg-chain-gray transition">Edit Profile</button>
-                                        <button class="px-4 py-2 bg-chain-yellow text-chain-dark rounded-full text-sm font-bold hover:bg-yellow-400 transition">
-                                            <i class="fas fa-crown mr-1"></i> Subscribe
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p id="profile-bio" class="text-gray-300 mb-4 max-w-2xl">Building CHAIN⛓️Link | Bartender turned Builder | Vernon, BC 🍁</p>
-
-                        <div class="flex flex-wrap gap-4 text-sm text-gray-400 mb-4">
-                            <span id="profile-location"><i class="fas fa-map-marker-alt mr-1"></i> Vernon, BC</span>
-                            <span id="profile-birthday"><i class="fas fa-birthday-cake mr-1"></i> Born October 22</span>
-                            <span><i class="fas fa-calendar mr-1"></i> Joined February 2024</span>
-                            <span id="profile-website" class="hidden"><i class="fas fa-link mr-1"></i> <a href="#" target="_blank" class="hover:text-chain-yellow transition">Website</a></span>
-                        </div>
-
-                        <div class="grid grid-cols-4 gap-4 py-4 border-t border-chain-gray">
-                            <div class="text-center cursor-pointer hover:bg-chain-dark rounded-lg py-2 transition">
-                                <div id="stat-posts" class="text-xl font-bold text-white">0</div>
-                                <div class="text-xs text-gray-500 uppercase tracking-wide">Posts</div>
-                            </div>
-                            <div class="text-center cursor-pointer hover:bg-chain-dark rounded-lg py-2 transition">
-                                <div id="stat-followers" class="text-xl font-bold text-white">0</div>
-                                <div class="text-xs text-gray-500 uppercase tracking-wide">Followers</div>
-                            </div>
-                            <div class="text-center cursor-pointer hover:bg-chain-dark rounded-lg py-2 transition">
-                                <div id="stat-following" class="text-xl font-bold text-white">0</div>
-                                <div class="text-xs text-gray-500 uppercase tracking-wide">Following</div>
-                            </div>
-                            <div class="text-center cursor-pointer hover:bg-chain-dark rounded-lg py-2 transition">
-                                <div id="stat-subscribers" class="text-xl font-bold text-chain-yellow">0</div>
-                                <div class="text-xs text-gray-500 uppercase tracking-wide">Subscribers</div>
-                            </div>
-                        </div>
+                    <div class="bg-chain-charcoal border border-chain-yellow rounded-xl p-4 text-center relative transform scale-105">
+                        <div class="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-chain-yellow text-chain-dark text-xs font-bold px-3 py-1 rounded-full">POPULAR</div>
+                        <div class="tier-2 text-chain-dark text-xs font-bold px-2 py-1 rounded inline-block mb-2">PRO</div>
+                        <div class="text-2xl font-bold text-white">$9.99<span class="text-sm font-normal text-gray-400">/mo</span></div>
+                        <p class="text-xs text-gray-400 mt-2">HD streams + Exclusive content</p>
+                    </div>
+                    <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-4 text-center">
+                        <div class="tier-3 text-chain-dark text-xs font-bold px-2 py-1 rounded inline-block mb-2">VIP</div>
+                        <div class="text-2xl font-bold text-white">$19.99<span class="text-sm font-normal text-gray-400">/mo</span></div>
+                        <p class="text-xs text-gray-400 mt-2">4K streams + 1-on-1 sessions</p>
                     </div>
                 </div>
 
-                <div class="sticky top-0 md:top-16 bg-chain-dark/95 backdrop-blur z-30 border-b border-chain-gray">
-                    <div class="flex">
-                        <button class="flex-1 py-4 text-center text-chain-yellow border-b-2 border-chain-yellow font-medium">Posts</button>
-                        <button class="flex-1 py-4 text-center text-gray-400 hover:text-white transition">Media</button>
-                        <button class="flex-1 py-4 text-center text-gray-400 hover:text-white transition">Likes</button>
-                    </div>
-                </div>
-
-                <div id="profile-posts" class="p-4 space-y-4"></div>
+                <div id="live-streams" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </section>
 
-            <section id="messages-view" class="hidden h-[calc(100vh-80px)] md:h-[calc(100vh-64px)] flex flex-col md:flex-row max-w-6xl mx-auto">
-                <div class="w-full md:w-1/3 border-r border-chain-gray bg-chain-charcoal flex flex-col">
-                    <div class="p-4 border-b border-chain-gray flex items-center justify-between">
-                        <h2 class="text-xl font-bold text-white">Messages</h2>
-                        <span id="conversations-demo-badge" class="hidden px-2 py-1 bg-demo-purple/20 text-demo-purple text-xs rounded-full border border-demo-purple/30 text-[10px] uppercase">Demo</span>
-                    </div>
-                    <div class="mt-2 px-4 pb-2">
-                        <div class="relative">
-                            <input type="text" placeholder="Search conversations..." class="w-full bg-chain-dark border border-chain-gray rounded-full px-4 py-2 pl-10 text-sm text-white focus:outline-none focus:border-chain-yellow">
-                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm"></i>
+            <!-- Messages View -->
+            <section id="messages-view" class="hidden max-w-4xl mx-auto h-[calc(100vh-80px)]">
+                <div class="flex h-full border border-chain-gray rounded-xl overflow-hidden bg-chain-charcoal">
+                    <div class="w-full md:w-1/3 border-r border-chain-gray flex flex-col">
+                        <div class="p-4 border-b border-chain-gray">
+                            <h3 class="font-bold text-lg">Messages</h3>
                         </div>
+                        <div id="conversations-list" class="flex-1 overflow-y-auto"></div>
                     </div>
-                    <div id="conversations-list" class="flex-1 overflow-y-auto"></div>
-                </div>
-
-                <div id="chat-area" class="hidden md:flex flex-1 flex-col bg-chain-dark relative">
-                    <div class="p-4 border-b border-chain-gray flex items-center justify-between bg-chain-charcoal">
-                        <div class="flex items-center space-x-3">
-                            <div id="chat-avatar" class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">JD</div>
-                            <div>
-                                <h3 id="chat-name" class="font-bold text-white">John Doe</h3>
-                                <span id="chat-status" class="text-xs text-green-400">Active now</span>
+                    <div id="chat-area" class="hidden md:flex md:w-2/3 flex-col">
+                        <div id="chat-header" class="p-4 border-b border-chain-gray flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <img id="chat-avatar" src="" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <div id="chat-name" class="font-bold"></div>
+                                    <div id="chat-status" class="text-xs text-green-400">Online</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span id="chat-demo-badge" class="hidden px-2 py-1 bg-demo-purple/20 text-demo-purple text-xs rounded border border-demo-purple/30">Demo Chat</span>
                             <button class="text-gray-400 hover:text-white"><i class="fas fa-ellipsis-v"></i></button>
                         </div>
+                        <div id="messages-list" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+                        <div class="p-4 border-t border-chain-gray">
+                            <div class="flex space-x-2">
+                                <input type="text" id="message-input" class="flex-1 bg-chain-dark border border-chain-gray rounded-full px-4 py-2 text-white focus:outline-none focus:border-chain-yellow" placeholder="Type a message..." onkeypress="if(event.key==='Enter') window.App.messages.send()">
+                                <button onclick="window.App.messages.send()" class="bg-chain-yellow text-chain-dark w-10 h-10 rounded-full flex items-center justify-center hover:bg-yellow-400 transition"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="no-chat-selected" class="hidden md:flex md:w-2/3 items-center justify-center text-gray-500">
+                        <div class="text-center"><i class="fas fa-comments text-4xl mb-2"></i><p>Select a conversation</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile View -->
+            <section id="profile-view" class="hidden max-w-4xl mx-auto px-4 py-6">
+                <div class="bg-chain-charcoal border border-chain-gray rounded-xl overflow-hidden">
+                    <div class="h-48 bg-gradient-to-r from-chain-dark to-chain-gray relative">
+                        <img id="profile-cover" src="" class="w-full h-full object-cover opacity-50">
+                        <button onclick="document.getElementById('cover-input').click()" class="absolute bottom-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition"><i class="fas fa-camera"></i></button>
+                        <input type="file" id="cover-input" class="hidden" accept="image/*" onchange="window.App.profile.handleCoverUpload(event)">
                     </div>
                     
-                    <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+                    <div class="px-6 pb-6 relative">
+                        <div class="relative -mt-16 mb-4 inline-block" id="profile-avatar-container">
+                            <div class="story-ring p-1 rounded-full" id="avatar-ring">
+                                <img id="profile-avatar" src="" class="w-32 h-32 rounded-full border-4 border-chain-charcoal bg-chain-gray">
+                            </div>
+                            <button onclick="document.getElementById('avatar-input').click()" class="absolute bottom-0 right-0 bg-chain-yellow text-chain-dark p-2 rounded-full hover:bg-yellow-400 transition"><i class="fas fa-camera"></i></button>
+                            <input type="file" id="avatar-input" class="hidden" accept="image/*" onchange="window.App.profile.handleAvatarUpload(event)">
+                        </div>
 
-                    <div class="p-4 border-t border-chain-gray bg-chain-charcoal">
-                        <div class="flex items-center space-x-2">
-                            <button class="text-gray-400 hover:text-chain-yellow p-2"><i class="fas fa-plus-circle"></i></button>
-                            <input type="text" id="message-input" placeholder="Type a message..." class="flex-1 bg-chain-dark border border-chain-gray rounded-full px-4 py-2 text-white focus:outline-none focus:border-chain-yellow" onkeypress="if(event.key==='Enter') messaging.send()">
-                            <button onclick="messaging.send()" class="text-chain-yellow hover:text-yellow-400 p-2"><i class="fas fa-paper-plane"></i></button>
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
+                            <div>
+                                <h2 id="profile-name" class="text-2xl font-bold text-white"></h2>
+                                <p id="profile-username" class="text-gray-400"></p>
+                                <p id="profile-bio" class="mt-2 text-gray-300 max-w-lg"></p>
+                                <div id="spotify-widget" class="mt-3 flex items-center space-x-2 text-sm text-green-400 hidden">
+                                    <i class="fab fa-spotify"></i>
+                                    <span id="spotify-track">Listening to...</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 md:mt-0 flex space-x-2">
+                                <button onclick="window.App.profile.openEditModal()" class="px-4 py-2 bg-chain-yellow text-chain-dark rounded-lg hover:bg-yellow-400 transition text-sm font-bold">Edit Profile</button>
+                                <button onclick="window.App.profile.toggleSpotify()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition text-sm font-medium flex items-center space-x-1"><i class="fab fa-spotify"></i><span>Connect Spotify</span></button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-4 py-4 border-y border-chain-gray mb-6">
+                            <div class="text-center"><div id="profile-posts" class="text-xl font-bold text-white">0</div><div class="text-xs text-gray-400">Posts</div></div>
+                            <div class="text-center"><div id="profile-followers" class="text-xl font-bold text-white">0</div><div class="text-xs text-gray-400">Followers</div></div>
+                            <div class="text-center"><div id="profile-following" class="text-xl font-bold text-white">0</div><div class="text-xs text-gray-400">Following</div></div>
+                            <div class="text-center"><div id="profile-subscribers" class="text-xl font-bold text-white">0</div><div class="text-xs text-gray-400">Subscribers</div></div>
+                        </div>
+
+                        <div class="flex space-x-6 border-b border-chain-gray mb-6">
+                            <button class="pb-2 border-b-2 border-chain-yellow text-white font-medium">Posts</button>
+                            <button class="pb-2 border-b-2 border-transparent text-gray-400 hover:text-white">Media</button>
+                            <button class="pb-2 border-b-2 border-transparent text-gray-400 hover:text-white">Likes</button>
+                        </div>
+
+                        <div id="profile-posts-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                        
+                        <!-- Creator Credit -->
+                        <div class="mt-8 pt-6 border-t border-chain-gray text-center">
+                            <p class="text-xs text-gray-500 italic font-mono">
+                                Created with <span class="text-red-500">❤️</span> by Kendal Symes — Sole Developer, Designer & Visionary
+                            </p>
+                            <p class="text-[10px] text-demo-purple mt-1 uppercase tracking-widest">
+                                Architected with Kimi K2.5
+                            </p>
                         </div>
                     </div>
                 </div>
-
-                <div id="empty-chat" class="md:hidden flex-1 flex items-center justify-center bg-chain-dark">
-                    <p class="text-gray-500">Select a conversation</p>
-                </div>
             </section>
-
-            <section id="live-view" class="hidden max-w-6xl mx-auto p-4">
-                <div class="bg-gradient-to-r from-purple-900 to-chain-charcoal border border-chain-gray rounded-xl p-8 mb-6 text-center relative overflow-hidden">
-                    <div id="live-demo-overlay" class="hidden absolute inset-0 bg-demo-purple/10 backdrop-blur-[1px] flex items-center justify-center">
-                        <span class="px-4 py-2 bg-demo-purple text-white rounded-full text-sm font-bold uppercase tracking-wider border border-white/20 shadow-lg">
-                            <i class="fas fa-flask mr-2"></i>Demo Mode
-                        </span>
-                    </div>
-                    <div class="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4 live-pulse cursor-pointer hover:scale-110 transition" onclick="live.start()">
-                        <i class="fas fa-video text-white text-3xl"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Go Live</h2>
-                    <p class="text-gray-400 mb-4">Connect with your audience in real-time</p>
-                    <button onclick="live.start()" class="bg-red-500 text-white px-8 py-3 rounded-full font-bold hover:bg-red-600 transition">Start Streaming</button>
-                </div>
-
-                <div class="grid md:grid-cols-3 gap-4 mb-8">
-                    <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-6 hover:border-chain-yellow transition cursor-pointer relative group" onclick="live.selectTier(4.99)">
-                        <h3 class="text-lg font-bold text-white mb-2">Basic</h3>
-                        <div class="text-3xl font-bold text-chain-yellow mb-4">$4.99<span class="text-sm text-gray-500 font-normal">/month</span></div>
-                        <ul class="space-y-2 text-sm text-gray-400 mb-6">
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>Access to live streams</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>Basic chat</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>Stream replays</li>
-                        </ul>
-                        <button class="w-full py-2 border border-chain-yellow text-chain-yellow rounded-lg hover:bg-chain-yellow hover:text-chain-dark transition">Select</button>
-                    </div>
-                    
-                    <div class="bg-chain-charcoal border-2 border-chain-yellow rounded-xl p-6 relative transform scale-105 shadow-xl shadow-chain-yellow/10" onclick="live.selectTier(9.99)">
-                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-chain-yellow text-chain-dark text-xs font-bold px-3 py-1 rounded-full">POPULAR</div>
-                        <h3 class="text-lg font-bold text-white mb-2">Pro</h3>
-                        <div class="text-3xl font-bold text-chain-yellow mb-4">$9.99<span class="text-sm text-gray-500 font-normal">/month</span></div>
-                        <ul class="space-y-2 text-sm text-gray-400 mb-6">
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>All Basic features</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>Priority chat</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>Exclusive badges</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>HD quality</li>
-                        </ul>
-                        <button class="w-full py-2 bg-chain-yellow text-chain-dark font-bold rounded-lg hover:bg-yellow-400 transition">Select</button>
-                    </div>
-
-                    <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-6 hover:border-chain-yellow transition cursor-pointer relative group" onclick="live.selectTier(19.99)">
-                        <h3 class="text-lg font-bold text-white mb-2">VIP</h3>
-                        <div class="text-3xl font-bold text-chain-yellow mb-4">$19.99<span class="text-sm text-gray-500 font-normal">/month</span></div>
-                        <ul class="space-y-2 text-sm text-gray-400 mb-6">
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>All Pro features</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>1-on-1 monthly chat</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>Behind the scenes</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i>Custom emojis</li>
-                        </ul>
-                        <button class="w-full py-2 border border-chain-yellow text-chain-yellow rounded-lg hover:bg-chain-yellow hover:text-chain-dark transition">Select</button>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xl font-bold text-white">Live Now</h3>
-                    <span id="live-now-demo-badge" class="hidden px-2 py-1 bg-demo-purple/20 text-demo-purple text-xs rounded-full border border-demo-purple/30">
-                        <i class="fas fa-flask mr-1"></i> Sample Streams
-                    </span>
-                </div>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="live-streams"></div>
-            </section>
-
         </main>
     </div>
 
     <!-- Edit Profile Modal -->
-    <div id="edit-profile-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-chain-charcoal border border-chain-gray rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all">
-            <div class="sticky top-0 bg-chain-charcoal border-b border-chain-gray p-4 flex items-center justify-between z-10">
-                <h2 class="text-xl font-bold text-white">Edit Profile</h2>
-                <button onclick="profile.closeEditModal()" class="text-gray-400 hover:text-white transition">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
+    <div id="edit-profile-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-chain-charcoal border border-chain-gray rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-4 border-b border-chain-gray flex justify-between items-center">
+                <h3 class="font-bold text-lg">Edit Profile</h3>
+                <button onclick="window.App.profile.closeEditModal()" class="text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
             </div>
-
-            <form id="edit-profile-form" onsubmit="profile.saveEdit(event)" class="p-6 space-y-6">
-                <div class="relative h-32 bg-gradient-to-r from-purple-900 to-chain-dark rounded-lg overflow-hidden group cursor-pointer">
-                    <img id="edit-cover-preview" class="w-full h-full object-cover opacity-60" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='200'%3E%3Crect width='800' height='200' fill='%231A1A1A'/%3E%3C/svg%3E" alt="Cover">
-                    <div class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition">
-                        <i class="fas fa-camera text-white text-2xl"></i>
-                    </div>
-                    <input type="file" id="edit-cover-input" accept="image/*" class="hidden" onchange="profile.handleEditImage(this, 'cover')">
-                    <button type="button" onclick="document.getElementById('edit-cover-input').click()" class="absolute inset-0 w-full h-full"></button>
+            <div class="p-4 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Display Name</label>
+                    <input type="text" id="edit-name" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:border-chain-yellow focus:outline-none">
                 </div>
-
-                <div class="relative -mt-16 ml-4 w-24 h-24">
-                    <div class="w-24 h-24 rounded-full border-4 border-chain-charcoal overflow-hidden relative group cursor-pointer bg-gradient-to-br from-pastel-pink to-pink-500">
-                        <img id="edit-avatar-preview" class="w-full h-full object-cover hidden" src="" alt="Avatar">
-                        <div id="edit-avatar-placeholder" class="absolute inset-0 flex items-center justify-center text-white text-3xl font-bold">KS</div>
-                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                            <i class="fas fa-camera text-white"></i>
-                        </div>
-                        <input type="file" id="edit-avatar-input" accept="image/*" class="hidden" onchange="profile.handleEditImage(this, 'avatar')">
-                        <button type="button" onclick="document.getElementById('edit-avatar-input').click()" class="absolute inset-0 w-full h-full rounded-full"></button>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Bio</label>
+                    <textarea id="edit-bio" rows="3" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:border-chain-yellow focus:outline-none resize-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Profile Theme</label>
+                    <div class="flex space-x-2">
+                        <button onclick="window.App.profile.setTheme('default')" class="w-8 h-8 rounded-full bg-chain-yellow border-2 border-transparent hover:scale-110 transition" title="Default"></button>
+                        <button onclick="window.App.profile.setTheme('pink')" class="w-8 h-8 rounded-full bg-pastel-pink border-2 border-transparent hover:scale-110 transition" title="Pink"></button>
+                        <button onclick="window.App.profile.setTheme('blue')" class="w-8 h-8 rounded-full bg-pastel-blue border-2 border-transparent hover:scale-110 transition" title="Blue"></button>
+                        <button onclick="window.App.profile.setTheme('green')" class="w-8 h-8 rounded-full bg-pastel-green border-2 border-transparent hover:scale-110 transition" title="Green"></button>
+                        <button onclick="window.App.profile.setTheme('purple')" class="w-8 h-8 rounded-full bg-pastel-purple border-2 border-transparent hover:scale-110 transition" title="Purple"></button>
                     </div>
                 </div>
-
-                <div class="space-y-4 pt-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-1">Display Name</label>
-                        <input type="text" id="edit-name" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-2 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="Your name">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-1">Bio</label>
-                        <textarea id="edit-bio" rows="3" maxlength="160" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-2 text-white focus:outline-none focus:border-chain-yellow resize-none transition" placeholder="Tell us about yourself..."></textarea>
-                        <div class="text-right text-xs text-gray-500 mt-1"><span id="bio-count">0</span>/160</div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-1">Location</label>
-                        <div class="relative">
-                            <i class="fas fa-map-marker-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-                            <input type="text" id="edit-location" class="w-full bg-chain-dark border border-chain-gray rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="City, Country">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-1">Website</label>
-                        <div class="relative">
-                            <i class="fas fa-link absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-                            <input type="url" id="edit-website" class="w-full bg-chain-dark border border-chain-gray rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="https://...">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex space-x-3 pt-4 border-t border-chain-gray">
-                    <button type="button" onclick="profile.closeEditModal()" class="flex-1 px-4 py-2 border border-chain-gray text-gray-300 rounded-lg hover:bg-chain-dark transition">Cancel</button>
-                    <button type="submit" class="flex-1 px-4 py-2 bg-chain-yellow text-chain-dark font-bold rounded-lg hover:bg-yellow-400 transition">Save Changes</button>
-                </div>
-            </form>
+                <button onclick="window.App.profile.saveEdit()" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition">Save Changes</button>
+            </div>
         </div>
     </div>
 
-    <div id="toast-container" class="fixed top-12 md:top-4 right-4 z-50 space-y-2 pointer-events-none"></div>
+    <div id="story-modal" class="hidden fixed inset-0 bg-black z-50 flex items-center justify-center">
+        <button onclick="window.App.stories.close()" class="absolute top-4 right-4 text-white text-2xl z-10"><i class="fas fa-times"></i></button>
+        <div class="max-w-md w-full h-full md:h-auto md:aspect-[9/16] bg-chain-charcoal relative">
+            <img id="story-image" src="" class="w-full h-full object-cover">
+            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                <p id="story-caption" class="text-white text-lg"></p>
+            </div>
+        </div>
+    </div>
 
-    <div id="spotify-widget" class="fixed bottom-24 md:bottom-4 left-4 bg-chain-charcoal border border-chain-gray rounded-lg p-3 shadow-2xl hidden max-w-xs w-full z-30">
-        <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 bg-green-500 rounded flex items-center justify-center">
-                <i class="fab fa-spotify text-white text-2xl"></i>
+    <div id="comments-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="bg-chain-charcoal w-full max-w-lg rounded-t-xl md:rounded-xl max-h-[80vh] flex flex-col">
+            <div class="p-4 border-b border-chain-gray flex justify-between items-center">
+                <h3 class="font-bold">Comments</h3>
+                <button onclick="window.App.comments.close()" class="text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
             </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-white truncate">Now Playing</p>
-                <p class="text-xs text-gray-400 truncate" id="spotify-track">Not connected</p>
+            <div id="comments-list" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+            <div class="p-4 border-t border-chain-gray">
+                <div class="flex space-x-2">
+                    <input type="text" id="comment-input" class="flex-1 bg-chain-dark border border-chain-gray rounded-full px-4 py-2 text-white focus:outline-none focus:border-chain-yellow" placeholder="Add a comment..." onkeypress="if(event.key==='Enter') window.App.comments.add()">
+                    <button onclick="window.App.comments.add()" class="text-chain-yellow font-medium px-4">Post</button>
+                </div>
             </div>
-            <button onclick="spotify.toggle()" class="text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
         </div>
     </div>
 
     <script>
-        // ALL JAVASCRIPT IN ONE BLOCK - NO DUPLICATE DECLARATIONS
+        // SUPABASE CONFIG - YOUR CREDENTIALS
+        const SUPABASE_URL = 'https://etdntphbptcuzfnkqhev.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_iq9YfZpqKe_aUqoxJAIVyg_0ZUR_KQY';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        const security = {
-            sanitize(str) { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; },
-            validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); },
-            generateId() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); }); },
-            escapeHtml(unsafe) { return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
-        };
-
-        // SINGLE DECLARATION OF APP STATE
-        const AppState = {
-            currentUser: null,
-            currentView: 'auth',
-            posts: [],
-            conversations: [],
-            messages: [],
-            currentFont: 'default',
-            profileTheme: 'pastel-pink',
-            isLive: false,
-            spotifyConnected: false,
-            demoStreams: []
-        };
-
-        const demoMode = {
-            isEnabled: localStorage.getItem('chainlink_demo') === 'true',
-            
-            toggle() {
-                this.isEnabled = !this.isEnabled;
-                localStorage.setItem('chainlink_demo', this.isEnabled);
-                
-                if (this.isEnabled) {
-                    this.loadMockData();
-                    toast.info('🧪 Demo Mode Enabled');
-                } else {
-                    this.clearMockData();
-                    toast.success('Demo Mode Disabled');
-                }
-                this.updateUI();
-                if (AppState.currentView === 'feed') feed.load();
-                if (AppState.currentView === 'messages') messaging.load();
-                if (AppState.currentView === 'live') live.load();
-                if (AppState.currentView === 'profile') profile.load();
-            },
-            
-            loadMockData() {
-                const mockPosts = [
-                    { id: 'demo-1', author: 'Sarah Chen', handle: '@sarahcodes', content: 'Just deployed my first app! 🚀 #coding #webdev\n\nSo excited to share this milestone!', font: 'default', timestamp: new Date(Date.now() - 3600000), likes: 24, loves: 5, dislikes: 0, repeats: 3, comments: [{ author: 'Alex Rivera', text: 'Congrats Sarah! 🎉', timestamp: new Date(Date.now() - 3000000), isDemo: true }], isDemo: true, media: null },
-                    { id: 'demo-2', author: 'Alex Rivera', handle: '@arivera', content: 'The sunset in Kelowna today was absolutely incredible 🌅', font: 'cursive', timestamp: new Date(Date.now() - 7200000), likes: 156, loves: 42, dislikes: 1, repeats: 12, comments: [], isDemo: true, media: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop' },
-                    { id: 'demo-3', author: 'Jordan Smith', handle: '@jsmith', content: 'Working on something big... stay tuned! ⛓️', font: 'mono', timestamp: new Date(Date.now() - 18000000), likes: 89, loves: 12, dislikes: 0, repeats: 8, comments: [], isDemo: true, media: null }
-                ];
-                
-                const mockConversations = [
-                    { id: 'demo-1', name: 'John Doe', last: 'Hey! How are you?', time: '2m', unread: 2, isDemo: true, avatar: 'JD' },
-                    { id: 'demo-2', name: 'Sarah Chen', last: 'The meeting is at 3', time: '1h', unread: 0, isDemo: true, avatar: 'SC' },
-                    { id: 'demo-3', name: 'Mike Ross', last: 'Sent you the files', time: '3h', unread: 1, isDemo: true, avatar: 'MR' }
-                ];
-                
-                const mockMessages = [
-                    { id: 'demo-1', from: 'them', text: 'Hey! How is the app coming along?', time: '2:30 PM', isDemo: true },
-                    { id: 'demo-2', from: 'me', text: 'Going great! Just finishing up the messaging feature.', time: '2:32 PM', isDemo: true },
-                    { id: 'demo-3', from: 'them', text: 'That\'s awesome! Can\'t wait to try it.', time: '2:33 PM', isDemo: true },
-                    { id: 'demo-4', from: 'them', text: 'The demo mode looks sick btw 🔥', time: '2:35 PM', isDemo: true }
-                ];
-                
-                const mockStreams = [
-                    { title: 'Coding Session: Building CHAIN⛓️Link', user: 'DevMike', viewers: 234, thumbnail: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400', isDemo: true },
-                    { title: 'Q&A: Ask me anything!', user: 'SarahTech', viewers: 567, thumbnail: 'https://images.unsplash.com/photo-1577563908411-5077b6dc7624?w=400', isDemo: true }
-                ];
-                
-                AppState.posts = [...mockPosts, ...AppState.posts.filter(p => !p.isDemo)];
-                AppState.conversations = [...mockConversations, ...AppState.conversations.filter(c => !c.isDemo)];
-                AppState.messages = mockMessages;
-                AppState.demoStreams = mockStreams;
-            },
-            
-            clearMockData() {
-                AppState.posts = AppState.posts.filter(p => !p.isDemo);
-                AppState.conversations = AppState.conversations.filter(c => !c.isDemo);
-                AppState.messages = [];
-                AppState.demoStreams = [];
-            },
-            
-            updateUI() {
-                const banner = document.getElementById('demo-banner');
-                const toggleBtn = document.getElementById('demo-toggle-btn');
-                const navBadge = document.getElementById('nav-demo-badge');
-                const profileBadge = document.getElementById('profile-demo-badge');
-                const conversationsBadge = document.getElementById('conversations-demo-badge');
-                const chatBadge = document.getElementById('chat-demo-badge');
-                const liveBadge = document.getElementById('live-now-demo-badge');
-                const liveOverlay = document.getElementById('live-demo-overlay');
-                
-                if (this.isEnabled) {
-                    document.body.classList.add('demo-active');
-                    if (banner) banner.classList.remove('hidden');
-                    if (navBadge) navBadge.classList.remove('hidden');
-                    if (profileBadge) profileBadge.classList.remove('hidden');
-                    if (conversationsBadge) conversationsBadge.classList.remove('hidden');
-                    if (chatBadge) chatBadge.classList.remove('hidden');
-                    if (liveBadge) liveBadge.classList.remove('hidden');
-                    if (liveOverlay) liveOverlay.classList.remove('hidden');
-                    
-                    if (toggleBtn) {
-                        toggleBtn.innerHTML = '<i class="fas fa-flask mr-1"></i><span>Exit Demo</span>';
-                        toggleBtn.classList.add('text-demo-purple', 'border-demo-purple/30');
-                    }
-                } else {
-                    document.body.classList.remove('demo-active');
-                    if (banner) banner.classList.add('hidden');
-                    if (navBadge) navBadge.classList.add('hidden');
-                    if (profileBadge) profileBadge.classList.add('hidden');
-                    if (conversationsBadge) conversationsBadge.classList.add('hidden');
-                    if (chatBadge) chatBadge.classList.add('hidden');
-                    if (liveBadge) liveBadge.classList.add('hidden');
-                    if (liveOverlay) liveOverlay.classList.add('hidden');
-                    
-                    if (toggleBtn) {
-                        toggleBtn.innerHTML = '<i class="fas fa-flask mr-1"></i><span>Demo Mode</span>';
-                        toggleBtn.classList.remove('text-demo-purple', 'border-demo-purple/30');
-                    }
-                }
-            },
-            
-            init() {
-                if (this.isEnabled) this.loadMockData();
-                this.updateUI();
-            }
-        };
-
-        const quotes = [
-            "The future belongs to those who believe in the beauty of their dreams.",
-            "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-            "Don't watch the clock; do what it does. Keep going.",
-            "The only way to do great work is to love what you do.",
-            "Believe you can and you're halfway there."
+        const demoUsers = [
+            { id: 1, username: 'alex_design', first_name: 'Alex', last_name: 'Chen', avatar: 'https://i.pravatar.cc/150?img=11', bio: 'Digital artist & creator 🎨', theme: 'pastel-blue', followers: 1234, following: 567, subscribers: 89 },
+            { id: 2, username: 'sarah_music', first_name: 'Sarah', last_name: 'Johnson', avatar: 'https://i.pravatar.cc/150?img=5', bio: 'Musician | Producer 🎵', theme: 'pastel-pink', followers: 3456, following: 234, subscribers: 234 },
+            { id: 3, username: 'tech_mike', first_name: 'Mike', last_name: 'Ross', avatar: 'https://i.pravatar.cc/150?img=3', bio: 'Tech reviewer 📱', theme: 'pastel-green', followers: 890, following: 123, subscribers: 45 },
+            { id: 4, username: 'emma_travels', first_name: 'Emma', last_name: 'Wilson', avatar: 'https://i.pravatar.cc/150?img=9', bio: 'Travel blogger ✈️', theme: 'pastel-purple', followers: 5678, following: 890, subscribers: 567 }
         ];
 
-        const router = {
-            navigate(view) {
-                if (!AppState.currentUser && view !== 'auth') return;
-                document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-                document.getElementById(`${view}-view`).classList.remove('hidden');
-                document.querySelectorAll('.nav-btn').forEach(btn => {
-                    if (btn.dataset.view === view) {
-                        btn.classList.add('text-chain-yellow');
-                        btn.classList.remove('text-gray-400');
-                    } else {
-                        btn.classList.remove('text-chain-yellow');
-                        btn.classList.add('text-gray-400');
-                    }
-                });
-                AppState.currentView = view;
-                if (view === 'feed') feed.load();
-                if (view === 'profile') profile.load();
-                if (view === 'messages') messaging.load();
-                if (view === 'live') live.load();
-            }
-        };
+        let demoPosts = [
+            { id: 1, user_id: 1, content: 'Just finished this new design! What do you think? 🎨', font_style: 'font-default', created_at: new Date(Date.now() - 3600000).toISOString(), media: ['https://picsum.photos/seed/art1/600/400'], reactions: { love: 12, like: 34, dislike: 2, repeat: 8 }, comments: [{ user: demoUsers[1], text: 'Amazing work! 🔥', time: '30m ago', approved: true }] },
+            { id: 2, user_id: 2, content: 'New track dropping tonight! Stay tuned 🎵', font_style: 'font-cursive', created_at: new Date(Date.now() - 7200000).toISOString(), media: [], reactions: { love: 45, like: 67, dislike: 0, repeat: 23 }, comments: [] },
+            { id: 3, user_id: 3, content: 'Reviewing the latest gadget... spoiler: it\'s fast! ⚡', font_style: 'font-mono', created_at: new Date(Date.now() - 10800000).toISOString(), media: ['https://picsum.photos/seed/tech1/600/400'], reactions: { love: 8, like: 45, dislike: 3, repeat: 12 }, comments: [{ user: demoUsers[0], text: 'Can\'t wait for the full review!', time: '1h ago', approved: true }] },
+            { id: 4, user_id: 4, content: 'Sunset in Bali 🌅', font_style: 'font-display', created_at: new Date(Date.now() - 14400000).toISOString(), media: ['https://picsum.photos/seed/bali/600/400'], reactions: { love: 89, like: 123, dislike: 1, repeat: 45 }, comments: [] }
+        ];
 
-        const auth = {
-            init() {
-                const saved = localStorage.getItem('chainlink_user');
-                if (saved) {
-                    AppState.currentUser = JSON.parse(saved);
-                    document.getElementById('main-nav').classList.remove('hidden');
-                    document.getElementById('app').classList.remove('hidden-until-load');
-                    demoMode.init();
-                    router.navigate('feed');
+        const demoStories = [
+            { id: 1, user: demoUsers[0], image: 'https://picsum.photos/seed/story1/400/800', caption: 'Studio vibes 🎨' },
+            { id: 2, user: demoUsers[1], image: 'https://picsum.photos/seed/story2/400/800', caption: 'Behind the scenes 🎵' },
+            { id: 3, user: demoUsers[3], image: 'https://picsum.photos/seed/story3/400/800', caption: 'Paradise found 🌴' }
+        ];
+
+        const demoStreams = [
+            { id: 1, user: demoUsers[1], title: 'Live Music Production', viewers: 234, tier: 'pro', thumbnail: 'https://picsum.photos/seed/live1/600/400' },
+            { id: 2, user: demoUsers[3], title: 'Q&A from Bali', viewers: 567, tier: 'basic', thumbnail: 'https://picsum.photos/seed/live2/600/400' },
+            { id: 3, user: demoUsers[2], title: 'Tech Review Live', viewers: 123, tier: 'vip', thumbnail: 'https://picsum.photos/seed/live3/600/400' }
+        ];
+
+        const demoConversations = [
+            { id: 1, user: demoUsers[0], last_message: 'Hey! Love your latest post 🔥', unread: 2, time: '2m ago' },
+            { id: 2, user: demoUsers[1], last_message: 'Thanks for the support!', unread: 0, time: '1h ago' },
+            { id: 3, user: demoUsers[2], last_message: 'Check out this new tech', unread: 1, time: '3h ago' }
+        ];
+
+        const App = {
+            isDemo: false,
+            currentUser: null,
+            currentView: 'auth',
+            selectedPost: null,
+            activeChat: null,
+            
+            async init() {
+                this.updateDailyQuote();
+                document.body.classList.remove('hidden-until-load');
+                
+                // Check for real session first
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    this.currentUser = session.user;
+                    this.isDemo = false;
+                    this.showMainApp();
                 } else {
-                    document.getElementById('app').classList.remove('hidden-until-load');
-                    this.setRandomQuote();
+                    // Show auth forms (not auto-demo)
+                    document.getElementById('login-form').classList.remove('hidden');
                 }
             },
 
-            setRandomQuote() {
+            updateDailyQuote() {
+                const quotes = [
+                    "The future belongs to those who believe in the beauty of their dreams.",
+                    "Create your own sunshine.",
+                    "Every moment is a fresh beginning."
+                ];
                 document.getElementById('daily-quote').textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
             },
 
-            toggleMode() {
-                const loginForm = document.getElementById('login-form');
-                const signupForm = document.getElementById('signup-form');
-                const toggleText = document.getElementById('auth-toggle-text');
-                const toggleBtn = document.getElementById('auth-toggle-btn');
-                const subtitle = document.getElementById('auth-subtitle');
-                const social = document.getElementById('social-auth');
-
-                if (loginForm.classList.contains('hidden')) {
-                    loginForm.classList.remove('hidden');
-                    signupForm.classList.add('hidden');
-                    toggleText.textContent = "Don't have an account?";
-                    toggleBtn.textContent = "Sign up";
-                    subtitle.textContent = "Link up with your friends";
-                    social.classList.remove('hidden');
-                } else {
-                    loginForm.classList.add('hidden');
-                    signupForm.classList.remove('hidden');
-                    toggleText.textContent = "Already have an account?";
-                    toggleBtn.textContent = "Sign in";
-                    subtitle.textContent = "Join for free today";
-                    social.classList.add('hidden');
-                }
-            },
-
-            togglePassword(id) {
-                const input = document.getElementById(id);
-                input.type = input.type === 'password' ? 'text' : 'password';
-            },
-
-            handleLogin(e) {
-                e.preventDefault();
-                const email = document.getElementById('login-email').value;
-                if (!security.validateEmail(email)) {
-                    toast.error('Please enter a valid email');
-                    return;
-                }
-                document.getElementById('login-form').classList.add('hidden');
-                document.getElementById('tfa-section').classList.remove('hidden');
-                document.getElementById('social-auth').classList.add('hidden');
+            demoMode: {
+                activate() {
+                    App.isDemo = true;
+                    App.currentUser = { ...demoUsers[0], email: 'demo@chainlink.app', id: 1 };
+                    document.body.classList.add('demo-active');
+                    document.getElementById('demo-banner').classList.remove('hidden');
+                    document.getElementById('nav-demo-badge').classList.remove('hidden');
+                    App.showMainApp();
+                    App.feed.load();
+                },
                 
-                if (typeof QRCode !== 'undefined') {
-                    QRCode.toCanvas(document.getElementById('qr-canvas'), `otpauth://totp/ChainLink:${email}?secret=JBSWY3DPEHPK3PXP&issuer=ChainLink`, { width: 200, margin: 2, color: { dark: '#000000', light: '#ffffff' } });
+                toggle() {
+                    if (App.isDemo) {
+                        App.isDemo = false;
+                        App.currentUser = null;
+                        document.body.classList.remove('demo-active');
+                        document.getElementById('demo-banner').classList.add('hidden');
+                        document.getElementById('nav-demo-badge').classList.add('hidden');
+                        App.router.navigate('auth');
+                        document.getElementById('login-form').classList.remove('hidden');
+                        document.getElementById('signup-form').classList.add('hidden');
+                    } else {
+                        this.activate();
+                    }
                 }
             },
 
-            verify2FA() {
-                const code = document.getElementById('tfa-code').value;
-                if (code.length === 6) {
-                    AppState.currentUser = { id: '1', name: 'Kendal Symes', handle: '@kendaljenelle', email: document.getElementById('login-email').value, theme: 'pastel-pink', bio: 'Building CHAIN⛓️Link | Bartender turned Builder | Vernon, BC 🍁', location: 'Vernon, BC', website: '', birthday: '1998-10-22' };
-                    localStorage.setItem('chainlink_user', JSON.stringify(AppState.currentUser));
-                    document.getElementById('main-nav').classList.remove('hidden');
-                    demoMode.init();
-                    router.navigate('feed');
-                    toast.success('Welcome back!');
-                } else {
-                    toast.error('Invalid code');
+            auth: {
+                toggleAuthMode() {
+                    const loginForm = document.getElementById('login-form');
+                    const signupForm = document.getElementById('signup-form');
+                    const toggle = document.getElementById('auth-toggle');
+                    
+                    if (loginForm.classList.contains('hidden')) {
+                        loginForm.classList.remove('hidden');
+                        signupForm.classList.add('hidden');
+                        toggle.textContent = "Don't have an account? Sign up";
+                    } else {
+                        loginForm.classList.add('hidden');
+                        signupForm.classList.remove('hidden');
+                        toggle.textContent = "Already have an account? Sign in";
+                    }
+                },
+
+                togglePassword(id) {
+                    const input = document.getElementById(id);
+                    input.type = input.type === 'password' ? 'text' : 'password';
+                },
+
+                async handleLogin(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+                    
+                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                    if (error) {
+                        alert(error.message);
+                        return;
+                    }
+                    App.currentUser = data.user;
+                    App.isDemo = false;
+                    App.showMainApp();
+                },
+
+                async handleSignup(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('signup-email').value;
+                    const password = document.getElementById('signup-password').value;
+                    const firstName = document.getElementById('signup-firstname').value;
+                    const lastName = document.getElementById('signup-lastname').value;
+                    const username = document.getElementById('signup-username').value;
+                    
+                    const { data, error } = await supabase.auth.signUp({ 
+                        email, 
+                        password,
+                        options: {
+                            data: {
+                                first_name: firstName,
+                                last_name: lastName,
+                                username: username
+                            }
+                        }
+                    });
+                    
+                    if (error) {
+                        alert(error.message);
+                        return;
+                    }
+                    
+                    // Show 2FA
+                    document.getElementById('signup-form').classList.add('hidden');
+                    document.getElementById('auth-alternatives').classList.add('hidden');
+                    document.getElementById('tfa-section').classList.remove('hidden');
+                    
+                    const canvas = document.getElementById('qr-canvas');
+                    QRCode.toCanvas(canvas, `otpauth://totp/CHAINLink:${email}?secret=DEMO123456&issuer=CHAINLink`, { width: 150 });
+                },
+
+                async verify2FA() {
+                    const code = document.getElementById('tfa-code').value;
+                    // In real app, verify with server. For now, accept any 6 digits
+                    if (code.length === 6) {
+                        App.showMainApp();
+                    }
+                },
+
+                async socialLogin(provider) {
+                    const { data, error } = await supabase.auth.signInWithOAuth({
+                        provider: provider,
+                    });
+                    if (error) alert(error.message);
+                },
+
+                async logout() {
+                    await supabase.auth.signOut();
+                    App.currentUser = null;
+                    App.isDemo = false;
+                    document.body.classList.remove('demo-active');
+                    document.getElementById('demo-banner').classList.add('hidden');
+                    App.router.navigate('auth');
+                    document.getElementById('login-form').classList.remove('hidden');
+                    document.getElementById('signup-form').classList.add('hidden');
                 }
             },
 
-            handleSignup(e) {
-                e.preventDefault();
-                const data = {
-                    firstName: document.getElementById('signup-firstname').value,
-                    lastName: document.getElementById('signup-lastname').value,
-                    username: document.getElementById('signup-username').value,
-                    email: document.getElementById('signup-email').value,
-                    birthday: document.getElementById('signup-birthday').value,
-                    gender: document.getElementById('signup-gender').value
-                };
-                if (!security.validateEmail(data.email)) {
-                    toast.error('Invalid email address');
-                    return;
-                }
-                AppState.currentUser = { id: '1', name: `${data.firstName} ${data.lastName}`, handle: `@${data.username}`, email: data.email, theme: 'pastel-pink', bio: '', location: '', website: '', birthday: data.birthday };
-                localStorage.setItem('chainlink_user', JSON.stringify(AppState.currentUser));
+            showMainApp() {
+                document.getElementById('auth-view').classList.add('hidden');
                 document.getElementById('main-nav').classList.remove('hidden');
-                demoMode.init();
-                router.navigate('feed');
-                toast.success('Account created successfully!');
+                App.router.navigate('feed');
+                App.profile.load();
             },
 
-            socialLogin(provider) {
-                toast.info(`Connecting to ${provider}...`);
-                setTimeout(() => {
-                    AppState.currentUser = { id: '1', name: 'Kendal Symes', handle: '@kendaljenelle', email: 'kendal@example.com', theme: 'pastel-pink', bio: 'Building CHAIN⛓️Link | Bartender turned Builder | Vernon, BC 🍁', location: 'Vernon, BC', website: '' };
-                    localStorage.setItem('chainlink_user', JSON.stringify(AppState.currentUser));
-                    document.getElementById('main-nav').classList.remove('hidden');
-                    demoMode.init();
-                    router.navigate('feed');
-                    toast.success(`Connected with ${provider}!`);
-                }, 1500);
-            },
-
-            logout() {
-                localStorage.removeItem('chainlink_user');
-                AppState.currentUser = null;
-                demoMode.isEnabled = false;
-                localStorage.setItem('chainlink_demo', 'false');
-                location.reload();
-            }
-        };
-
-        const postCreator = {
-            mediaFile: null,
-
-            setFont(font) {
-                AppState.currentFont = font;
-                document.querySelectorAll('.font-btn').forEach(btn => {
-                    btn.classList.remove('bg-chain-yellow', 'text-chain-dark', 'border-chain-yellow');
-                    btn.classList.add('border-chain-gray', 'text-gray-400');
-                });
-                event.target.classList.remove('border-chain-gray', 'text-gray-400');
-                event.target.classList.add('bg-chain-yellow', 'text-chain-dark', 'border-chain-yellow');
-                document.getElementById('post-content').className = `w-full bg-chain-dark border border-chain-gray rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-chain-yellow resize-none transition font-${font}`;
-            },
-
-            handleImage(input) {
-                if (input.files && input.files[0]) {
-                    this.mediaFile = input.files[0];
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('preview-img').src = e.target.result;
-                        document.getElementById('preview-img').classList.remove('hidden');
-                        document.getElementById('preview-video').classList.add('hidden');
-                        document.getElementById('media-preview').classList.remove('hidden');
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            },
-
-            handleVideo(input) {
-                if (input.files && input.files[0]) {
-                    this.mediaFile = input.files[0];
-                    const url = URL.createObjectURL(input.files[0]);
-                    document.getElementById('preview-video').src = url;
-                    document.getElementById('preview-video').classList.remove('hidden');
-                    document.getElementById('preview-img').classList.add('hidden');
-                    document.getElementById('media-preview').classList.remove('hidden');
-                }
-            },
-
-            clearMedia() {
-                this.mediaFile = null;
-                document.getElementById('media-preview').classList.add('hidden');
-                document.getElementById('preview-img').src = '';
-                document.getElementById('preview-video').src = '';
-            },
-
-            toggleSchedule() {
-                document.getElementById('schedule-picker').classList.toggle('hidden');
-            },
-
-            submit() {
-                const content = document.getElementById('post-content').value;
-                if (!content && !this.mediaFile) {
-                    toast.error('Please add some content');
-                    return;
-                }
-
-                const post = {
-                    id: security.generateId(),
-                    author: AppState.currentUser.name,
-                    handle: AppState.currentUser.handle,
-                    content: security.sanitize(content),
-                    font: AppState.currentFont,
-                    timestamp: new Date(),
-                    likes: 0, loves: 0, dislikes: 0, repeats: 0, comments: [],
-                    isScheduled: false,
-                    media: this.mediaFile ? URL.createObjectURL(this.mediaFile) : null,
-                    mediaType: this.mediaFile ? this.mediaFile.type.split('/')[0] : null,
-                    isDemo: false
-                };
-
-                AppState.posts.unshift(post);
-                feed.renderPost(post, true);
-                document.getElementById('post-content').value = '';
-                this.clearMedia();
-                toast.success('Posted successfully!');
-            }
-        };
-
-        const feed = {
-            load() {
-                if (AppState.posts.length === 0 && demoMode.isEnabled) demoMode.loadMockData();
-                this.renderFeed();
-            },
-
-            renderFeed() {
-                const container = document.getElementById('feed-posts');
-                container.innerHTML = '';
-                AppState.posts.forEach(post => this.renderPost(post));
-            },
-
-            renderPost(post, prepend = false) {
-                const container = document.getElementById('feed-posts');
-                const postEl = document.createElement('div');
-                postEl.className = 'post-card bg-chain-charcoal border border-chain-gray rounded-xl p-4 shadow-lg animate-fade-in';
-                postEl.id = `post-${post.id}`;
-                
-                const timeAgo = this.timeAgo(post.timestamp);
-                const fontClass = `font-${post.font}`;
-                let mediaHtml = '';
-                if (post.media) {
-                    mediaHtml = post.mediaType === 'video' 
-                        ? `<video src="${post.media}" controls class="mt-3 rounded-lg w-full max-h-96 object-cover"></video>`
-                        : `<img src="${post.media}" class="mt-3 rounded-lg w-full max-h-96 object-cover" loading="lazy" alt="Post media">`;
-                }
-
-                const demoBadge = post.isDemo ? `<span class="ml-2 px-2 py-0.5 bg-demo-purple/20 text-demo-purple text-[10px] rounded-full border border-demo-purple/30 uppercase tracking-wider font-bold">Demo</span>` : '';
-
-                postEl.innerHTML = `
-                    <div class="flex space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold flex-shrink-0">${post.author.charAt(0)}</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-2 min-w-0">
-                                    <span class="font-bold text-white truncate">${security.escapeHtml(post.author)}</span>
-                                    <span class="text-gray-500 text-sm">${security.escapeHtml(post.handle)}</span>
-                                    <span class="text-gray-600 text-xs flex-shrink-0">• ${timeAgo}</span>
-                                    ${demoBadge}
-                                </div>
-                                <button class="text-gray-500 hover:text-white flex-shrink-0"><i class="fas fa-ellipsis-h"></i></button>
-                            </div>
-                            <div class="mt-2 text-white ${fontClass} text-lg leading-relaxed break-words">${post.content}</div>
-                            ${mediaHtml}
-                            <div class="flex items-center justify-between mt-4 pt-3 border-t border-chain-gray">
-                                <div class="flex space-x-6">
-                                    <button onclick="feed.react('${post.id}', 'love')" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition"><i class="fas fa-heart"></i><span class="text-sm" id="love-${post.id}">${post.loves}</span></button>
-                                    <button onclick="feed.react('${post.id}', 'like')" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition"><i class="fas fa-thumbs-up"></i><span class="text-sm" id="like-${post.id}">${post.likes}</span></button>
-                                    <button onclick="feed.react('${post.id}', 'repeat')" class="flex items-center space-x-2 text-gray-400 hover:text-green-400 transition"><i class="fas fa-retweet"></i><span class="text-sm" id="repeat-${post.id}">${post.repeats}</span></button>
-                                </div>
-                                <button onclick="feed.toggleComments('${post.id}')" class="text-gray-400 hover:text-chain-yellow transition"><i class="fas fa-comment mr-1"></i> ${post.comments.length}</button>
-                            </div>
-                            <div id="comments-${post.id}" class="hidden mt-4 pt-4 border-t border-chain-gray space-y-3">
-                                <div class="flex space-x-2">
-                                    <input type="text" id="comment-input-${post.id}" placeholder="Add a comment..." class="flex-1 bg-chain-dark border border-chain-gray rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-chain-yellow" onkeypress="if(event.key==='Enter') feed.addComment('${post.id}')">
-                                    <button onclick="feed.addComment('${post.id}')" class="text-chain-yellow hover:text-yellow-400 px-3"><i class="fas fa-paper-plane"></i></button>
-                                </div>
-                                <div id="comments-list-${post.id}" class="space-y-2 max-h-60 overflow-y-auto">${post.comments.map(c => this.renderComment(c)).join('')}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                if (prepend) container.insertBefore(postEl, container.firstChild);
-                else container.appendChild(postEl);
-            },
-
-            renderComment(comment) {
-                const demoBadge = comment.isDemo ? `<span class="ml-1 px-1.5 py-0.5 bg-demo-purple/20 text-demo-purple text-[8px] rounded border border-demo-purple/30 uppercase">Demo</span>` : '';
-                return `<div class="flex space-x-2 animate-fade-in"><div class="w-8 h-8 rounded-full bg-chain-gray flex items-center justify-center text-xs text-white font-bold">${comment.author.charAt(0)}</div><div class="flex-1 bg-chain-dark rounded-lg p-2"><div class="flex items-center justify-between"><div class="flex items-center"><span class="text-sm font-bold text-white">${security.escapeHtml(comment.author)}</span>${demoBadge}</div><span class="text-xs text-gray-500">${this.timeAgo(comment.timestamp)}</span></div><p class="text-sm text-gray-300 mt-1">${security.escapeHtml(comment.text)}</p></div></div>`;
-            },
-
-            react(postId, type) {
-                const post = AppState.posts.find(p => p.id === postId);
-                if (post) {
-                    post[type + 's']++;
-                    document.getElementById(`${type}-${postId}`).textContent = post[type + 's'];
-                }
-            },
-
-            toggleComments(postId) {
-                document.getElementById(`comments-${postId}`).classList.toggle('hidden');
-            },
-
-            addComment(postId) {
-                const input = document.getElementById(`comment-input-${postId}`);
-                const text = input.value.trim();
-                if (!text) return;
-                const comment = { author: AppState.currentUser.name, text: security.sanitize(text), timestamp: new Date(), isDemo: false };
-                const post = AppState.posts.find(p => p.id === postId);
-                post.comments.push(comment);
-                const list = document.getElementById(`comments-list-${postId}`);
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = this.renderComment(comment);
-                list.appendChild(tempDiv.firstElementChild);
-                input.value = '';
-            },
-
-            deletePost(postId) {
-                if (!confirm('Delete this post?')) return;
-                const index = AppState.posts.findIndex(p => p.id === postId);
-                if (index > -1) {
-                    AppState.posts.splice(index, 1);
-                    document.getElementById(`post-${postId}`)?.remove();
-                    profile.renderUserPosts();
-                    toast.success('Post deleted');
-                }
-            },
-
-            timeAgo(date) {
-                const seconds = Math.floor((new Date() - date) / 1000);
-                let interval = seconds / 31536000;
-                if (interval > 1) return Math.floor(interval) + "y";
-                interval = seconds / 2592000;
-                if (interval > 1) return Math.floor(interval) + "mo";
-                interval = seconds / 86400;
-                if (interval > 1) return Math.floor(interval) + "d";
-                interval = seconds / 3600;
-                if (interval > 1) return Math.floor(interval) + "h";
-                interval = seconds / 60;
-                if (interval > 1) return Math.floor(interval) + "m";
-                return "now";
-            }
-        };
-
-        const profile = {
-            themes: ['pastel-pink', 'pastel-blue', 'pastel-green', 'pastel-purple', 'pastel-orange', 'pastel-yellow'],
-            currentThemeIndex: 0,
-            editData: { avatar: null, cover: null },
-
-            load() {
-                if (AppState.currentUser) {
-                    document.getElementById('profile-name').textContent = AppState.currentUser.name;
-                    document.getElementById('profile-handle').textContent = AppState.currentUser.handle;
-                    document.getElementById('profile-bio').textContent = AppState.currentUser.bio || 'No bio yet';
-                    document.getElementById('edit-avatar-placeholder').textContent = AppState.currentUser.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+            router: {
+                navigate(view) {
+                    ['auth', 'feed', 'live', 'messages', 'profile'].forEach(v => {
+                        document.getElementById(`${v}-view`).classList.add('hidden');
+                    });
+                    document.getElementById(`${view}-view`).classList.remove('hidden');
+                    App.currentView = view;
                     
-                    const locEl = document.getElementById('profile-location');
-                    if (AppState.currentUser.location) {
-                        locEl.innerHTML = `<i class="fas fa-map-marker-alt mr-1"></i> ${security.escapeHtml(AppState.currentUser.location)}`;
-                        locEl.classList.remove('hidden');
-                    } else {
-                        locEl.classList.add('hidden');
+                    document.querySelectorAll('.nav-btn').forEach(btn => {
+                        if (btn.dataset.view === view) {
+                            btn.classList.add('text-chain-yellow');
+                            btn.classList.remove('text-gray-400');
+                        } else {
+                            btn.classList.remove('text-chain-yellow');
+                            btn.classList.add('text-gray-400');
+                        }
+                    });
+                    
+                    if (view === 'feed') App.feed.load();
+                    if (view === 'live') App.live.load();
+                    if (view === 'messages') App.messages.load();
+                    if (view === 'profile') App.profile.load();
+                }
+            },
+
+            feed: {
+                load() {
+                    const container = document.getElementById('feed-posts');
+                    container.innerHTML = '';
+                    const posts = App.isDemo ? demoPosts : demoPosts; // Use demo posts for now
+                    posts.forEach(post => {
+                        const user = demoUsers.find(u => u.id === post.user_id) || App.currentUser;
+                        const postEl = App.feed.createPostElement(post, user);
+                        container.appendChild(postEl);
+                    });
+                    App.stories.load();
+                    if (App.currentUser) {
+                        document.getElementById('current-user-avatar').src = App.currentUser.user_metadata?.avatar_url || App.currentUser.avatar || 'https://i.pravatar.cc/150?img=12';
                     }
+                },
+
+                createPostElement(post, user) {
+                    const div = document.createElement('div');
+                    div.className = 'bg-chain-charcoal border border-chain-gray rounded-xl p-4 post-card animate-fade-in';
+                    const timeAgo = App.utils.timeAgo(post.created_at);
+                    const fontClass = post.font_style || 'font-default';
+                    const isOwner = App.currentUser && (App.currentUser.id === post.user_id || App.currentUser.id === 1);
                     
-                    const webEl = document.getElementById('profile-website');
-                    if (AppState.currentUser.website) {
-                        webEl.innerHTML = `<i class="fas fa-link mr-1"></i> <a href="${AppState.currentUser.website}" target="_blank" class="hover:text-chain-yellow transition">${security.escapeHtml(AppState.currentUser.website.replace(/^https?:\/\//, ''))}</a>`;
-                        webEl.classList.remove('hidden');
-                    } else {
-                        webEl.classList.add('hidden');
+                    let mediaHtml = '';
+                    if (post.media && post.media.length > 0) {
+                        mediaHtml = `<div class="mt-3 grid grid-cols-1 gap-2 rounded-xl overflow-hidden">
+                            ${post.media.map(m => `<img src="${m}" class="w-full h-64 object-cover hover:opacity-95 transition cursor-pointer" onclick="window.open('${m}')">`).join('')}
+                        </div>`;
                     }
 
-                    const userPosts = AppState.posts.filter(p => p.handle === AppState.currentUser.handle && !p.isDemo);
-                    document.getElementById('stat-posts').textContent = userPosts.length;
-                }
-                this.renderUserPosts();
-            },
-
-            renderUserPosts() {
-                const container = document.getElementById('profile-posts');
-                container.innerHTML = '';
-                const userPosts = AppState.posts.filter(p => p.handle === AppState.currentUser?.handle);
-                
-                if (userPosts.length === 0) {
-                    container.innerHTML = `<div class="text-center py-12 text-gray-500 border-2 border-dashed border-chain-gray rounded-xl"><i class="fas fa-pen-fancy text-4xl mb-3 opacity-50"></i><p class="mb-2">No posts yet</p><button onclick="router.navigate('feed')" class="text-chain-yellow hover:underline text-sm">Create your first post</button></div>`;
-                    return;
-                }
-                
-                userPosts.forEach(post => {
-                    const el = document.createElement('div');
-                    el.className = 'bg-chain-charcoal border border-chain-gray rounded-xl p-4 hover:border-chain-yellow transition group';
-                    const demoBadge = post.isDemo ? `<span class="ml-2 px-2 py-0.5 bg-demo-purple/20 text-demo-purple text-[10px] rounded-full border border-demo-purple/30 uppercase">Demo</span>` : '';
-                    el.innerHTML = `
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center"><span class="text-gray-400 text-xs">${new Date(post.timestamp).toLocaleDateString()}</span>${demoBadge}</div>
-                            <button onclick="feed.deletePost('${post.id}')" class="text-gray-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition"><i class="fas fa-trash-alt text-xs"></i></button>
+                    div.innerHTML = `
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.App.router.navigate('profile')">
+                                <img src="${user.avatar}" class="w-10 h-10 rounded-full bg-chain-gray">
+                                <div>
+                                    <div class="font-bold text-white">${user.first_name} ${user.last_name}</div>
+                                    <div class="text-xs text-gray-400">@${user.username} · ${timeAgo}</div>
+                                </div>
+                            </div>
+                            ${isOwner ? `<button onclick="window.App.posts.delete(${post.id})" class="text-red-400 hover:text-red-300 text-xs"><i class="fas fa-trash"></i></button>` : ''}
                         </div>
-                        <p class="text-gray-300 font-${post.font} mb-3">${security.escapeHtml(post.content)}</p>
-                        ${post.media ? `<img src="${post.media}" class="rounded-lg max-h-48 object-cover mb-3" alt="Post media">` : ''}
-                        <div class="flex items-center space-x-4 text-xs text-gray-500">
-                            <span><i class="fas fa-heart text-red-400 mr-1"></i> ${post.loves}</span>
-                            <span><i class="fas fa-thumbs-up text-blue-400 mr-1"></i> ${post.likes}</span>
-                            <span><i class="fas fa-comment text-chain-yellow mr-1"></i> ${post.comments.length}</span>
+                        <div class="${fontClass} text-white text-lg mb-2">${App.utils.formatLinks(post.content)}</div>
+                        ${mediaHtml}
+                        <div class="flex items-center justify-between mt-4 pt-3 border-t border-chain-gray">
+                            <div class="flex space-x-4">
+                                <button onclick="window.App.reactions.toggle(${post.id}, 'love')" class="flex items-center space-x-1 text-gray-400 hover:text-red-400 transition group">
+                                    <i class="fas fa-heart group-hover:scale-110 transition"></i>
+                                    <span class="text-sm">${post.reactions.love || 0}</span>
+                                </button>
+                                <button onclick="window.App.reactions.toggle(${post.id}, 'like')" class="flex items-center space-x-1 text-gray-400 hover:text-chain-yellow transition group">
+                                    <i class="fas fa-thumbs-up group-hover:scale-110 transition"></i>
+                                    <span class="text-sm">${post.reactions.like || 0}</span>
+                                </button>
+                                <button onclick="window.App.reactions.toggle(${post.id}, 'dislike')" class="flex items-center space-x-1 text-gray-400 hover:text-blue-400 transition group">
+                                    <i class="fas fa-thumbs-down group-hover:scale-110 transition"></i>
+                                    <span class="text-sm">${post.reactions.dislike || 0}</span>
+                                </button>
+                                <button onclick="window.App.reactions.toggle(${post.id}, 'repeat')" class="flex items-center space-x-1 text-gray-400 hover:text-green-400 transition group">
+                                    <i class="fas fa-retweet group-hover:scale-110 transition"></i>
+                                    <span class="text-sm">${post.reactions.repeat || 0}</span>
+                                </button>
+                            </div>
+                            <button onclick="window.App.comments.open(${post.id})" class="flex items-center space-x-1 text-gray-400 hover:text-chain-yellow transition">
+                                <i class="fas fa-comment"></i>
+                                <span class="text-sm">${post.comments.filter(c => c.approved).length || 0}</span>
+                            </button>
                         </div>
                     `;
-                    container.appendChild(el);
-                });
+                    return div;
+                }
             },
 
-            editProfile() {
-                document.getElementById('edit-name').value = AppState.currentUser.name || '';
-                document.getElementById('edit-bio').value = AppState.currentUser.bio || '';
-                document.getElementById('edit-location').value = AppState.currentUser.location || '';
-                document.getElementById('edit-website').value = AppState.currentUser.website || '';
-                document.getElementById('bio-count').textContent = (AppState.currentUser.bio || '').length;
-                document.getElementById('edit-profile-modal').classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            },
+            posts: {
+                toggleSchedule() {
+                    document.getElementById('schedule-picker').classList.toggle('hidden');
+                },
 
-            closeEditModal() {
-                document.getElementById('edit-profile-modal').classList.add('hidden');
-                document.body.style.overflow = '';
-                this.editData = { avatar: null, cover: null };
-            },
+                handleMediaSelect(e) {
+                    const files = e.target.files;
+                    const preview = document.getElementById('media-preview');
+                    preview.innerHTML = '';
+                    preview.classList.remove('hidden');
+                    Array.from(files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const div = document.createElement('div');
+                            div.className = 'relative aspect-square rounded-lg overflow-hidden bg-chain-dark';
+                            div.innerHTML = `
+                                <img src="${e.target.result}" class="w-full h-full object-cover">
+                                <button onclick="this.parentElement.remove()" class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-times"></i></button>
+                            `;
+                            preview.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                },
 
-            handleEditImage(input, type) {
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        if (type === 'avatar') {
-                            document.getElementById('edit-avatar-preview').src = e.target.result;
-                            document.getElementById('edit-avatar-preview').classList.remove('hidden');
-                            document.getElementById('edit-avatar-placeholder').classList.add('hidden');
-                        } else {
-                            document.getElementById('edit-cover-preview').src = e.target.result;
-                        }
-                        profile.editData[type] = e.target.result;
+                create() {
+                    const content = document.getElementById('post-content').value;
+                    if (!content.trim()) return;
+                    const fontStyle = document.getElementById('post-font').value;
+                    
+                    const newPost = {
+                        id: Date.now(),
+                        user_id: App.currentUser.id,
+                        content: content,
+                        font_style: fontStyle,
+                        created_at: new Date().toISOString(),
+                        media: [],
+                        reactions: { love: 0, like: 0, dislike: 0, repeat: 0 },
+                        comments: []
                     };
-                    reader.readAsDataURL(input.files[0]);
+                    
+                    demoPosts.unshift(newPost);
+                    App.feed.load();
+                    
+                    document.getElementById('post-content').value = '';
+                    document.getElementById('media-preview').innerHTML = '';
+                    document.getElementById('media-preview').classList.add('hidden');
+                    document.getElementById('schedule-picker').classList.add('hidden');
+                },
+
+                delete(postId) {
+                    if (confirm('Delete this post?')) {
+                        demoPosts = demoPosts.filter(p => p.id !== postId);
+                        App.feed.load();
+                    }
                 }
             },
 
-            saveEdit(e) {
-                e.preventDefault();
-                const updates = {
-                    name: document.getElementById('edit-name').value.trim(),
-                    bio: document.getElementById('edit-bio').value.trim(),
-                    location: document.getElementById('edit-location').value.trim(),
-                    website: document.getElementById('edit-website').value.trim()
-                };
+            stories: {
+                load() {
+                    const container = document.getElementById('stories-container');
+                    container.innerHTML = '';
+                    const stories = App.isDemo ? demoStories : [];
+                    stories.forEach(story => {
+                        const div = document.createElement('div');
+                        div.className = 'flex flex-col items-center space-y-1 cursor-pointer flex-shrink-0';
+                        div.onclick = () => App.stories.view(story);
+                        div.innerHTML = `
+                            <div class="story-ring rounded-full p-[2px]">
+                                <img src="${story.user.avatar}" class="w-14 h-14 rounded-full border-2 border-chain-charcoal">
+                            </div>
+                            <span class="text-xs text-gray-400 truncate w-16 text-center">${story.user.first_name}</span>
+                        `;
+                        container.appendChild(div);
+                    });
+                },
 
-                if (!updates.name) {
-                    toast.error('Name is required');
-                    return;
-                }
+                view(story) {
+                    document.getElementById('story-image').src = story.image;
+                    document.getElementById('story-caption').textContent = story.caption;
+                    document.getElementById('story-modal').classList.remove('hidden');
+                    setTimeout(() => App.stories.close(), 5000);
+                },
 
-                AppState.currentUser = { ...AppState.currentUser, ...updates };
-                
-                document.getElementById('profile-name').textContent = updates.name;
-                document.getElementById('profile-bio').textContent = updates.bio || 'No bio yet';
-                
-                const locEl = document.getElementById('profile-location');
-                if (updates.location) {
-                    locEl.innerHTML = `<i class="fas fa-map-marker-alt mr-1"></i> ${security.escapeHtml(updates.location)}`;
-                    locEl.classList.remove('hidden');
-                } else {
-                    locEl.classList.add('hidden');
-                }
-                
-                const webEl = document.getElementById('profile-website');
-                if (updates.website) {
-                    webEl.innerHTML = `<i class="fas fa-link mr-1"></i> <a href="${updates.website}" target="_blank" class="hover:text-chain-yellow transition">${security.escapeHtml(updates.website.replace(/^https?:\/\//, ''))}</a>`;
-                    webEl.classList.remove('hidden');
-                } else {
-                    webEl.classList.add('hidden');
-                }
+                close() {
+                    document.getElementById('story-modal').classList.add('hidden');
+                },
 
-                if (this.editData.avatar) {
-                    document.getElementById('profile-avatar-text').classList.add('hidden');
-                    document.getElementById('profile-avatar-img').src = this.editData.avatar;
-                    document.getElementById('profile-avatar-img').classList.remove('hidden');
+                create() {
+                    alert('Story creation would open camera/file picker');
                 }
-                
-                if (this.editData.cover) {
-                    document.getElementById('profile-cover-img').src = this.editData.cover;
-                    document.getElementById('profile-cover-img').classList.remove('hidden');
-                }
-
-                localStorage.setItem('chainlink_user', JSON.stringify(AppState.currentUser));
-                this.closeEditModal();
-                toast.success('Profile updated successfully!');
             },
 
-            changeTheme() {
-                this.currentThemeIndex = (this.currentThemeIndex + 1) % this.themes.length;
-                const theme = this.themes[this.currentThemeIndex];
-                const avatar = document.getElementById('profile-avatar');
-                this.themes.forEach(t => {
-                    const color = t.replace('pastel-', '');
-                    avatar.classList.remove(`from-pastel-${color}`, `to-${color}-500`);
-                });
-                const color = theme.replace('pastel-', '');
-                avatar.classList.add(`from-pastel-${color}`, `to-${color}-500`);
-                AppState.currentUser.theme = theme;
-                localStorage.setItem('chainlink_user', JSON.stringify(AppState.currentUser));
-                toast.success(`Theme changed to ${color}`);
-            }
-        };
-
-        const messaging = {
-            currentConversation: null,
-
-            load() {
-                this.renderConversations();
-                if (AppState.conversations.length > 0 && demoMode.isEnabled) this.loadConversation(AppState.conversations[0]);
+            reactions: {
+                toggle(postId, type) {
+                    const post = demoPosts.find(p => p.id === postId);
+                    if (post) {
+                        post.reactions[type]++;
+                        App.feed.load();
+                    }
+                }
             },
 
-            renderConversations() {
-                const container = document.getElementById('conversations-list');
-                if (AppState.conversations.length === 0) {
-                    container.innerHTML = `<div class="text-center py-12 text-gray-500"><i class="fas fa-comments text-4xl mb-3 opacity-50"></i><p class="text-sm">No messages yet</p></div>`;
-                    return;
-                }
+            comments: {
+                open(postId) {
+                    App.selectedPost = postId;
+                    const post = demoPosts.find(p => p.id === postId);
+                    const list = document.getElementById('comments-list');
+                    list.innerHTML = '';
+                    const isOwner = App.currentUser && (App.currentUser.id === post.user_id || App.currentUser.id === 1);
+                    
+                    if (post && post.comments) {
+                        post.comments.forEach((comment, index) => {
+                            if (!comment.approved && !isOwner) return; // Hide unapproved from non-owners
+                            
+                            const div = document.createElement('div');
+                            div.className = 'flex space-x-3';
+                            let modButtons = '';
+                            if (isOwner) {
+                                modButtons = `
+                                    <div class="flex space-x-2 mt-1">
+                                        ${!comment.approved ? `<button onclick="window.App.comments.moderate(${postId}, ${index}, 'approve')" class="text-xs text-green-400 hover:text-green-300">Approve</button>` : ''}
+                                        <button onclick="window.App.comments.moderate(${postId}, ${index}, 'delete')" class="text-xs text-red-400 hover:text-red-300">Delete</button>
+                                    </div>
+                                `;
+                            }
+                            div.innerHTML = `
+                                <img src="${comment.user.avatar}" class="w-8 h-8 rounded-full">
+                                <div class="flex-1 bg-chain-dark rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-bold text-sm">${comment.user.first_name} ${comment.user.last_name}</span>
+                                        <span class="text-xs text-gray-500">${comment.time}</span>
+                                    </div>
+                                    <p class="text-sm text-gray-300">${comment.text}</p>
+                                    ${modButtons}
+                                </div>
+                            `;
+                            list.appendChild(div);
+                        });
+                    }
+                    document.getElementById('comments-modal').classList.remove('hidden');
+                },
 
-                container.innerHTML = AppState.conversations.map(c => {
-                    const demoBadge = c.isDemo ? `<span class="ml-2 px-1.5 py-0.5 bg-demo-purple/20 text-demo-purple text-[8px] rounded border border-demo-purple/30 uppercase">Demo</span>` : '';
-                    return `<div onclick='messaging.loadConversation(${JSON.stringify(c).replace(/'/g, "&#39;")})' class="flex items-center p-4 hover:bg-chain-dark cursor-pointer transition border-b border-chain-gray group"><div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">${c.avatar || c.name.charAt(0)}</div><div class="flex-1 min-w-0"><div class="flex justify-between items-center mb-1"><div class="flex items-center"><h4 class="font-bold text-white truncate">${c.name}</h4>${demoBadge}</div><span class="text-xs text-gray-500 flex-shrink-0">${c.time}</span></div><p class="text-sm text-gray-400 truncate group-hover:text-gray-300 transition">${c.last}</p></div>${c.unread ? `<span class="ml-2 w-5 h-5 bg-chain-yellow text-chain-dark text-xs rounded-full flex items-center justify-center font-bold flex-shrink-0">${c.unread}</span>` : ''}</div>`;
-                }).join('');
+                close() {
+                    document.getElementById('comments-modal').classList.add('hidden');
+                    App.selectedPost = null;
+                },
+
+                add() {
+                    const input = document.getElementById('comment-input');
+                    const text = input.value.trim();
+                    if (!text || !App.selectedPost) return;
+                    
+                    const post = demoPosts.find(p => p.id === App.selectedPost);
+                    if (post) {
+                        post.comments.push({
+                            user: App.currentUser,
+                            text: text,
+                            time: 'Just now',
+                            approved: false // Needs approval
+                        });
+                        input.value = '';
+                        this.open(App.selectedPost);
+                        App.feed.load();
+                        alert('Comment submitted for approval');
+                    }
+                },
+
+                moderate(postId, commentIndex, action) {
+                    const post = demoPosts.find(p => p.id === postId);
+                    if (!post) return;
+                    
+                    if (action === 'approve') {
+                        post.comments[commentIndex].approved = true;
+                        this.open(postId);
+                        App.feed.load();
+                    } else if (action === 'delete') {
+                        post.comments.splice(commentIndex, 1);
+                        this.open(postId);
+                        App.feed.load();
+                    }
+                }
             },
 
-            loadConversation(conversation) {
-                this.currentConversation = conversation;
-                document.getElementById('chat-name').textContent = conversation.name;
-                document.getElementById('chat-avatar').textContent = conversation.avatar || conversation.name.charAt(0);
-                const chatBadge = document.getElementById('chat-demo-badge');
-                if (conversation.isDemo) chatBadge.classList.remove('hidden');
-                else chatBadge.classList.add('hidden');
-                this.renderMessages();
+            live: {
+                load() {
+                    const container = document.getElementById('live-streams');
+                    container.innerHTML = '';
+                    demoStreams.forEach(stream => {
+                        const div = document.createElement('div');
+                        div.className = 'relative rounded-xl overflow-hidden cursor-pointer group';
+                        div.onclick = () => App.live.join(stream);
+                        div.innerHTML = `
+                            <img src="${stream.thumbnail}" class="w-full aspect-video object-cover group-hover:scale-105 transition duration-300">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                            <div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded flex items-center space-x-1">
+                                <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                                <span>LIVE</span>
+                            </div>
+                            <div class="absolute top-3 right-3">
+                                <span class="tier-${stream.tier === 'basic' ? '1' : stream.tier === 'pro' ? '2' : '3'} text-chain-dark text-xs font-bold px-2 py-1 rounded uppercase">${stream.tier}</span>
+                            </div>
+                            <div class="absolute bottom-0 left-0 right-0 p-4">
+                                <h3 class="font-bold text-white mb-1">${stream.title}</h3>
+                                <div class="flex items-center justify-between text-sm text-gray-300">
+                                    <div class="flex items-center space-x-2">
+                                        <img src="${stream.user.avatar}" class="w-6 h-6 rounded-full">
+                                        <span>${stream.user.first_name} ${stream.user.last_name}</span>
+                                    </div>
+                                    <div class="flex items-center space-x-1">
+                                        <i class="fas fa-user text-xs"></i>
+                                        <span>${stream.viewers}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                },
+
+                startStream() {
+                    alert('Live streaming would start here. Requires camera permissions.');
+                },
+
+                join(stream) {
+                    alert(`Joining ${stream.user.first_name}'s ${stream.tier} stream...`);
+                }
             },
 
-            renderMessages() {
-                const container = document.getElementById('messages-container');
-                const msgs = AppState.messages || [];
-                if (msgs.length === 0) {
-                    container.innerHTML = `<div class="text-center text-gray-500 mt-8"><p>Start a conversation</p></div>`;
-                    return;
-                }
-                container.innerHTML = msgs.map(m => {
-                    const isMe = m.from === 'me';
-                    const demoBadge = m.isDemo ? `<span class="ml-1 px-1.5 py-0.5 bg-demo-purple/20 text-demo-purple text-[8px] rounded border border-demo-purple/30 uppercase">Demo</span>` : '';
-                    return `<div class="flex ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in"><div class="max-w-[80%] ${isMe ? 'bg-chain-yellow text-chain-dark' : 'bg-chain-charcoal text-white'} rounded-2xl px-4 py-2 shadow-lg"><div class="flex items-center ${isMe ? 'justify-end' : 'justify-start'} mb-1">${!isMe ? `<span class="text-xs font-bold opacity-70 mr-1">${m.from === 'them' ? 'John' : 'You'}</span>` : ''}${demoBadge}</div><p>${security.escapeHtml(m.text)}</p><span class="text-xs ${isMe ? 'text-chain-dark/60' : 'text-gray-500'} block mt-1 text-right">${m.time}</span></div></div>`;
-                }).join('');
-                container.scrollTop = container.scrollHeight;
-            },
+            messages: {
+                load() {
+                    const list = document.getElementById('conversations-list');
+                    list.innerHTML = '';
+                    demoConversations.forEach(convo => {
+                        const div = document.createElement('div');
+                        div.className = 'flex items-center space-x-3 p-4 hover:bg-chain-dark cursor-pointer transition border-b border-chain-gray last:border-0';
+                        div.onclick = () => App.messages.openChat(convo);
+                        div.innerHTML = `
+                            <div class="relative">
+                                <img src="${convo.user.avatar}" class="w-12 h-12 rounded-full">
+                                ${convo.unread > 0 ? `<span class="absolute -top-1 -right-1 w-4 h-4 bg-chain-yellow text-chain-dark text-xs rounded-full flex items-center justify-center font-bold">${convo.unread}</span>` : ''}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-baseline mb-1">
+                                    <h4 class="font-bold text-white truncate">${convo.user.first_name} ${convo.user.last_name}</h4>
+                                    <span class="text-xs text-gray-500">${convo.time}</span>
+                                </div>
+                                <p class="text-sm text-gray-400 truncate">${convo.last_message}</p>
+                            </div>
+                        `;
+                        list.appendChild(div);
+                    });
+                },
 
-            send() {
-                const input = document.getElementById('message-input');
-                const text = input.value.trim();
-                if (!text) return;
-                const newMsg = { id: security.generateId(), from: 'me', text: text, time: 'Just now', isDemo: false };
-                AppState.messages.push(newMsg);
-                this.renderMessages();
-                input.value = '';
-                
-                if (demoMode.isEnabled && this.currentConversation?.isDemo) {
-                    setTimeout(() => {
-                        const replies = ["That's really cool! 🎉", "I love the demo mode feature!", "How long have you been coding?", "This looks amazing!"];
-                        AppState.messages.push({ id: security.generateId(), from: 'them', text: replies[Math.floor(Math.random() * replies.length)], time: 'Just now', isDemo: true });
-                        this.renderMessages();
-                        toast.info('New message from ' + this.currentConversation.name);
-                    }, 2000);
-                }
-            }
-        };
+                openChat(convo) {
+                    App.activeChat = convo;
+                    document.getElementById('no-chat-selected').classList.add('hidden');
+                    document.getElementById('chat-area').classList.remove('hidden');
+                    document.getElementById('chat-avatar').src = convo.user.avatar;
+                    document.getElementById('chat-name').textContent = `${convo.user.first_name} ${convo.user.last_name}`;
+                    
+                    const list = document.getElementById('messages-list');
+                    list.innerHTML = '';
+                    const messages = [
+                        { sender: 'them', text: 'Hey! How are you?', time: '2:30 PM' },
+                        { sender: 'me', text: 'Doing great! Just working on some new designs.', time: '2:32 PM' },
+                        { sender: 'them', text: convo.last_message, time: convo.time }
+                    ];
+                    
+                    messages.forEach(msg => {
+                        const div = document.createElement('div');
+                        div.className = `flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`;
+                        div.innerHTML = `
+                            <div class="${msg.sender === 'me' ? 'bg-chain-yellow text-chain-dark' : 'bg-chain-dark text-white'} rounded-2xl px-4 py-2 max-w-[70%]">
+                                <p>${msg.text}</p>
+                                <span class="text-xs opacity-70 block mt-1">${msg.time}</span>
+                            </div>
+                        `;
+                        list.appendChild(div);
+                    });
+                    list.scrollTop = list.scrollHeight;
+                },
 
-        const live = {
-            load() { this.renderStreams(); },
-            renderStreams() {
-                const container = document.getElementById('live-streams');
-                const streams = demoMode.isEnabled && AppState.demoStreams ? AppState.demoStreams : [];
-                if (streams.length === 0) {
-                    container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 border-2 border-dashed border-chain-gray rounded-xl"><i class="fas fa-broadcast-tower text-4xl mb-3 opacity-50"></i><p>No live streams right now</p><button onclick="live.start()" class="mt-4 text-chain-yellow hover:underline">Start the first one?</button></div>`;
-                    return;
-                }
-                container.innerHTML = streams.map(s => `
-                    <div class="bg-chain-charcoal border border-chain-gray rounded-xl overflow-hidden hover:border-red-500 transition cursor-pointer group relative">
-                        <div class="absolute top-2 left-2 z-10 flex space-x-2">
-                            <div class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded flex items-center"><span class="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></span> LIVE</div>
-                            ${s.isDemo ? `<div class="bg-demo-purple text-white text-xs font-bold px-2 py-1 rounded flex items-center"><i class="fas fa-flask mr-1"></i> Demo</div>` : ''}
+                send() {
+                    const input = document.getElementById('message-input');
+                    const text = input.value.trim();
+                    if (!text) return;
+                    
+                    const list = document.getElementById('messages-list');
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-end animate-slide-up';
+                    div.innerHTML = `
+                        <div class="bg-chain-yellow text-chain-dark rounded-2xl px-4 py-2 max-w-[70%]">
+                            <p>${App.utils.formatLinks(text)}</p>
+                            <span class="text-xs opacity-70 block mt-1">Just now</span>
                         </div>
-                        <div class="relative">
-                            <img src="${s.thumbnail}" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" alt="${s.title}">
-                            <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded backdrop-blur-sm">${s.viewers} viewers</div>
-                        </div>
-                        <div class="p-3">
-                            <h4 class="font-bold text-white group-hover:text-red-400 transition line-clamp-1">${s.title}</h4>
-                            <p class="text-sm text-gray-400">${s.user}</p>
-                        </div>
-                    </div>
-                `).join('');
+                    `;
+                    list.appendChild(div);
+                    list.scrollTop = list.scrollHeight;
+                    input.value = '';
+                }
             },
-            start() {
-                if (demoMode.isEnabled) toast.info('🎬 Demo: Starting stream...');
-                else toast.info('Initializing stream...');
-                document.getElementById('live-badge').classList.remove('hidden');
-                setTimeout(() => { toast.success('You are now LIVE! 🔴'); AppState.isLive = true; }, 2000);
-            },
-            selectTier(price) {
-                if (demoMode.isEnabled) toast.info(`💰 Demo: $${price}/month (no charge)`);
-                else toast.info(`Selected $${price}/month tier`);
-            }
-        };
 
-        const spotify = {
-            toggle() {
-                const widget = document.getElementById('spotify-widget');
-                widget.classList.toggle('hidden');
-                if (!widget.classList.contains('hidden') && !AppState.spotifyConnected) {
-                    document.getElementById('spotify-track').textContent = demoMode.isEnabled ? 'Demo Mode - Lo-Fi Beats' : 'Connected - Lo-Fi Beats';
-                    AppState.spotifyConnected = true;
+            profile: {
+                load() {
+                    if (!App.currentUser) return;
+                    
+                    const user = App.currentUser;
+                    const name = user.user_metadata?.first_name ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}` : `${user.first_name} ${user.last_name}`;
+                    const username = user.user_metadata?.username || user.username || user.email?.split('@')[0];
+                    
+                    document.getElementById('profile-name').textContent = name;
+                    document.getElementById('profile-username').textContent = `@${username}`;
+                    document.getElementById('profile-bio').textContent = user.user_metadata?.bio || user.bio || 'No bio yet';
+                    document.getElementById('profile-avatar').src = user.user_metadata?.avatar_url || user.avatar || 'https://i.pravatar.cc/150?img=12';
+                    
+                    // Apply theme
+                    const theme = user.user_metadata?.theme || 'default';
+                    const ring = document.getElementById('avatar-ring');
+                    ring.className = `story-ring p-1 rounded-full ${theme !== 'default' ? 'theme-' + theme : ''}`;
+                    
+                    document.getElementById('profile-posts').textContent = demoPosts.filter(p => p.user_id === user.id).length;
+                    document.getElementById('profile-followers').textContent = user.user_metadata?.followers || user.followers || 0;
+                    document.getElementById('profile-following').textContent = user.user_metadata?.following || user.following || 0;
+                    document.getElementById('profile-subscribers').textContent = user.user_metadata?.subscribers || user.subscribers || 0;
+                    
+                    const grid = document.getElementById('profile-posts-grid');
+                    grid.innerHTML = '';
+                    const userPosts = demoPosts.filter(p => p.user_id === user.id);
+                    userPosts.forEach(post => {
+                        const div = document.createElement('div');
+                        div.className = 'bg-chain-dark border border-chain-gray rounded-lg p-4';
+                        div.innerHTML = `
+                            <p class="${post.font_style} text-white mb-2">${post.content}</p>
+                            ${post.media.length ? `<img src="${post.media[0]}" class="w-full h-48 object-cover rounded-lg mt-2">` : ''}
+                            <div class="flex items-center space-x-4 mt-3 text-sm text-gray-400">
+                                <span><i class="fas fa-heart text-red-400 mr-1"></i> ${post.reactions.love}</span>
+                                <span><i class="fas fa-comment mr-1"></i> ${post.comments.length}</span>
+                            </div>
+                        `;
+                        grid.appendChild(div);
+                    });
+                },
+
+                openEditModal() {
+                    const user = App.currentUser;
+                    document.getElementById('edit-name').value = user.user_metadata?.first_name ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}` : `${user.first_name} ${user.last_name}`;
+                    document.getElementById('edit-bio').value = user.user_metadata?.bio || user.bio || '';
+                    document.getElementById('edit-profile-modal').classList.remove('hidden');
+                },
+
+                closeEditModal() {
+                    document.getElementById('edit-profile-modal').classList.add('hidden');
+                },
+
+                setTheme(theme) {
+                    const ring = document.getElementById('avatar-ring');
+                    ring.className = `story-ring p-1 rounded-full ${theme !== 'default' ? 'theme-' + theme : ''}`;
+                },
+
+                async saveEdit() {
+                    const name = document.getElementById('edit-name').value.split(' ');
+                    const bio = document.getElementById('edit-bio').value;
+                    const firstName = name[0];
+                    const lastName = name.slice(1).join(' ');
+                    
+                    // Update local
+                    App.currentUser.user_metadata = {
+                        ...App.currentUser.user_metadata,
+                        first_name: firstName,
+                        last_name: lastName,
+                        bio: bio
+                    };
+                    
+                    // Update Supabase if not demo
+                    if (!App.isDemo) {
+                        await supabase.auth.updateUser({
+                            data: {
+                                first_name: firstName,
+                                last_name: lastName,
+                                bio: bio
+                            }
+                        });
+                    }
+                    
+                    App.profile.closeEditModal();
+                    App.profile.load();
+                },
+
+                handleAvatarUpload(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            document.getElementById('profile-avatar').src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                },
+
+                handleCoverUpload(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        alert('Cover photo uploaded (demo)');
+                    }
+                },
+
+                toggleSpotify() {
+                    const widget = document.getElementById('spotify-widget');
+                    if (widget.classList.contains('hidden')) {
+                        widget.classList.remove('hidden');
+                        document.getElementById('spotify-track').textContent = '🎵 Currently vibing to: Midnight City - M83';
+                    } else {
+                        widget.classList.add('hidden');
+                    }
+                }
+            },
+
+            utils: {
+                timeAgo(date) {
+                    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+                    if (seconds < 60) return 'Just now';
+                    const minutes = Math.floor(seconds / 60);
+                    if (minutes < 60) return `${minutes}m ago`;
+                    const hours = Math.floor(minutes / 60);
+                    if (hours < 24) return `${hours}h ago`;
+                    return `${Math.floor(hours / 24)}d ago`;
+                },
+
+                formatLinks(text) {
+                    return text.replace(/(https?:\/\/[^\s]+)/g, url => `<a href="${url}" target="_blank" class="message-link">${url}</a>`);
                 }
             }
         };
 
-        const toast = {
-            container: document.getElementById('toast-container'),
-            show(message, type = 'info') {
-                const el = document.createElement('div');
-                const colors = { success: 'bg-green-500', error: 'bg-red-500', info: 'bg-demo-purple text-white', warning: 'bg-chain-yellow text-chain-dark' };
-                el.className = `${colors[type] || colors.info} px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full pointer-events-auto flex items-center space-x-2 backdrop-blur-sm border border-white/10`;
-                el.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i><span class="font-medium text-sm">${message}</span>`;
-                this.container.appendChild(el);
-                requestAnimationFrame(() => el.classList.remove('translate-x-full'));
-                setTimeout(() => { el.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => el.remove(), 300); }, 3000);
-            },
-            success(msg) { this.show(msg, 'success'); },
-            error(msg) { this.show(msg, 'error'); },
-            info(msg) { this.show(msg, 'info'); }
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            auth.init();
-            document.getElementById('edit-bio')?.addEventListener('input', function() {
-                document.getElementById('bio-count').textContent = this.value.length;
-            });
-        });
-
-        if ('serviceWorker' in navigator) navigator.serviceWorker.register('data:text/javascript,').catch(() => {});
-        if (window.location.hash) window.location.hash = '';
+        window.App = App;
+        document.addEventListener('DOMContentLoaded', () => App.init());
     </script>
 </body>
 </html>
