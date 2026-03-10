@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.spotify.com; frame-src 'self' https://accounts.google.com https://open.spotify.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <!-- FIXED CSP: Added cdn.jsdelivr.net and removed unsafe restrictions -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.spotify.com https://accounts.google.com; frame-src 'self' https://accounts.google.com https://open.spotify.com;">
     
     <title>CHAIN⛓️Link - Link up with your friends</title>
     <meta name="description" content="Join for free today. The next generation social platform.">
@@ -16,9 +15,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@400;500&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
-    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -35,17 +36,6 @@
                         display: ['Playfair Display', 'serif'],
                         mono: ['Roboto Mono', 'monospace'],
                         cursive: ['Dancing Script', 'cursive']
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.3s ease-in-out',
-                        'slide-up': 'slideUp 0.4s ease-out',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'gradient': 'gradient 8s linear infinite'
-                    },
-                    keyframes: {
-                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
-                        gradient: { '0%, 100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } }
                     }
                 }
             }
@@ -59,29 +49,19 @@
         ::-webkit-scrollbar-thumb:hover { background: #F4D03F; }
         
         .post-card { contain: content; content-visibility: auto; contain-intrinsic-height: auto 300px; }
-        .qr-scan-line { animation: scan 2s linear infinite; }
-        @keyframes scan { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(200px); opacity: 0; } }
-        
         .glass { background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(244, 208, 63, 0.1); }
-        
         .font-default { font-family: 'Inter', sans-serif; }
         .font-display { font-family: 'Playfair Display', serif; }
         .font-mono { font-family: 'Roboto Mono', monospace; }
         .font-cursive { font-family: 'Dancing Script', 'cursive'; }
-        .font-bold-custom { font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.02em; }
-        
         input[type="file"] { display: none; }
-        
         .live-pulse { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); animation: livePulse 2s infinite; }
         @keyframes livePulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
-        
         .hidden-until-load { visibility: hidden; }
-        .loaded { visibility: visible; }
-        
         .demo-banner { background: linear-gradient(90deg, #8B5CF6, #EC4899, #8B5CF6); background-size: 200% 200%; animation: gradient 3s ease infinite; }
         .demo-active #app { padding-top: 40px; }
         @media (min-width: 768px) { .demo-active #app { padding-top: 0; } .demo-active main { padding-top: 40px; } }
-        
+        @keyframes gradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
         .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
 </head>
@@ -92,7 +72,7 @@
             <div class="text-center">
                 <i class="fas fa-exclamation-triangle text-chain-yellow text-5xl mb-4"></i>
                 <h1 class="text-2xl font-bold mb-2">JavaScript Required</h1>
-                <p class="text-gray-400">CHAIN⛓️Link requires JavaScript to function securely.</p>
+                <p class="text-gray-400">CHAIN⛓️Link requires JavaScript to function.</p>
             </div>
         </div>
     </noscript>
@@ -101,7 +81,6 @@
         <div class="flex items-center justify-center space-x-2 text-sm font-medium px-4">
             <i class="fas fa-flask animate-pulse"></i>
             <span class="uppercase tracking-wider font-bold">Demo Mode Active</span>
-            <span class="hidden md:inline opacity-80">• Showing sample data only</span>
             <button onclick="demoMode.toggle()" class="ml-4 px-3 py-1 bg-white/20 hover:bg-white/30 rounded-full transition text-xs backdrop-blur-sm border border-white/20">Exit Demo</button>
         </div>
     </div>
@@ -177,24 +156,18 @@
                             <form id="login-form" class="space-y-4" onsubmit="auth.handleLogin(event)">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-400 mb-1">Email</label>
-                                    <input type="email" id="login-email" required 
-                                        class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-chain-yellow focus:ring-1 focus:ring-chain-yellow transition"
-                                        placeholder="you@example.com">
+                                    <input type="email" id="login-email" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-chain-yellow focus:ring-1 focus:ring-chain-yellow transition" placeholder="you@example.com">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-400 mb-1">Password</label>
                                     <div class="relative">
-                                        <input type="password" id="login-password" required 
-                                            class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-chain-yellow focus:ring-1 focus:ring-chain-yellow transition"
-                                            placeholder="••••••••">
+                                        <input type="password" id="login-password" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-chain-yellow focus:ring-1 focus:ring-chain-yellow transition" placeholder="••••••••">
                                         <button type="button" onclick="auth.togglePassword('login-password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-white">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </div>
                                 </div>
-                                <button type="submit" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition transform hover:scale-[1.02] active:scale-[0.98]">
-                                    Sign In
-                                </button>
+                                <button type="submit" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition transform hover:scale-[1.02] active:scale-[0.98]">Sign In</button>
                             </form>
 
                             <form id="signup-form" class="hidden space-y-4" onsubmit="auth.handleSignup(event)">
@@ -319,7 +292,7 @@
                                         <i class="fas fa-clock"></i>
                                     </button>
                                 </div>
-                                <button onclick="postCreator.submit()" class="bg-chain-yellow text-chain-dark px-6 py-2 rounded-full font-bold hover:bg-yellow-400 transition transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" id="post-btn">Post</button>
+                                <button onclick="postCreator.submit()" class="bg-chain-yellow text-chain-dark px-6 py-2 rounded-full font-bold hover:bg-yellow-400 transition transform active:scale-95" id="post-btn">Post</button>
                             </div>
 
                             <div id="schedule-picker" class="hidden mt-3 p-3 bg-chain-dark rounded-lg border border-chain-gray">
@@ -348,15 +321,15 @@
                 <div class="bg-chain-charcoal border-b border-chain-gray">
                     <div class="h-48 md:h-64 bg-gradient-to-r from-purple-900 via-chain-dark to-chain-yellow relative overflow-hidden">
                         <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 2px 2px, rgba(244,208,63,0.15) 1px, transparent 0); background-size: 20px 20px;"></div>
-                        <img id="profile-cover-img" class="w-full h-full object-cover opacity-50" src="" alt="Cover">
+                        <img id="profile-cover-img" class="w-full h-full object-cover opacity-50 hidden" src="" alt="Cover">
                     </div>
                     
                     <div class="px-4 pb-4 relative">
                         <div class="flex flex-col md:flex-row items-start md:items-end -mt-16 mb-4">
                             <div class="relative">
-                                <div id="profile-avatar" class="w-32 h-32 rounded-full border-4 border-chain-charcoal bg-gradient-to-br from-pastel-pink to-pink-500 flex items-center justify-center text-4xl font-bold text-white shadow-xl overflow-hidden">
+                                <div id="profile-avatar" class="w-32 h-32 rounded-full border-4 border-chain-charcoal bg-gradient-to-br from-pastel-pink to-pink-500 flex items-center justify-center text-4xl font-bold text-white shadow-xl overflow-hidden relative">
                                     <span id="profile-avatar-text">KS</span>
-                                    <img id="profile-avatar-img" class="w-full h-full object-cover hidden" src="" alt="Avatar">
+                                    <img id="profile-avatar-img" class="w-full h-full object-cover hidden absolute inset-0" src="" alt="Avatar">
                                 </div>
                                 <button onclick="profile.changeTheme()" class="absolute bottom-0 right-0 bg-chain-yellow text-chain-dark w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition" title="Change Theme">
                                     <i class="fas fa-palette text-sm"></i>
@@ -390,7 +363,7 @@
                             <span id="profile-location"><i class="fas fa-map-marker-alt mr-1"></i> Vernon, BC</span>
                             <span id="profile-birthday"><i class="fas fa-birthday-cake mr-1"></i> Born October 22</span>
                             <span><i class="fas fa-calendar mr-1"></i> Joined February 2024</span>
-                            <span id="profile-website" class="hidden"><i class="fas fa-link mr-1"></i> <a href="#" class="hover:text-chain-yellow transition">Website</a></span>
+                            <span id="profile-website" class="hidden"><i class="fas fa-link mr-1"></i> <a href="#" target="_blank" class="hover:text-chain-yellow transition">Website</a></span>
                         </div>
 
                         <div class="grid grid-cols-4 gap-4 py-4 border-t border-chain-gray">
@@ -488,9 +461,6 @@
 
                 <div class="grid md:grid-cols-3 gap-4 mb-8">
                     <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-6 hover:border-chain-yellow transition cursor-pointer relative group" onclick="live.selectTier(4.99)">
-                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span class="px-3 py-1 bg-demo-purple text-white text-xs rounded-full">Demo</span>
-                        </div>
                         <h3 class="text-lg font-bold text-white mb-2">Basic</h3>
                         <div class="text-3xl font-bold text-chain-yellow mb-4">$4.99<span class="text-sm text-gray-500 font-normal">/month</span></div>
                         <ul class="space-y-2 text-sm text-gray-400 mb-6">
@@ -515,9 +485,6 @@
                     </div>
 
                     <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-6 hover:border-chain-yellow transition cursor-pointer relative group" onclick="live.selectTier(19.99)">
-                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span class="px-3 py-1 bg-demo-purple text-white text-xs rounded-full">Demo</span>
-                        </div>
                         <h3 class="text-lg font-bold text-white mb-2">VIP</h3>
                         <div class="text-3xl font-bold text-chain-yellow mb-4">$19.99<span class="text-sm text-gray-500 font-normal">/month</span></div>
                         <ul class="space-y-2 text-sm text-gray-400 mb-6">
@@ -629,15 +596,17 @@
     </div>
 
     <script>
+        // ALL JAVASCRIPT IN ONE BLOCK - NO DUPLICATE DECLARATIONS
+        
         const security = {
             sanitize(str) { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; },
             validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); },
-            validatePassword(pass) { return pass.length >= 8 && /[A-Z]/.test(pass) && /[0-9]/.test(pass); },
             generateId() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); }); },
             escapeHtml(unsafe) { return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
         };
 
-        const state = {
+        // SINGLE DECLARATION OF APP STATE
+        const AppState = {
             currentUser: null,
             currentView: 'auth',
             posts: [],
@@ -646,7 +615,8 @@
             currentFont: 'default',
             profileTheme: 'pastel-pink',
             isLive: false,
-            spotifyConnected: false
+            spotifyConnected: false,
+            demoStreams: []
         };
 
         const demoMode = {
@@ -658,23 +628,22 @@
                 
                 if (this.isEnabled) {
                     this.loadMockData();
-                    toast.info('🧪 Demo Mode Enabled - Sample data loaded');
+                    toast.info('🧪 Demo Mode Enabled');
                 } else {
                     this.clearMockData();
-                    toast.success('🔴 Demo Mode Disabled - Connected to live data');
+                    toast.success('Demo Mode Disabled');
                 }
                 this.updateUI();
-                
-                if (state.currentView === 'feed') feed.load();
-                if (state.currentView === 'messages') messaging.load();
-                if (state.currentView === 'live') live.load();
-                if (state.currentView === 'profile') profile.load();
+                if (AppState.currentView === 'feed') feed.load();
+                if (AppState.currentView === 'messages') messaging.load();
+                if (AppState.currentView === 'live') live.load();
+                if (AppState.currentView === 'profile') profile.load();
             },
             
             loadMockData() {
                 const mockPosts = [
-                    { id: 'demo-1', author: 'Sarah Chen', handle: '@sarahcodes', content: 'Just deployed my first app! 🚀 #coding #webdev\n\nSo excited to share this milestone with everyone. The journey has been incredible!', font: 'default', timestamp: new Date(Date.now() - 3600000), likes: 24, loves: 5, dislikes: 0, repeats: 3, comments: [{ author: 'Alex Rivera', text: 'Congrats Sarah! 🎉', timestamp: new Date(Date.now() - 3000000), isDemo: true }], isDemo: true, media: null },
-                    { id: 'demo-2', author: 'Alex Rivera', handle: '@arivera', content: 'The sunset in Kelowna today was absolutely incredible 🌅\n\nNature never fails to amaze me.', font: 'cursive', timestamp: new Date(Date.now() - 7200000), likes: 156, loves: 42, dislikes: 1, repeats: 12, comments: [], isDemo: true, media: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop' },
+                    { id: 'demo-1', author: 'Sarah Chen', handle: '@sarahcodes', content: 'Just deployed my first app! 🚀 #coding #webdev\n\nSo excited to share this milestone!', font: 'default', timestamp: new Date(Date.now() - 3600000), likes: 24, loves: 5, dislikes: 0, repeats: 3, comments: [{ author: 'Alex Rivera', text: 'Congrats Sarah! 🎉', timestamp: new Date(Date.now() - 3000000), isDemo: true }], isDemo: true, media: null },
+                    { id: 'demo-2', author: 'Alex Rivera', handle: '@arivera', content: 'The sunset in Kelowna today was absolutely incredible 🌅', font: 'cursive', timestamp: new Date(Date.now() - 7200000), likes: 156, loves: 42, dislikes: 1, repeats: 12, comments: [], isDemo: true, media: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop' },
                     { id: 'demo-3', author: 'Jordan Smith', handle: '@jsmith', content: 'Working on something big... stay tuned! ⛓️', font: 'mono', timestamp: new Date(Date.now() - 18000000), likes: 89, loves: 12, dislikes: 0, repeats: 8, comments: [], isDemo: true, media: null }
                 ];
                 
@@ -693,21 +662,20 @@
                 
                 const mockStreams = [
                     { title: 'Coding Session: Building CHAIN⛓️Link', user: 'DevMike', viewers: 234, thumbnail: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400', isDemo: true },
-                    { title: 'Q&A: Ask me anything!', user: 'SarahTech', viewers: 567, thumbnail: 'https://images.unsplash.com/photo-1577563908411-5077b6dc7624?w=400', isDemo: true },
-                    { title: 'Live Music Production', user: 'AlexBeats', viewers: 128, thumbnail: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400', isDemo: true }
+                    { title: 'Q&A: Ask me anything!', user: 'SarahTech', viewers: 567, thumbnail: 'https://images.unsplash.com/photo-1577563908411-5077b6dc7624?w=400', isDemo: true }
                 ];
                 
-                state.posts = [...mockPosts, ...state.posts.filter(p => !p.isDemo)];
-                state.conversations = [...mockConversations, ...state.conversations.filter(c => !c.isDemo)];
-                state.messages = mockMessages;
-                state.demoStreams = mockStreams;
+                AppState.posts = [...mockPosts, ...AppState.posts.filter(p => !p.isDemo)];
+                AppState.conversations = [...mockConversations, ...AppState.conversations.filter(c => !c.isDemo)];
+                AppState.messages = mockMessages;
+                AppState.demoStreams = mockStreams;
             },
             
             clearMockData() {
-                state.posts = state.posts.filter(p => !p.isDemo);
-                state.conversations = state.conversations.filter(c => !c.isDemo);
-                state.messages = [];
-                state.demoStreams = [];
+                AppState.posts = AppState.posts.filter(p => !p.isDemo);
+                AppState.conversations = AppState.conversations.filter(c => !c.isDemo);
+                AppState.messages = [];
+                AppState.demoStreams = [];
             },
             
             updateUI() {
@@ -722,13 +690,13 @@
                 
                 if (this.isEnabled) {
                     document.body.classList.add('demo-active');
-                    banner?.classList.remove('hidden');
-                    navBadge?.classList.remove('hidden');
-                    profileBadge?.classList.remove('hidden');
-                    conversationsBadge?.classList.remove('hidden');
-                    chatBadge?.classList.remove('hidden');
-                    liveBadge?.classList.remove('hidden');
-                    liveOverlay?.classList.remove('hidden');
+                    if (banner) banner.classList.remove('hidden');
+                    if (navBadge) navBadge.classList.remove('hidden');
+                    if (profileBadge) profileBadge.classList.remove('hidden');
+                    if (conversationsBadge) conversationsBadge.classList.remove('hidden');
+                    if (chatBadge) chatBadge.classList.remove('hidden');
+                    if (liveBadge) liveBadge.classList.remove('hidden');
+                    if (liveOverlay) liveOverlay.classList.remove('hidden');
                     
                     if (toggleBtn) {
                         toggleBtn.innerHTML = '<i class="fas fa-flask mr-1"></i><span>Exit Demo</span>';
@@ -736,13 +704,13 @@
                     }
                 } else {
                     document.body.classList.remove('demo-active');
-                    banner?.classList.add('hidden');
-                    navBadge?.classList.add('hidden');
-                    profileBadge?.classList.add('hidden');
-                    conversationsBadge?.classList.add('hidden');
-                    chatBadge?.classList.add('hidden');
-                    liveBadge?.classList.add('hidden');
-                    liveOverlay?.classList.add('hidden');
+                    if (banner) banner.classList.add('hidden');
+                    if (navBadge) navBadge.classList.add('hidden');
+                    if (profileBadge) profileBadge.classList.add('hidden');
+                    if (conversationsBadge) conversationsBadge.classList.add('hidden');
+                    if (chatBadge) chatBadge.classList.add('hidden');
+                    if (liveBadge) liveBadge.classList.add('hidden');
+                    if (liveOverlay) liveOverlay.classList.add('hidden');
                     
                     if (toggleBtn) {
                         toggleBtn.innerHTML = '<i class="fas fa-flask mr-1"></i><span>Demo Mode</span>';
@@ -767,7 +735,7 @@
 
         const router = {
             navigate(view) {
-                if (!state.currentUser && view !== 'auth') return;
+                if (!AppState.currentUser && view !== 'auth') return;
                 document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
                 document.getElementById(`${view}-view`).classList.remove('hidden');
                 document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -779,7 +747,7 @@
                         btn.classList.add('text-gray-400');
                     }
                 });
-                state.currentView = view;
+                AppState.currentView = view;
                 if (view === 'feed') feed.load();
                 if (view === 'profile') profile.load();
                 if (view === 'messages') messaging.load();
@@ -791,7 +759,7 @@
             init() {
                 const saved = localStorage.getItem('chainlink_user');
                 if (saved) {
-                    state.currentUser = JSON.parse(saved);
+                    AppState.currentUser = JSON.parse(saved);
                     document.getElementById('main-nav').classList.remove('hidden');
                     document.getElementById('app').classList.remove('hidden-until-load');
                     demoMode.init();
@@ -836,7 +804,7 @@
                 input.type = input.type === 'password' ? 'text' : 'password';
             },
 
-            async handleLogin(e) {
+            handleLogin(e) {
                 e.preventDefault();
                 const email = document.getElementById('login-email').value;
                 if (!security.validateEmail(email)) {
@@ -846,14 +814,17 @@
                 document.getElementById('login-form').classList.add('hidden');
                 document.getElementById('tfa-section').classList.remove('hidden');
                 document.getElementById('social-auth').classList.add('hidden');
-                QRCode.toCanvas(document.getElementById('qr-canvas'), `otpauth://totp/ChainLink:${email}?secret=JBSWY3DPEHPK3PXP&issuer=ChainLink`, { width: 200, margin: 2, color: { dark: '#000000', light: '#ffffff' } });
+                
+                if (typeof QRCode !== 'undefined') {
+                    QRCode.toCanvas(document.getElementById('qr-canvas'), `otpauth://totp/ChainLink:${email}?secret=JBSWY3DPEHPK3PXP&issuer=ChainLink`, { width: 200, margin: 2, color: { dark: '#000000', light: '#ffffff' } });
+                }
             },
 
             verify2FA() {
                 const code = document.getElementById('tfa-code').value;
                 if (code.length === 6) {
-                    state.currentUser = { id: '1', name: 'Kendal Symes', handle: '@kendaljenelle', email: document.getElementById('login-email').value, theme: 'pastel-pink', bio: 'Building CHAIN⛓️Link | Bartender turned Builder | Vernon, BC 🍁', location: 'Vernon, BC', website: '', birthday: '1998-10-22' };
-                    localStorage.setItem('chainlink_user', JSON.stringify(state.currentUser));
+                    AppState.currentUser = { id: '1', name: 'Kendal Symes', handle: '@kendaljenelle', email: document.getElementById('login-email').value, theme: 'pastel-pink', bio: 'Building CHAIN⛓️Link | Bartender turned Builder | Vernon, BC 🍁', location: 'Vernon, BC', website: '', birthday: '1998-10-22' };
+                    localStorage.setItem('chainlink_user', JSON.stringify(AppState.currentUser));
                     document.getElementById('main-nav').classList.remove('hidden');
                     demoMode.init();
                     router.navigate('feed');
@@ -877,8 +848,8 @@
                     toast.error('Invalid email address');
                     return;
                 }
-                state.currentUser = { id: '1', name: `${data.firstName} ${data.lastName}`, handle: `@${data.username}`, email: data.email, theme: 'pastel-pink', bio: '', location: '', website: '', birthday: data.birthday };
-                localStorage.setItem('chainlink_user', JSON.stringify(state.currentUser));
+                AppState.currentUser = { id: '1', name: `${data.firstName} ${data.lastName}`, handle: `@${data.username}`, email: data.email, theme: 'pastel-pink', bio: '', location: '', website: '', birthday: data.birthday };
+                localStorage.setItem('chainlink_user', JSON.stringify(AppState.currentUser));
                 document.getElementById('main-nav').classList.remove('hidden');
                 demoMode.init();
                 router.navigate('feed');
@@ -888,8 +859,8 @@
             socialLogin(provider) {
                 toast.info(`Connecting to ${provider}...`);
                 setTimeout(() => {
-                    state.currentUser = { id: '1', name: 'Kendal Symes', handle: '@kendaljenelle', email: 'kendal@example.com', theme: 'pastel-pink', bio: 'Building CHAIN⛓️Link | Bartender turned Builder | Vernon, BC 🍁', location: 'Vernon, BC', website: '' };
-                    localStorage.setItem('chainlink_user', JSON.stringify(state.currentUser));
+                    AppState.currentUser = { id: '1', name: 'Kendal Symes', handle: '@kendaljenelle', email: 'kendal@example.com', theme: 'pastel-pink', bio: 'Building CHAIN⛓️Link | Bartender turned Builder | Vernon, BC 🍁', location: 'Vernon, BC', website: '' };
+                    localStorage.setItem('chainlink_user', JSON.stringify(AppState.currentUser));
                     document.getElementById('main-nav').classList.remove('hidden');
                     demoMode.init();
                     router.navigate('feed');
@@ -899,7 +870,7 @@
 
             logout() {
                 localStorage.removeItem('chainlink_user');
-                state.currentUser = null;
+                AppState.currentUser = null;
                 demoMode.isEnabled = false;
                 localStorage.setItem('chainlink_demo', 'false');
                 location.reload();
@@ -908,10 +879,9 @@
 
         const postCreator = {
             mediaFile: null,
-            scheduledTime: null,
 
             setFont(font) {
-                state.currentFont = font;
+                AppState.currentFont = font;
                 document.querySelectorAll('.font-btn').forEach(btn => {
                     btn.classList.remove('bg-chain-yellow', 'text-chain-dark', 'border-chain-yellow');
                     btn.classList.add('border-chain-gray', 'text-gray-400');
@@ -966,43 +936,42 @@
 
                 const post = {
                     id: security.generateId(),
-                    author: state.currentUser.name,
-                    handle: state.currentUser.handle,
+                    author: AppState.currentUser.name,
+                    handle: AppState.currentUser.handle,
                     content: security.sanitize(content),
-                    font: state.currentFont,
+                    font: AppState.currentFont,
                     timestamp: new Date(),
                     likes: 0, loves: 0, dislikes: 0, repeats: 0, comments: [],
-                    isScheduled: !!this.scheduledTime,
+                    isScheduled: false,
                     media: this.mediaFile ? URL.createObjectURL(this.mediaFile) : null,
                     mediaType: this.mediaFile ? this.mediaFile.type.split('/')[0] : null,
                     isDemo: false
                 };
 
-                state.posts.unshift(post);
+                AppState.posts.unshift(post);
                 feed.renderPost(post, true);
                 document.getElementById('post-content').value = '';
                 this.clearMedia();
-                toast.success(this.scheduledTime ? 'Post scheduled!' : 'Posted successfully!');
+                toast.success('Posted successfully!');
             }
         };
 
         const feed = {
             load() {
-                if (state.posts.length === 0 && demoMode.isEnabled) demoMode.loadMockData();
+                if (AppState.posts.length === 0 && demoMode.isEnabled) demoMode.loadMockData();
                 this.renderFeed();
-                this.setupIntersectionObserver();
             },
 
             renderFeed() {
                 const container = document.getElementById('feed-posts');
                 container.innerHTML = '';
-                state.posts.forEach(post => this.renderPost(post));
+                AppState.posts.forEach(post => this.renderPost(post));
             },
 
             renderPost(post, prepend = false) {
                 const container = document.getElementById('feed-posts');
                 const postEl = document.createElement('div');
-                postEl.className = 'post-card bg-chain-charcoal border border-chain-gray rounded-xl p-4 shadow-lg animate-slide-up';
+                postEl.className = 'post-card bg-chain-charcoal border border-chain-gray rounded-xl p-4 shadow-lg animate-fade-in';
                 postEl.id = `post-${post.id}`;
                 
                 const timeAgo = this.timeAgo(post.timestamp);
@@ -1025,7 +994,6 @@
                                     <span class="font-bold text-white truncate">${security.escapeHtml(post.author)}</span>
                                     <span class="text-gray-500 text-sm">${security.escapeHtml(post.handle)}</span>
                                     <span class="text-gray-600 text-xs flex-shrink-0">• ${timeAgo}</span>
-                                    ${post.isScheduled ? '<span class="text-xs text-chain-yellow border border-chain-yellow px-2 py-0.5 rounded-full flex-shrink-0">Scheduled</span>' : ''}
                                     ${demoBadge}
                                 </div>
                                 <button class="text-gray-500 hover:text-white flex-shrink-0"><i class="fas fa-ellipsis-h"></i></button>
@@ -1034,10 +1002,9 @@
                             ${mediaHtml}
                             <div class="flex items-center justify-between mt-4 pt-3 border-t border-chain-gray">
                                 <div class="flex space-x-6">
-                                    <button onclick="feed.react('${post.id}', 'love')" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition group"><i class="fas fa-heart group-hover:scale-125 transition-transform"></i><span class="text-sm" id="love-${post.id}">${post.loves}</span></button>
-                                    <button onclick="feed.react('${post.id}', 'like')" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition group"><i class="fas fa-thumbs-up group-hover:scale-125 transition-transform"></i><span class="text-sm" id="like-${post.id}">${post.likes}</span></button>
-                                    <button onclick="feed.react('${post.id}', 'dislike')" class="flex items-center space-x-2 text-gray-400 hover:text-orange-400 transition group"><i class="fas fa-thumbs-down group-hover:scale-125 transition-transform"></i><span class="text-sm" id="dislike-${post.id}">${post.dislikes}</span></button>
-                                    <button onclick="feed.react('${post.id}', 'repeat')" class="flex items-center space-x-2 text-gray-400 hover:text-green-400 transition group"><i class="fas fa-retweet group-hover:scale-125 transition-transform"></i><span class="text-sm" id="repeat-${post.id}">${post.repeats}</span></button>
+                                    <button onclick="feed.react('${post.id}', 'love')" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition"><i class="fas fa-heart"></i><span class="text-sm" id="love-${post.id}">${post.loves}</span></button>
+                                    <button onclick="feed.react('${post.id}', 'like')" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition"><i class="fas fa-thumbs-up"></i><span class="text-sm" id="like-${post.id}">${post.likes}</span></button>
+                                    <button onclick="feed.react('${post.id}', 'repeat')" class="flex items-center space-x-2 text-gray-400 hover:text-green-400 transition"><i class="fas fa-retweet"></i><span class="text-sm" id="repeat-${post.id}">${post.repeats}</span></button>
                                 </div>
                                 <button onclick="feed.toggleComments('${post.id}')" class="text-gray-400 hover:text-chain-yellow transition"><i class="fas fa-comment mr-1"></i> ${post.comments.length}</button>
                             </div>
@@ -1062,13 +1029,10 @@
             },
 
             react(postId, type) {
-                const post = state.posts.find(p => p.id === postId);
+                const post = AppState.posts.find(p => p.id === postId);
                 if (post) {
                     post[type + 's']++;
                     document.getElementById(`${type}-${postId}`).textContent = post[type + 's'];
-                    const btn = event.currentTarget;
-                    btn.classList.add('scale-125');
-                    setTimeout(() => btn.classList.remove('scale-125'), 200);
                 }
             },
 
@@ -1080,8 +1044,8 @@
                 const input = document.getElementById(`comment-input-${postId}`);
                 const text = input.value.trim();
                 if (!text) return;
-                const comment = { author: state.currentUser.name, text: security.sanitize(text), timestamp: new Date(), isDemo: false };
-                const post = state.posts.find(p => p.id === postId);
+                const comment = { author: AppState.currentUser.name, text: security.sanitize(text), timestamp: new Date(), isDemo: false };
+                const post = AppState.posts.find(p => p.id === postId);
                 post.comments.push(comment);
                 const list = document.getElementById(`comments-list-${postId}`);
                 const tempDiv = document.createElement('div');
@@ -1092,9 +1056,9 @@
 
             deletePost(postId) {
                 if (!confirm('Delete this post?')) return;
-                const index = state.posts.findIndex(p => p.id === postId);
+                const index = AppState.posts.findIndex(p => p.id === postId);
                 if (index > -1) {
-                    state.posts.splice(index, 1);
+                    AppState.posts.splice(index, 1);
                     document.getElementById(`post-${postId}`)?.remove();
                     profile.renderUserPosts();
                     toast.success('Post deleted');
@@ -1114,19 +1078,7 @@
                 interval = seconds / 60;
                 if (interval > 1) return Math.floor(interval) + "m";
                 return "now";
-            },
-
-            setupIntersectionObserver() {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting && entry.target.id === 'feed-sentinel') this.loadMore();
-                    });
-                }, { root: null, rootMargin: '100px', threshold: 0.1 });
-                const sentinel = document.getElementById('feed-sentinel');
-                if (sentinel) observer.observe(sentinel);
-            },
-
-            loadMore() {}
+            }
         };
 
         const profile = {
@@ -1135,29 +1087,29 @@
             editData: { avatar: null, cover: null },
 
             load() {
-                if (state.currentUser) {
-                    document.getElementById('profile-name').textContent = state.currentUser.name;
-                    document.getElementById('profile-handle').textContent = state.currentUser.handle;
-                    document.getElementById('profile-bio').textContent = state.currentUser.bio || 'No bio yet';
-                    document.getElementById('edit-avatar-placeholder').textContent = state.currentUser.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                if (AppState.currentUser) {
+                    document.getElementById('profile-name').textContent = AppState.currentUser.name;
+                    document.getElementById('profile-handle').textContent = AppState.currentUser.handle;
+                    document.getElementById('profile-bio').textContent = AppState.currentUser.bio || 'No bio yet';
+                    document.getElementById('edit-avatar-placeholder').textContent = AppState.currentUser.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
                     
                     const locEl = document.getElementById('profile-location');
-                    if (state.currentUser.location) {
-                        locEl.innerHTML = `<i class="fas fa-map-marker-alt mr-1"></i> ${security.escapeHtml(state.currentUser.location)}`;
+                    if (AppState.currentUser.location) {
+                        locEl.innerHTML = `<i class="fas fa-map-marker-alt mr-1"></i> ${security.escapeHtml(AppState.currentUser.location)}`;
                         locEl.classList.remove('hidden');
                     } else {
                         locEl.classList.add('hidden');
                     }
                     
                     const webEl = document.getElementById('profile-website');
-                    if (state.currentUser.website) {
-                        webEl.innerHTML = `<i class="fas fa-link mr-1"></i> <a href="${state.currentUser.website}" target="_blank" class="hover:text-chain-yellow transition">${security.escapeHtml(state.currentUser.website.replace(/^https?:\/\//, ''))}</a>`;
+                    if (AppState.currentUser.website) {
+                        webEl.innerHTML = `<i class="fas fa-link mr-1"></i> <a href="${AppState.currentUser.website}" target="_blank" class="hover:text-chain-yellow transition">${security.escapeHtml(AppState.currentUser.website.replace(/^https?:\/\//, ''))}</a>`;
                         webEl.classList.remove('hidden');
                     } else {
                         webEl.classList.add('hidden');
                     }
 
-                    const userPosts = state.posts.filter(p => p.handle === state.currentUser.handle && !p.isDemo);
+                    const userPosts = AppState.posts.filter(p => p.handle === AppState.currentUser.handle && !p.isDemo);
                     document.getElementById('stat-posts').textContent = userPosts.length;
                 }
                 this.renderUserPosts();
@@ -1166,7 +1118,7 @@
             renderUserPosts() {
                 const container = document.getElementById('profile-posts');
                 container.innerHTML = '';
-                const userPosts = state.posts.filter(p => p.handle === state.currentUser?.handle);
+                const userPosts = AppState.posts.filter(p => p.handle === AppState.currentUser?.handle);
                 
                 if (userPosts.length === 0) {
                     container.innerHTML = `<div class="text-center py-12 text-gray-500 border-2 border-dashed border-chain-gray rounded-xl"><i class="fas fa-pen-fancy text-4xl mb-3 opacity-50"></i><p class="mb-2">No posts yet</p><button onclick="router.navigate('feed')" class="text-chain-yellow hover:underline text-sm">Create your first post</button></div>`;
@@ -1195,11 +1147,11 @@
             },
 
             editProfile() {
-                document.getElementById('edit-name').value = state.currentUser.name || '';
-                document.getElementById('edit-bio').value = state.currentUser.bio || '';
-                document.getElementById('edit-location').value = state.currentUser.location || '';
-                document.getElementById('edit-website').value = state.currentUser.website || '';
-                document.getElementById('bio-count').textContent = (state.currentUser.bio || '').length;
+                document.getElementById('edit-name').value = AppState.currentUser.name || '';
+                document.getElementById('edit-bio').value = AppState.currentUser.bio || '';
+                document.getElementById('edit-location').value = AppState.currentUser.location || '';
+                document.getElementById('edit-website').value = AppState.currentUser.website || '';
+                document.getElementById('bio-count').textContent = (AppState.currentUser.bio || '').length;
                 document.getElementById('edit-profile-modal').classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
             },
@@ -1241,7 +1193,7 @@
                     return;
                 }
 
-                state.currentUser = { ...state.currentUser, ...updates };
+                AppState.currentUser = { ...AppState.currentUser, ...updates };
                 
                 document.getElementById('profile-name').textContent = updates.name;
                 document.getElementById('profile-bio').textContent = updates.bio || 'No bio yet';
@@ -1270,9 +1222,10 @@
                 
                 if (this.editData.cover) {
                     document.getElementById('profile-cover-img').src = this.editData.cover;
+                    document.getElementById('profile-cover-img').classList.remove('hidden');
                 }
 
-                localStorage.setItem('chainlink_user', JSON.stringify(state.currentUser));
+                localStorage.setItem('chainlink_user', JSON.stringify(AppState.currentUser));
                 this.closeEditModal();
                 toast.success('Profile updated successfully!');
             },
@@ -1287,8 +1240,8 @@
                 });
                 const color = theme.replace('pastel-', '');
                 avatar.classList.add(`from-pastel-${color}`, `to-${color}-500`);
-                state.currentUser.theme = theme;
-                localStorage.setItem('chainlink_user', JSON.stringify(state.currentUser));
+                AppState.currentUser.theme = theme;
+                localStorage.setItem('chainlink_user', JSON.stringify(AppState.currentUser));
                 toast.success(`Theme changed to ${color}`);
             }
         };
@@ -1298,17 +1251,17 @@
 
             load() {
                 this.renderConversations();
-                if (state.conversations.length > 0 && demoMode.isEnabled) this.loadConversation(state.conversations[0]);
+                if (AppState.conversations.length > 0 && demoMode.isEnabled) this.loadConversation(AppState.conversations[0]);
             },
 
             renderConversations() {
                 const container = document.getElementById('conversations-list');
-                if (state.conversations.length === 0) {
+                if (AppState.conversations.length === 0) {
                     container.innerHTML = `<div class="text-center py-12 text-gray-500"><i class="fas fa-comments text-4xl mb-3 opacity-50"></i><p class="text-sm">No messages yet</p></div>`;
                     return;
                 }
 
-                container.innerHTML = state.conversations.map(c => {
+                container.innerHTML = AppState.conversations.map(c => {
                     const demoBadge = c.isDemo ? `<span class="ml-2 px-1.5 py-0.5 bg-demo-purple/20 text-demo-purple text-[8px] rounded border border-demo-purple/30 uppercase">Demo</span>` : '';
                     return `<div onclick='messaging.loadConversation(${JSON.stringify(c).replace(/'/g, "&#39;")})' class="flex items-center p-4 hover:bg-chain-dark cursor-pointer transition border-b border-chain-gray group"><div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">${c.avatar || c.name.charAt(0)}</div><div class="flex-1 min-w-0"><div class="flex justify-between items-center mb-1"><div class="flex items-center"><h4 class="font-bold text-white truncate">${c.name}</h4>${demoBadge}</div><span class="text-xs text-gray-500 flex-shrink-0">${c.time}</span></div><p class="text-sm text-gray-400 truncate group-hover:text-gray-300 transition">${c.last}</p></div>${c.unread ? `<span class="ml-2 w-5 h-5 bg-chain-yellow text-chain-dark text-xs rounded-full flex items-center justify-center font-bold flex-shrink-0">${c.unread}</span>` : ''}</div>`;
                 }).join('');
@@ -1326,7 +1279,7 @@
 
             renderMessages() {
                 const container = document.getElementById('messages-container');
-                const msgs = state.messages || [];
+                const msgs = AppState.messages || [];
                 if (msgs.length === 0) {
                     container.innerHTML = `<div class="text-center text-gray-500 mt-8"><p>Start a conversation</p></div>`;
                     return;
@@ -1334,7 +1287,7 @@
                 container.innerHTML = msgs.map(m => {
                     const isMe = m.from === 'me';
                     const demoBadge = m.isDemo ? `<span class="ml-1 px-1.5 py-0.5 bg-demo-purple/20 text-demo-purple text-[8px] rounded border border-demo-purple/30 uppercase">Demo</span>` : '';
-                    return `<div class="flex ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in"><div class="max-w-[80%] ${isMe ? 'bg-chain-yellow text-chain-dark' : 'bg-chain-charcoal text-white'} rounded-2xl px-4 py-2 shadow-lg relative group"><div class="flex items-center ${isMe ? 'justify-end' : 'justify-start'} mb-1">${!isMe ? `<span class="text-xs font-bold opacity-70 mr-1">${m.from === 'them' ? 'John' : 'You'}</span>` : ''}${demoBadge}</div><p>${security.escapeHtml(m.text)}</p><span class="text-xs ${isMe ? 'text-chain-dark/60' : 'text-gray-500'} block mt-1 text-right">${m.time}</span></div></div>`;
+                    return `<div class="flex ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in"><div class="max-w-[80%] ${isMe ? 'bg-chain-yellow text-chain-dark' : 'bg-chain-charcoal text-white'} rounded-2xl px-4 py-2 shadow-lg"><div class="flex items-center ${isMe ? 'justify-end' : 'justify-start'} mb-1">${!isMe ? `<span class="text-xs font-bold opacity-70 mr-1">${m.from === 'them' ? 'John' : 'You'}</span>` : ''}${demoBadge}</div><p>${security.escapeHtml(m.text)}</p><span class="text-xs ${isMe ? 'text-chain-dark/60' : 'text-gray-500'} block mt-1 text-right">${m.time}</span></div></div>`;
                 }).join('');
                 container.scrollTop = container.scrollHeight;
             },
@@ -1344,14 +1297,14 @@
                 const text = input.value.trim();
                 if (!text) return;
                 const newMsg = { id: security.generateId(), from: 'me', text: text, time: 'Just now', isDemo: false };
-                state.messages.push(newMsg);
+                AppState.messages.push(newMsg);
                 this.renderMessages();
                 input.value = '';
                 
                 if (demoMode.isEnabled && this.currentConversation?.isDemo) {
                     setTimeout(() => {
-                        const replies = ["That's really cool! 🎉", "I love the demo mode feature!", "How long have you been coding?", "This looks amazing!", "Can't wait to see the final version! ⛓️"];
-                        state.messages.push({ id: security.generateId(), from: 'them', text: replies[Math.floor(Math.random() * replies.length)], time: 'Just now', isDemo: true });
+                        const replies = ["That's really cool! 🎉", "I love the demo mode feature!", "How long have you been coding?", "This looks amazing!"];
+                        AppState.messages.push({ id: security.generateId(), from: 'them', text: replies[Math.floor(Math.random() * replies.length)], time: 'Just now', isDemo: true });
                         this.renderMessages();
                         toast.info('New message from ' + this.currentConversation.name);
                     }, 2000);
@@ -1363,7 +1316,7 @@
             load() { this.renderStreams(); },
             renderStreams() {
                 const container = document.getElementById('live-streams');
-                const streams = demoMode.isEnabled && state.demoStreams ? state.demoStreams : [];
+                const streams = demoMode.isEnabled && AppState.demoStreams ? AppState.demoStreams : [];
                 if (streams.length === 0) {
                     container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 border-2 border-dashed border-chain-gray rounded-xl"><i class="fas fa-broadcast-tower text-4xl mb-3 opacity-50"></i><p>No live streams right now</p><button onclick="live.start()" class="mt-4 text-chain-yellow hover:underline">Start the first one?</button></div>`;
                     return;
@@ -1386,13 +1339,13 @@
                 `).join('');
             },
             start() {
-                if (demoMode.isEnabled) toast.info('🎬 Demo: Starting stream simulation...');
+                if (demoMode.isEnabled) toast.info('🎬 Demo: Starting stream...');
                 else toast.info('Initializing stream...');
                 document.getElementById('live-badge').classList.remove('hidden');
-                setTimeout(() => { toast.success('You are now LIVE! 🔴'); state.isLive = true; }, 2000);
+                setTimeout(() => { toast.success('You are now LIVE! 🔴'); AppState.isLive = true; }, 2000);
             },
             selectTier(price) {
-                if (demoMode.isEnabled) toast.info(`💰 Demo: Selected $${price}/month tier (no charge)`);
+                if (demoMode.isEnabled) toast.info(`💰 Demo: $${price}/month (no charge)`);
                 else toast.info(`Selected $${price}/month tier`);
             }
         };
@@ -1401,9 +1354,9 @@
             toggle() {
                 const widget = document.getElementById('spotify-widget');
                 widget.classList.toggle('hidden');
-                if (!widget.classList.contains('hidden') && !state.spotifyConnected) {
-                    document.getElementById('spotify-track').textContent = demoMode.isEnabled ? 'Demo Mode - Lo-Fi Beats' : 'Connected - Playing Lo-Fi Beats';
-                    state.spotifyConnected = true;
+                if (!widget.classList.contains('hidden') && !AppState.spotifyConnected) {
+                    document.getElementById('spotify-track').textContent = demoMode.isEnabled ? 'Demo Mode - Lo-Fi Beats' : 'Connected - Lo-Fi Beats';
+                    AppState.spotifyConnected = true;
                 }
             }
         };
@@ -1421,14 +1374,11 @@
             },
             success(msg) { this.show(msg, 'success'); },
             error(msg) { this.show(msg, 'error'); },
-            info(msg) { this.show(msg, 'info'); },
-            warning(msg) { this.show(msg, 'warning'); }
+            info(msg) { this.show(msg, 'info'); }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
             auth.init();
-            
-            // Bio character counter
             document.getElementById('edit-bio')?.addEventListener('input', function() {
                 document.getElementById('bio-count').textContent = this.value.length;
             });
