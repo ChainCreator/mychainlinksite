@@ -307,6 +307,9 @@
     </div>
 
     <script>
+const supabaseUrl = 'https://etdntphbptcuzfnkqhev.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0ZG50cGhicHRjdXpmbmtxaGV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMjE4NTUsImV4cCI6MjA4NTg5Nzg1NX0.6WdINNX8fS33ZAGnaGVCcSxDNAr_H0g7drdwk2seYCg';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
         // State Management
         let isDemoMode = false;
         let currentUser = null;
