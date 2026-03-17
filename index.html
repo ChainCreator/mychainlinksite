@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CHAIN Link - The social media platform that lets you be you. No filters, no gallery uploads, just real connections.">
+    <meta name="theme-color" content="#0D0D0D">
+    <meta name="google-signin-client_id" content="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com">
+    <title>CHAIN⛓️Link</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link 
+    
+<style>
+        :root {
+            --chain-dark: #0D0D0D;
+            --chain-yellow: #F4D03F;
+            --chain-gray: #1A1A1A;
+            --chain-light: #E0E0E0;
+        }
+        
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--chain-dark);
+            color: var(--chain-light);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .text-chain-yellow { color: #F4D03F; }
+        .bg-chain-yellow { background-color: #F4D03F; }
+        .border-chain-yellow { border-color: #F4D03F; }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0D0D0D; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F4D03F; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(244, 208, 63, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(244, 208, 63, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(244, 208, 63, 0); }
+        }
+        
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        
+        /* Auth Styles */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, #0D0D0D 0%, #1A1A1A 100%);
+        }
+        
+        .quote-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .quote-label {
+            color: #6B7280;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        
+        .quote-text {
+            color: #E5E7EB;
+            font-size: 1.25rem;
+            font-style: italic;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto 0.5rem;
+        }
+        
+        .quote-author {
+            color: #F4D03F;
+            font-size: 0.875rem;
+        }
+        
+       .brand-title {
+   font-size: 3.5rem;
+letter-spacing: 0.05em;
+color: #F4D03F;
+text-align: center;
+margin-bottom: 0.5rem;
+mont-weight: 700;
+
+      
+       }
+        
+        .brand-subtitle {
+            text-align: center;
+            color: #FFFFFF;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .brand-tagline {
+            text-align: center;
+            color: #F4D03F;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        
+        .social-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 9999px;
+            border: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #1F2937;
+            color: white;
+            border: 1px solid #374151;
+        }
+        
+        .social-btn:hover { background: #374151; }
+        
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 0.75rem;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1rem;
+            background: #1F2937;
+            border: 1px solid #374151;
+            border-radius: 0.75rem;
+            color: white;
+            font-size: 0.9375rem;
+            transition: border-color 0.2s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #F4D03F;
+        }
+        
+        .input-field::placeholder { color: #6B7280; }
+        
+        .eye-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6B7280;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+        
+        .eye-toggle:hover { color: #F4D03F; }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #F4D03F;
+            color: #0D0D0D;
+            border: none;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: filter 0.2s;
+            margin-top: 0.5rem;
+        }
+        
+        .submit-btn:hover { filter: brightness(1.1); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .password-requirements {
+            font-size: 0.75rem;
+            color: #6B7280;
+            margin-top: 0.5rem;
+            text-align: left;
+        }
+        
+        .requirement-met { color: #10B981; }
+        .requirement-unmet { color: #6B7280; }
+        
+        /* Camera */
+        .camera-modal {
+            backdrop-filter: blur(20px);
+            background: rgba(13, 13, 13, 0.98);
+        }
+        
+        .capture-btn {
+            width: 72px;
+            height: 72px;
+            border: 4px solid #F4D03F;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+            background: transparent;
+        }
+        
+        .capture-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 56px;
+            height: 56px;
+            background: #F4D03F;
+            border-radius: 50%;
+        }
+        
+        .capture-btn:active { transform: scale(0.95); }
+        
+        /* Profile Circle with Ring */
+        .profile-ring-container {
+            position: relative;
+            display: inline-block;
+            padding: 3px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #F4D03F, #D4AC0D);
+        }
+        
+        .profile-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            background: #0D0D0D;
+            color: white;
+        }
+        
+        .profile-circle-lg {
+            width: 80px;
+            height: 80px;
+            font-size: 1.5rem;
+        }
+        
+        .profile-circle-xl {
+            width: 120px;
+            height: 120px;
+            font-size: 2rem;
+        }
+        
+        /* Pastel Themes */
+        .theme-pink { background: linear-gradient(135deg, #F472B6, #DB2777); }
+        .theme-blue { background: linear-gradient(135deg, #60A5FA, #2563EB); }
+        .theme-green { background: linear-gradient(135deg, #4ADE80, #16A34A); }
+        .theme-purple { background: linear-gradient(135deg, #A78BFA, #7C3AED); }
+        .theme-orange { background: linear-gradient(135deg, #FB923C, #EA580C); }
+        .theme-yellow { background: linear-gradient(135deg, #FACC15, #CA8A04); }
+        
+        /* Chat Bubbles */
+        .chat-bubble {
+            max-width: 75%;
+            padding: 0.75rem 1rem;
+            border-radius: 1.25rem;
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+        }
+        
+        .chat-bubble-sent {
+            background: #F4D03F;
+            color: #0D0D0D;
+            margin-left: auto;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        .chat-bubble-received {
+            background: #1A1A1A;
+            color: white;
+            margin-right: auto;
+            border-bottom-left-radius: 0.25rem;
+        }
+        
+        /* Spotify Widget */
+        .spotify-widget {
+            background: linear-gradient(135deg, #1DB954, #1ed760);
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+        
+        /* View System */
+        .view-section {
+            display: none;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .view-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .view-flex { display: none; }
+        .view-flex.active { display: flex; }
+        
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #374151;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider { background-color: #F4D03F; }
+        input:checked + .toggle-slider:before { transform: translateX(22px); }
+        
+        /* Flash */
+        .flash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.15s;
+        }
+        
+        .flash.active { opacity: 1; }
+        
+        /* Demo Toggle */
+        .demo-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+            background: rgba(26, 26, 26, 0.9);
+            border: 1px solid #333;
+            color: #9CA3AF;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+        
+        .demo-toggle.active {
+            background: #F4D03F;
+            color: #0D0D0D;
+            border-color: #F4D03F;
+        }
+        
+        /* Live Indicator */
+        .live-badge {
+            background: #EF4444;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            animation: pulse-ring 2s infinite;
+        }
+        
+        /* Grid */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+        
+        .photo-grid-item {
+            aspect-ratio: 1;
+            background: #1A1A1A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .photo-grid-item:hover { opacity: 0.8; }
+        
+        /* Rules Modal */
+        .rules-modal {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 2FA QR Container */
+        #qrcode img {
+            margin: 0 auto;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-[#0D0D0D] text-gray-100">
+
+    <div id="flash" class="flash"></div>
+
+    <!-- DEMO TOGGLE -->
+    <button id="demoToggle" class="demo-toggle" onclick="toggleDemoMode()">
+        Demo: OFF
+    </button>
+
+    <!-- AUTHENTICATION VIEW -->
+    <div id="auth-view" class="view-section active">
+        <div class="auth-container">
+            <div class="quote-section">
+                <div class="quote-label">Daily Inspiration</div>
+                <div class="quote-text">"Creativity is intelligence having fun."</div>
+                <div class="quote-author">— Albert Einstein</div>
+            </div>
+            
+            <div class="w-full max-w-sm">
+                <h1 class="brand-title">CHAIN⛓️Link</h1>
+                <p class="brand-subtitle">Join for free today</p>
+                <p class="brand-tagline">Welcome to the social media platform that lets you be you</p>
+                
+                <div class="mb-6 p-4 bg-[#1A1A1A] rounded-lg border border-[#F4D03F]/30">
+                    <p class="text-[#F4D03F] text-sm font-bold text-center mb-2">💰 Creator Earnings</p>
+                    <p class="text-gray-400 text-xs text-center">Subscribe for $5.99/month. Creators keep 94% (we take 6% to keep the lights on).</p>
+                </div>
+                
+                <button onclick="signInWithGoogle()" class="social-btn">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Continue with Google
+                </button>
+                
+                <button onclick="signInWithFacebook()" class="social-btn">
+                    <svg class="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    Continue with Facebook
+                </button>
+                
+                <div style="display: flex; align-items: center; margin: 1.5rem 0; color: #6B7280; font-size: 0.875rem;">
+                    <div style="flex: 1; height: 1px; background: #374151;"></div>
+                    <span style="padding: 0 1rem;">Or continue with email</span>
+                    <div style="flex: 1; height: 1px; background: #374151;"></div>
+                </div>
+                
+                <form onsubmit="handleEmailAuth(event)">
+                    <input type="email" id="auth-email" placeholder="you@example.com" class="input-field" required>
+                    
+                    <div class="input-group">
+                        <input type="password" id="auth-password" placeholder="Password" class="input-field" required oninput="validatePassword()">
+                        <button type="button" class="eye-toggle" onclick="togglePasswordVisibility()">
+                            <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="password-requirements" id="password-reqs">
+                        <div id="req-length" class="requirement-unmet">• At least 8 characters</div>
+                        <div id="req-upper" class="requirement-unmet">• One uppercase letter</div>
+                        <div id="req-lower" class="requirement-unmet">• One lowercase letter</div>
+                        <div id="req-number" class="requirement-unmet">• One number</div>
+                        <div id="req-symbol" class="requirement-unmet">• One special symbol (!@#$%^&*)</div>
+                    </div>
+                    
+                    <button type="submit" id="auth-submit" class="submit-btn" disabled>Sign In / Sign Up</button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 1.5rem; color: #9CA3AF; font-size: 0.875rem; cursor: pointer;" onclick="showRules()">
+                    By signing up, you agree to our <span style="color: #F4D03F; text-decoration: underline;">Community Rules</span>
+                </div>
+                
+                <div style="text-align: center; margin-top: 1rem; color: #9CA3AF; font-size: 0.875rem; cursor: pointer;" onclick="enterDemoMode()">
+                    Try <span style="color: #F4D03F; text-decoration: underline;">Demo Mode</span> →
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RULES MODAL -->
+    <div id="rules-modal" class="rules-modal fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#1A1A1A] rounded-2xl max-w-md w-full max-h-[80vh] overflow-y-auto border border-[#F4D03F]/30 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-[#F4D03F]">Community Rules</h2>
+                <button onclick="hideRules()" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="space-y-4 text-sm text-gray-300">
+                <p><strong class="text-white">1. No Gallery Uploads</strong><br>Only camera-captured content. No saved images, no screenshots.</p>
+                <p><strong class="text-white">2. Be Authentic</strong><br>No filters allowed. Be the real you.</p>
+                <p><strong class="text-white">3. Creator Earnings</strong><br>$5.99/month subscription. You keep 94%, we take 6%.</p>
+                <p><strong class="text-white">4. No External Sharing</strong><br>Content stays on CHAIN Link. No reposting outside.</p>
+                <p><strong class="text-white">5. Respect Privacy</strong><br>Message requests required for non-followers.</p>
+                <p><strong class="text-white">6. Zero Tolerance</strong><br>Hate speech, harassment, or illegal content results in immediate ban.</p>
+            </div>
+            <button onclick="hideRules()" class="w-full mt-6 py-3 bg-[#F4D03F] text-[#0D0D0D] rounded-full font-bold">I Understand</button>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="app-view" class="view-section hidden">
+        
+        <!-- HEADER -->
+        <header class="sticky top-0 z-40 bg-[#0D0D0D]/95 backdrop-blur-md border-b border-[#1A1A1A]">
+            <div class="max-w-2xl mx-auto px-4 py-3 flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-[#F4D03F]" style="font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px;">
+                    CHAIN⛓️Link
+                </h1>
+                
+                <nav class="flex items-center gap-1">
+                    <button onclick="showView('feed')" class="p-2 rounded-full">
+                        <svg class="w-6 h-6 text-[#F4D03F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    </button>
+                    
+                    <button onclick="showView('explore')" class="p-2 rounded-full">
+                        <svg class="w-6 h-6 text-gray-400 hover:text-[#F4D03F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </button>
+                    
+                    <button onclick="showView('live')" class="p-2 rounded-full relative">
+                        <div class="live-badge absolute -top-1 -right-1 text-[10px] px-1.5">LIVE</div>
+                        <svg class="w-6 h-6 text-gray-400 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    </button>
+                    
+                    <button onclick="showView('messages')" class="p-2 rounded-full relative">
+                        <svg class="w-6 h-6 text-gray-400 hover:text-[#F4D03F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                        <span id="msg-badge" class="hidden absolute top-0 right-0 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                    </button>
+                    
+                    <button onclick="openCameraModal()" class="p-2 bg-[#F4D03F] text-[#0D0D0D] rounded-full hover:scale-105 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+                    </button>
+                    
+                    <button onclick="showView('profile')" class="p-2 rounded-full">
+                        <div class="profile-ring-container">
+                            <div class="profile-circle bg-gradient-to-br from-[#F4D03F] to-[#D4AC0D] text-[#0D0D0D]">K</div>
+                        </div>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- FEED VIEW -->
+        <div id="feed-view" class="view-section active pb-20">
+            
+            <!-- Spotify Widget -->
+            <div class="mx-4 mt-4">
+                <div class="spotify-widget">
+                    <div class="w-10 h-10 bg-black/30 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-xs text-black/60 font-bold uppercase">Now Playing</div>
+                        <div class="text-sm font-bold text-black">Spotify Connect</div>
+                        <div class="text-xs text-black/80">Tap to link your account</div>
+                    </div>
+                    <div class="flex gap-0.5">
+                        <div class="w-1 h-4 bg-black/40 rounded-full animate-pulse"></div>
+                        <div class="w-1 h-6 bg-black/40 rounded-full animate-pulse" style="animation-delay: 0.1s"></div>
+                        <div class="w-1 h-3 bg-black/40 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Post -->
+            <div class="p-4 border-b border-[#1A1A1A]">
+                <div class="flex gap-3">
+                    <div class="profile-ring-container">
+                        <div class="profile-circle bg-gradient-to-br from-[#F4D03F] to-[#D4AC0D] text-[#0D0D0D]">K</div>
+                    </div>
+                    <div class="flex-1">
+                        <textarea id="postInput" class="w-full bg-transparent border-none text-white placeholder-gray-500 focus:outline-none resize-none text-lg" style="min-height: 100px; font-family: 'Inter', sans-serif;" placeholder="Let's connect today..." rows="3"></textarea>
+                        
+                        <div id="mentionDropdown" class="hidden absolute bg-[#1A1A1A] border border-[#333] rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto w-64 mt-1"></div>
+                        
+                        <div class="flex gap-2 mt-3 mb-3 overflow-x-auto no-scrollbar">
+                            <button onclick="setFont('default')" class="px-3 py-1 rounded-full text-xs bg-[#F4D03F] text-[#0D0D0D] font-medium transition">Default</button>
+                            <button onclick="setFont('display')" class="px-3 py-1 rounded-full text-xs bg-[#1A1A1A] text-white border border-[#333] hover:border-[#F4D03F] transition">Display</button>
+                            <button onclick="setFont('mono')" class="px-3 py-1 rounded-full text-xs bg-[#1A1A1A] text-white border border-[#333] hover:border-[#F4D03F] transition font-mono">Mono</button>
+                            <button onclick="setFont('cursive')" class="px-3 py-1 rounded-full text-xs bg-[#1A1A1A] text-white border border-[#333] hover:border-[#F4D03F] transition" style="font-family: 'Dancing Script'">Cursive</button>
+                            <button onclick="setFont('bold')" class="px-3 py-1 rounded-full text-xs bg-[#1A1A1A] text-white border border-[#333] hover:border-[#F4D03F] transition font-bold">Bold</button>
+                        </div>
+                        
+                        <div id="tagPreview" class="flex flex-wrap gap-2 mb-3 empty:hidden"></div>
+                        
+                        <div id="mediaPreview" class="hidden mb-3 relative rounded-lg overflow-hidden">
+                            <img id="capturedImage" class="w-full h-48 object-cover" src="" alt="Preview">
+                            <button onclick="clearMedia()" class="absolute top-2 right-2 p-1.5 bg-black/50 text-white rounded-full hover:bg-red-500 transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center justify-between pt-3 border-t border-[#1A1A1A]">
+                            <div class="flex items-center gap-4">
+                                <button onclick="openCameraModal()" class="text-[#F4D03F] hover:opacity-80 transition">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+                                </button>
+                                
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="commentsToggle" checked>
+                                        <span class="toggle-slider"></span>
+                                    </div>
+                                    <span class="text-gray-400 text-sm">Comments on</span>
+                                </label>
+                            </div>
+                            
+                            <button onclick="createPost()" class="px-6 py-2 bg-[#F4D03F] text-[#0D0D0D] rounded-full font-semibold hover:brightness-110 transition">Post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Posts Feed -->
+            <div id="feed-posts" class="divide-y divide-[#1A1A1A]"></div>
+        </div>
+
+        <!-- EXPLORE VIEW -->
+        <div id="explore-view" class="view-section pb-20">
+            <div class="p-4 border-b border-[#1A1A1A]">
+                <div class="relative">
+                    <input type="text" id="search-input" placeholder="Search..." class="w-full bg-[#1A1A1A] border border-[#333] rounded-full py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:border-[#F4D03F] focus:outline-none" oninput="handleSearch(this.value)">
+                    <svg class="w-5 h-5 text-gray-500 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
+            </div>
+            
+            <div class="photo-grid" id="explore-grid"></div>
+            
+            <div id="search-results" class="hidden p-4 space-y-3"></div>
+        </div>
+
+        <!-- LIVE VIEW -->
+        <div id="live-view" class="view-section pb-20">
+            <div class="p-4 border-b border-[#1A1A1A] flex justify-between items-center">
+                <h2 class="text-xl font-bold">Live Streams</h2>
+                <button onclick="startLiveStream()" class="px-4 py-2 bg-red-500 text-white rounded-full font-bold text-sm hover:bg-red-600 transition flex items-center gap-2">
+                    <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    Go Live
+                </button>
+            </div>
+            
+            <div id="live-streams-list" class="p-4 space-y-4">
+                <!-- Live streams populated here -->
+            </div>
+            
+            <!-- Active Live Stream Modal -->
+            <div id="active-live-modal" class="hidden fixed inset-0 bg-black z-50">
+                <div class="absolute top-4 left-4 right-4 flex justify-between items-start">
+                    <div class="flex items-center gap-3">
+                        <div class="profile-ring-container">
+                            <div class="profile-circle bg-gradient-to-br from-red-500 to-pink-500 text-white text-xs">LIVE</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white">Your Live Stream</div>
+                            <div class="text-xs text-gray-400"><span id="viewer-count">0</span> viewers</div>
+                        </div>
+                    </div>
+                    <button onclick="endLiveStream()" class="p-2 bg-red-500 text-white rounded-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                
+                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
+                    <div id="live-chat" class="mb-4 max-h-48 overflow-y-auto space-y-2"></div>
+                    <div class="flex gap-2">
+                        <input type="text" id="live-chat-input" placeholder="Chat..." class="flex-1 bg-[#1A1A1A] border border-[#333] rounded-full px-4 py-2 text-white focus:border-[#F4D03F] focus:outline-none" onkeypress="if(event.key==='Enter')sendLiveChat()">
+                        <button onclick="sendLiveChat()" class="p-2 bg-[#F4D03F] text-[#0D0D0D] rounded-full">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MESSAGES VIEW -->
+        <div id="messages-view" class="view-section h-[calc(100vh-70px)] flex flex-col md:flex-row">
+            <div class="w-full md:w-80 border-r border-[#1A1A1A] flex flex-col bg-[#0D0D0D]">
+                <div class="p-4 border-b border-[#1A1A1A]">
+                    <h2 class="text-xl font-bold">Messages</h2>
+                </div>
+                
+                <div class="flex border-b border-[#1A1A1A]">
+                    <button onclick="switchMsgTab('inbox')" id="msg-tab-inbox" class="flex-1 py-3 text-[#F4D03F] border-b-2 border-[#F4D03F] font-medium text-sm">Inbox</button>
+                    <button onclick="switchMsgTab('requests')" id="msg-tab-requests" class="flex-1 py-3 text-gray-500 border-b-2 border-transparent font-medium text-sm relative">
+                        Requests
+                        <span id="request-badge" class="hidden absolute top-2 right-4 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                    </button>
+                </div>
+                
+                <div id="inbox-list" class="flex-1 overflow-y-auto"></div>
+                <div id="requests-list" class="hidden flex-1 overflow-y-auto"></div>
+            </div>
+            
+            <div id="chat-area" class="hidden md:flex flex-1 flex-col bg-[#0D0D0D]">
+                <div class="p-4 border-b border-[#1A1A1A] flex items-center gap-3">
+                    <div class="profile-ring-container"><div class="profile-circle bg-[#1A1A1A]" id="chat-avatar">?</div></div>
+                    <div>
+                        <div class="font-bold" id="chat-name">Select a chat</div>
+                        <div class="text-xs text-gray-500" id="chat-status">Tap to view messages</div>
+                    </div>
+                </div>
+                
+                <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-2"></div>
+                
+                <div id="chat-input-container" class="p-4 border-t border-[#1A1A1A] hidden">
+                    <div class="flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 bg-[#1A1A1A] border border-[#333] rounded-full px-4 py-2 text-white focus:border-[#F4D03F] focus:outline-none" onkeypress="if(event.key==='Enter')sendMessage()">
+                        <button onclick="sendMessage()" class="p-2 bg-[#F4D03F] text-[#0D0D0D] rounded-full">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="request-actions" class="p-4 border-t border-[#1A1A1A] hidden">
+                    <p class="text-sm text-gray-400 mb-3 text-center">This person isn't following you. Accept to allow messaging?</p>
+                    <div class="flex gap-2">
+                        <button onclick="declineRequest()" class="flex-1 py-2 border border-red-500 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition text-sm">Delete</button>
+                        <button onclick="acceptRequest()" class="flex-1 py-2 bg-[#F4D03F] text-[#0D0D0D] rounded-lg font-bold hover:brightness-110 transition text-sm">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE VIEW (TUMBLR STYLE) -->
+        <div id="profile-view" class="view-section pb-20">
+            <!-- Cover Photo -->
+            <div class="relative h-48 bg-gradient-to-br from-[#1A1A1A] to-[#333] overflow-hidden">
+                <div class="absolute inset-0 flex items-center justify-center text-gray-600">
+                    <button onclick="changeCover()" class="flex flex-col items-center gap-2 hover:text-[#F4D03F] transition">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+                        <span class="text-sm">Tap to add cover photo</span>
+                    </button>
+                </div>
+                
+                <!-- Avatar overlapping cover -->
+                <div class="absolute -bottom-10 left-4">
+                    <div class="profile-ring-container p-1 bg-[#0D0D0D]">
+                        <div class="profile-circle profile-circle-xl bg-gradient-to-br from-[#F4D03F] to-[#D4AC0D] text-[#0D0D0D]" id="profile-avatar-lg">K</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-12 px-4 pb-4 border-b border-[#1A1A1A]">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 class="text-xl font-bold">Kendal Symes</h2>
+                        <p class="text-gray-500 text-sm">@kendal</p>
+                    </div>
+                    <button onclick="showView('settings')" class="px-4 py-2 bg-[#1A1A1A] border border-[#333] rounded-full text-sm hover:border-[#F4D03F] transition">Edit Profile</button>
+                </div>
+                
+                <p class="mt-2 text-gray-300 text-sm">Bartender • Builder • Dog Mom 🐕</p>
+                
+                <!-- Pastel Theme Selector -->
+                <div class="flex gap-2 mt-3">
+                    <button onclick="setTheme('pink')" class="w-6 h-6 rounded-full theme-pink ring-2 ring-offset-2 ring-offset-[#0D0D0D] ring-transparent hover:ring-white transition" title="Pink"></button>
+                    <button onclick="setTheme('blue')" class="w-6 h-6 rounded-full theme-blue ring-2 ring-offset-2 ring-offset-[#0D0D0D] ring-transparent hover:ring-white transition" title="Blue"></button>
+                    <button onclick="setTheme('green')" class="w-6 h-6 rounded-full theme-green ring-2 ring-offset-2 ring-offset-[#0D0D0D] ring-transparent hover:ring-white transition" title="Green"></button>
+                    <button onclick="setTheme('purple')" class="w-6 h-6 rounded-full theme-purple ring-2 ring-offset-2 ring-offset-[#0D0D0D] ring-transparent hover:ring-white transition" title="Purple"></button>
+                    <button onclick="setTheme('orange')" class="w-6 h-6 rounded-full theme-orange ring-2 ring-offset-2 ring-offset-[#0D0D0D] ring-transparent hover:ring-white transition" title="Orange"></button>
+                    <button onclick="setTheme('yellow')" class="w-6 h-6 rounded-full theme-yellow ring-2 ring-offset-2 ring-offset-[#0D0D0D] ring-[#F4D03F] transition" title="Yellow"></button>
+                </div>
+                
+                <div class="flex gap-6 mt-4">
+                    <div class="text-center cursor-pointer">
+                        <div class="text-[#F4D03F] font-bold">42</div>
+                        <div class="text-gray-500 text-xs uppercase">Posts</div>
+                    </div>
+                    <div class="text-center cursor-pointer">
+                        <div class="text-[#F4D03F] font-bold">1.2K</div>
+                        <div class="text-gray-500 text-xs uppercase">Followers</div>
+                    </div>
+                    <div class="text-center cursor-pointer">
+                        <div class="text-[#F4D03F] font-bold">380</div>
+                        <div class="text-gray-500 text-xs uppercase">Following</div>
+                    </div>
+                    <div class="text-center cursor-pointer">
+                        <div class="text-[#F4D03F] font-bold">12</div>
+                        <div class="text-gray-500 text-xs uppercase">Subs</div>
+                    </div>
+                </div>
+                
+                <button onclick="subscribeUser()" class="w-full mt-4 py-3 bg-[#F4D03F] text-[#0D0D0D] rounded-full font-bold hover:brightness-110 transition">
+                    Subscribe $5.99/month
+                </button>
+                <p class="text-center text-xs text-gray-500 mt-2">Creators keep 94% • Platform fee 6%</p>
+            </div>
+            
+            <div class="flex border-b border-[#1A1A1A]">
+                <button onclick="switchProfileTab('posts')" id="profile-tab-posts" class="flex-1 py-3 text-[#F4D03F] border-b-2 border-[#F4D03F] font-medium text-sm">Posts</button>
+                <button onclick="switchProfileTab('liked')" id="profile-tab-liked" class="flex-1 py-3 text-gray-500 border-b-2 border-transparent font-medium text-sm">Liked</button>
+                <button onclick="switchProfileTab('saved')" id="profile-tab-saved" class="flex-1 py-3 text-gray-500 border-b-2 border-transparent font-medium text-sm">Saved</button>
+            </div>
+            
+            <div id="profile-posts-grid" class="photo-grid"></div>
+            <div id="profile-liked-empty" class="hidden text-center text-gray-500 py-12">No liked posts yet</div>
+            <div id="profile-saved-empty" class="hidden text-center text-gray-500 py-12">No saved posts yet</div>
+        </div>
+
+        <!-- SETTINGS VIEW -->
+        <div id="settings-view" class="view-section pb-20">
+            <div class="p-4 border-b border-[#1A1A1A] flex items-center gap-3">
+                <button onclick="showView('profile')" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <h2 class="text-xl font-bold">Settings</h2>
+            </div>
+            
+            <div class="p-4 space-y-4">
+                <div class="bg-[#1A1A1A] rounded-xl p-4">
+                    <h3 class="text-[#F4D03F] font-bold mb-4 text-sm uppercase tracking-wide">Account</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-gray-400 text-xs mb-1">Name</label>
+                            <input type="text" value="Kendal Symes" class="w-full bg-[#0D0D0D] border border-[#333] rounded-lg p-2.5 text-sm text-white focus:border-[#F4D03F] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-xs mb-1">Username</label>
+                            <input type="text" value="@kendal" class="w-full bg-[#0D0D0D] border border-[#333] rounded-lg p-2.5 text-sm text-white focus:border-[#F4D03F] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-xs mb-1">Bio</label>
+                            <textarea class="w-full bg-[#0D0D0D] border border-[#333] rounded-lg p-2.5 text-sm text-white focus:border-[#F4D03F] focus:outline-none resize-none" rows="2">Bartender • Builder • Dog Mom 🐕</textarea>
+                        </div>
+                        <button onclick="saveSettings()" class="w-full py-2 bg-[#F4D03F] text-[#0D0D0D] rounded-lg font-bold text-sm hover:brightness-110 transition">Save Changes</button>
+                    </div>
+                </div>
+                
+                <div class="bg-[#1A1A1A] rounded-xl p-4">
+                    <h3 class="text-[#F4D03F] font-bold mb-4 text-sm uppercase tracking-wide">Security</h3>
+                    
+                    <div class="flex justify-between items-center py-3 border-b border-[#333]">
+                        <div>
+                            <div class="text-sm font-medium">Two-Factor Authentication</div>
+                            <div class="text-xs text-gray-500">Secure your account with 2FA</div>
+                        </div>
+                        <button onclick="toggle2FA()" id="btn-2fa" class="text-[#F4D03F] text-sm font-medium">Setup</button>
+                    </div>
+                    
+                    <div id="2fa-qr-container" class="hidden mt-4 p-4 bg-[#0D0D0D] rounded-lg text-center">
+                        <p class="text-sm text-gray-400 mb-3">Scan with your authenticator app</p>
+                        <div id="qrcode" class="mb-3"></div>
+                        <input type="text" placeholder="Enter 6-digit code" class="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2 text-center text-white text-sm mb-2">
+                        <button onclick="verify2FA()" class="w-full py-2 bg-[#F4D03F] text-[#0D0D0D] rounded-lg font-bold text-sm">Verify</button>
+                    </div>
+                    
+                    <button onclick="changePassword()" class="w-full text-left py-3 text-sm text-white hover:text-[#F4D03F] transition">Change Password</button>
+                </div>
+                
+                <div class="bg-[#1A1A1A] rounded-xl p-4">
+                    <h3 class="text-[#F4D03F] font-bold mb-4 text-sm uppercase tracking-wide">Privacy</h3>
+                    <label class="flex justify-between items-center py-2 cursor-pointer">
+                        <span class="text-sm">Private Account</span>
+                        <input type="checkbox" class="w-5 h-5 accent-[#F4D03F]">
+                    </label>
+                    <label class="flex justify-between items-center py-2 cursor-pointer">
+                        <span class="text-sm">Allow Messages from Everyone</span>
+                        <input type="checkbox" checked class="w-5 h-5 accent-[#F4D03F]">
+                    </label>
+                </div>
+                
+                <div class="bg-[#1A1A1A] rounded-xl p-4">
+                    <h3 class="text-[#F4D03F] font-bold mb-4 text-sm uppercase tracking-wide">Notifications</h3>
+                    <label class="flex justify-between items-center py-2 cursor-pointer">
+                        <span class="text-sm">Push Notifications</span>
+                        <input type="checkbox" checked class="w-5 h-5 accent-[#F4D03F]">
+                    </label>
+                    <label class="flex justify-between items-center py-2 cursor-pointer">
+                        <span class="text-sm">Email Notifications</span>
+                        <input type="checkbox" checked class="w-5 h-5 accent-[#F4D03F]">
+                    </label>
+                </div>
+                
+                <div class="bg-[#1A1A1A] rounded-xl p-4 border border-red-500/30">
+                    <h3 class="text-red-500 font-bold mb-4 text-sm uppercase tracking-wide">Danger Zone</h3>
+                    <button onclick="breakChain()" class="w-full py-2.5 border border-red-500 text-red-500 rounded-lg text-sm font-medium hover:bg-red-500 hover:text-white transition">Delete Account</button>
+                </div>
+                
+                <button onclick="handleLogout()" class="w-full py-3 bg-[#1A1A1A] text-red-400 rounded-xl text-sm font-bold hover:bg-red-500 hover:text-white transition">Log Out</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CAMERA MODAL -->
+    <div id="cameraModal" class="camera-modal fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 flex flex-col">
+            <div class="flex justify-between items-center p-4 bg-gradient-to-b from-black/80 to-transparent">
+                <button onclick="closeCameraModal()" class="p-2 text-white rounded-full bg-white/10 hover:bg-white/20 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+                <span class="text-white font-medium">Take Photo</span>
+                <button onclick="flipCamera()" class="p-2 text-white rounded-full bg-white/10 hover:bg-white/20 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                </button>
+            </div>
+
+            <div class="flex-1 relative bg-black flex items-center justify-center">
+                <video id="cameraVideo" class="absolute inset-0 w-full h-full object-cover" autoplay playsinline></video>
+                <canvas id="cameraCanvas" class="hidden absolute inset-0 w-full h-full"></canvas>
+                <div class="absolute w-20 h-20 border-2 border-[#F4D03F]/50 rounded-lg"></div>
+            </div>
+
+            <div class="p-8 bg-gradient-to-t from-black/90 to-transparent flex justify-center items-center gap-8">
+                <div class="w-12"></div>
+                <button class="capture-btn" onclick="capturePhoto()"></button>
+                <div class="w-12"></div>
+            </div>
+        </div>
+
+        <div id="photoPreview" class="hidden absolute inset-0 bg-black flex flex-col">
+            <div class="flex justify-between items-center p-4">
+                <button onclick="retakePhoto()" class="text-white font-medium">Retake</button>
+                <button onclick="usePhoto()" class="px-6 py-2 bg-[#F4D03F] text-[#0D0D0D] rounded-full font-bold">Use Photo</button>
+            </div>
+            <div class="flex-1 flex items-center justify-center p-4">
+                <img id="previewImage" class="max-w-full max-h-full rounded-lg object-contain">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SUPABASE CONFIG - REAL CREDENTIALS
+        const supabaseUrl = 'https://vjaevzohcnejkaduvtno.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0ZG50cGhicHRjdXpmbmtxaGV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMjE4NTUsImV4cCI6MjA4NTg5Nzg1NX0.6WdINNX8fS33ZAGnaGVCcSxDNAr_H0g7drdwk2seYCg';
+        let supabaseClient = null;
+        let currentUser = null;
+        let isDemoMode = false;
+        let currentStream = null;
+        let currentFacingMode = 'environment';
+        let capturedMedia = null;
+        let currentChatId = null;
+        let is2FAEnabled = false;
+
+        // Initialize Supabase
+        try {
+            supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+        } catch (e) {
+            console.error('Supabase init failed:', e);
+        }
+
+        // Check session on load
+        async function checkSession() {
+            if (!supabaseClient) {
+                showAuth();
+                return;
+            }
+            
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                    currentUser = session.user;
+                    showApp();
+                } else {
+                    showAuth();
+                }
+            } catch (e) {
+                showAuth();
+            }
+        }
+
+        // MOCK DATA
+        const mockUsers = [
+            { id: 1, username: 'sarahdesigns', name: 'Sarah Chen', initial: 'S', color: 'from-pink-500 to-purple-500', following: true },
+            { id: 2, username: 'alex', name: 'Alex Rivera', initial: 'A', color: 'from-blue-500 to-cyan-500', following: true },
+            { id: 3, username: 'mikecodes', name: 'Mike Johnson', initial: 'M', color: 'from-green-500 to-emerald-500', following: false },
+            { id: 4, username: 'jenna', name: 'Jenna Smith', initial: 'J', color: 'from-orange-500 to-red-500', following: true }
+        ];
+
+        let posts = [
+            {
+                id: 1,
+                author: mockUsers[0],
+                content: "Just launched my new design portfolio! Check it out and let me know what you think @alex #design #portfolio",
+                time: "2h",
+                likes: 8,
+                liked: false,
+                loves: 12,
+                loved: false,
+                dislikes: 0,
+                disliked: false,
+                comments: true
+            },
+            {
+                id: 2,
+                author: mockUsers[1],
+                content: "Working on something special today. Stay tuned! #coding #grind",
+                time: "4h",
+                likes: 24,
+                liked: true,
+                loves: 15,
+                loved: true,
+                dislikes: 2,
+                disliked: false,
+                comments: true
+            }
+        ];
+
+        let conversations = [
+            { id: 1, user: mockUsers[0], lastMsg: "Thanks! Let's collab", time: "2m", unread: 0, isMutual: true },
+            { id: 2, user: mockUsers[1], lastMsg: "Sent the files over", time: "1h", unread: 2, isMutual: true },
+            { id: 3, user: mockUsers[3], lastMsg: "Love your content!", time: "3h", unread: 0, isMutual: true }
+        ];
+
+        let requests = [
+            { id: 4, user: mockUsers[2], lastMsg: "Can we work together?", time: "5h", unread: 1, isMutual: false }
+        ];
+
+        const messages = {
+            1: [
+                { sender: 'them', text: "Your work is amazing", time: "2:30 PM" },
+                { sender: 'me', text: "Thank you! Means a lot", time: "2:32 PM" },
+                { sender: 'them', text: "Thanks! Let's collab", time: "2:33 PM" }
+            ],
+            2: [
+                { sender: 'me', text: "Did you check the repo?", time: "12:00 PM" },
+                { sender: 'them', text: "Sent the files over", time: "12:15 PM" }
+            ],
+            4: [
+                { sender: 'them', text: "Hey I'm a developer too", time: "10:00 AM" },
+                { sender: 'them', text: "Can we work together?", time: "10:05 AM" }
+            ]
+        };
+
+        // AUTH FUNCTIONS
+        function showAuth() {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.getElementById('auth-view').classList.add('active');
+        }
+
+        function showApp() {
+            document.getElementById('auth-view').classList.remove('active');
+            document.getElementById('app-view').classList.remove('hidden');
+            document.getElementById('app-view').classList.add('active');
+            renderFeed();
+            renderExplore();
+            renderConversations();
+            updateBadge();
+            renderProfile();
+        }
+
+        async function signInWithGoogle() {
+            if (!supabaseClient || isDemoMode) {
+                enterDemoMode();
+                return;
+            }
+            try {
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: { redirectTo: window.location.origin }
+                });
+                if (error) throw error;
+            } catch (e) {
+                alert('Google sign in failed: ' + e.message);
+            }
+        }
+
+        async function signInWithFacebook() {
+            if (!supabaseClient || isDemoMode) {
+                enterDemoMode();
+                return;
+            }
+            try {
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'facebook',
+                    options: { redirectTo: window.location.origin }
+                });
+                if (error) throw error;
+            } catch (e) {
+                alert('Facebook sign in failed: ' + e.message);
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('auth-password').value;
+            const hasLength = password.length >= 8;
+            const hasUpper = /[A-Z]/.test(password);
+            const hasLower = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            
+            document.getElementById('req-length').className = hasLength ? 'requirement-met' : 'requirement-unmet';
+            document.getElementById('req-upper').className = hasUpper ? 'requirement-met' : 'requirement-unmet';
+            document.getElementById('req-lower').className = hasLower ? 'requirement-met' : 'requirement-unmet';
+            document.getElementById('req-number').className = hasNumber ? 'requirement-met' : 'requirement-unmet';
+            document.getElementById('req-symbol').className = hasSymbol ? 'requirement-met' : 'requirement-unmet';
+            
+            const isValid = hasLength && hasUpper && hasLower && hasNumber && hasSymbol;
+            document.getElementById('auth-submit').disabled = !isValid;
+        }
+
+        function togglePasswordVisibility() {
+            const input = document.getElementById('auth-password');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
+            } else {
+                input.type = 'password';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+            }
+        }
+
+        async function handleEmailAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            
+            if (isDemoMode) {
+                enterDemoMode();
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) {
+                    const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({ email, password });
+                    if (signUpError) throw signUpError;
+                    alert('Check your email to confirm signup!');
+                } else {
+                    currentUser = data.user;
+                    showApp();
+                }
+            } catch (e) {
+                alert('Auth error: ' + e.message);
+            }
+        }
+
+        function enterDemoMode() {
+            isDemoMode = true;
+            currentUser = { id: 'demo', email: 'demo@chainlink.ca', user_metadata: { name: 'Demo User' } };
+            document.getElementById('demoToggle').textContent = 'Demo: ON';
+            document.getElementById('demoToggle').classList.add('active');
+            showApp();
+        }
+
+        function toggleDemoMode() {
+            if (isDemoMode) {
+                location.reload();
+            } else {
+                enterDemoMode();
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Log out?')) {
+                if (supabaseClient && !isDemoMode) supabaseClient.auth.signOut();
+                location.reload();
+            }
+        }
+
+        function showRules() {
+            document.getElementById('rules-modal').classList.remove('hidden');
+        }
+
+        function hideRules() {
+            document.getElementById('rules-modal').classList.add('hidden');
+        }
+
+        // VIEW NAVIGATION
+        function showView(viewName) {
+            document.querySelectorAll('#app-view > .view-section').forEach(v => {
+                v.classList.remove('active');
+                v.classList.add('hidden');
+            });
+            
+            const target = document.getElementById(viewName + '-view');
+            target.classList.remove('hidden');
+            target.classList.add('active');
+            
+            if (viewName === 'explore') renderExplore();
+            if (viewName === 'profile') renderProfile();
+            if (viewName === 'live') renderLiveStreams();
+        }
+
+        // FEED FUNCTIONS
+        function renderFeed() {
+            const container = document.getElementById('feed-posts');
+            container.innerHTML = posts.map(post => `
+                <div class="p-4 border-b border-[#1A1A1A]">
+                    <div class="flex gap-3">
+                        <div class="profile-ring-container">
+                            <div class="profile-circle bg-gradient-to-br ${post.author.color} text-white text-xs">${post.author.initial}</div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-baseline gap-2">
+                                <span class="font-bold text-white text-sm">${post.author.name}</span>
+                                <span class="text-gray-500 text-xs">@${post.author.username}</span>
+                                <span class="text-gray-600 text-xs">· ${post.time}</span>
+                            </div>
+                            <p class="mt-1 text-white text-sm leading-relaxed">${formatContent(post.content)}</p>
+                            
+                            <div class="flex gap-6 mt-3">
+                                <button onclick="toggleReaction(${post.id}, 'love')" class="flex items-center gap-1.5 text-gray-400 hover:text-red-500 transition ${post.loved ? 'text-red-500' : ''}">
+                                    <svg class="w-5 h-5 ${post.loved ? 'fill-current' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                                    <span class="text-xs">${post.loves}</span>
+                                </button>
+                                <button onclick="toggleReaction(${post.id}, 'like')" class="flex items-center gap-1.5 text-gray-400 hover:text-blue-500 transition ${post.liked ? 'text-blue-500' : ''}">
+                                    <svg class="w-5 h-5 ${post.liked ? 'fill-current' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
+                                    <span class="text-xs">${post.likes}</span>
+                                </button>
+                                <button onclick="toggleReaction(${post.id}, 'dislike')" class="flex items-center gap-1.5 text-gray-400 hover:text-gray-600 transition ${post.disliked ? 'text-gray-600' : ''}">
+                                    <svg class="w-5 h-5 ${post.disliked ? 'fill-current' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"/></svg>
+                                    <span class="text-xs">${post.dislikes}</span>
+                                </button>
+                                <button onclick="sharePost(${post.id})" class="flex items-center gap-1.5 text-gray-400 hover:text-[#F4D03F] transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                                </button>
+                            </div>
+                            
+                            ${post.comments ? `
+                            <div class="mt-3 pt-3 border-t border-[#1A1A1A]">
+                                <div class="flex gap-2">
+                                    <div class="profile-ring-container">
+                                        <div class="profile-circle bg-gradient-to-br from-[#F4D03F] to-[#D4AC0D] text-[#0D0D0D] text-xs">K</div>
+                                    </div>
+                                    <input type="text" placeholder="Add a comment..." class="flex-1 bg-[#1A1A1A] border-none rounded-full px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none">
+                                </div>
+                            </div>
+                            ` : '<div class="mt-2 text-xs text-gray-500">Comments turned off</div>'}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatContent(text) {
+            return text
+                .replace(/@(\w+)/g, '<span class="text-[#F4D03F] font-semibold cursor-pointer" onclick="goToProfile(\'$1\')">@$1</span>')
+                .replace(/#(\w+)/g, '<span class="text-blue-400 font-semibold cursor-pointer" onclick="searchTag(\'$1\')">#$1</span>');
+        }
+
+        function toggleReaction(postId, type) {
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            if (type === 'love') {
+                post.loved = !post.loved;
+                post.loves += post.loved ? 1 : -1;
+            } else if (type === 'like') {
+                post.liked = !post.liked;
+                post.likes += post.liked ? 1 : -1;
+            } else if (type === 'dislike') {
+                post.disliked = !post.disliked;
+                post.dislikes += post.disliked ? 1 : -1;
+            }
+            renderFeed();
+        }
+
+        async function sharePost(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const shareData = {
+                title: 'CHAIN Link Post',
+                text: `Check out this post by ${post.author.name}: ${post.content.substring(0, 50)}...`,
+                url: window.location.href
+            };
+            
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                } catch (e) {
+                    console.log('Share cancelled');
+                }
+            } else {
+                // Fallback to SMS
+                const smsBody = encodeURIComponent(`Check out this CHAIN Link post: ${window.location.href}`);
+                window.location.href = `sms:?body=${smsBody}`;
+            }
+        }
+
+        // POST CREATION
+        const postInput = document.getElementById('postInput');
+        const mentionDropdown = document.getElementById('mentionDropdown');
+
+        postInput.addEventListener('input', function(e) {
+            const value = this.value;
+            const cursorPos = this.selectionStart;
+            const textBefore = value.substring(0, cursorPos);
+            
+            const match = textBefore.match(/@(\w*)$/);
+            if (match) {
+                showMentionDropdown(match[1]);
+            } else {
+                mentionDropdown.classList.add('hidden');
+            }
+            
+            const tags = value.match(/#\w+/g);
+            const preview = document.getElementById('tagPreview');
+            preview.innerHTML = tags ? tags.map(t => `<span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-1 rounded-full">${t}</span>`).join('') : '';
+        });
+
+        function showMentionDropdown(query) {
+            const filtered = mockUsers.filter(u => u.username.includes(query) || u.name.toLowerCase().includes(query.toLowerCase()));
+            if (filtered.length === 0) {
+                mentionDropdown.classList.add('hidden');
+                return;
+            }
+            
+            mentionDropdown.innerHTML = filtered.map(u => `
+                <div onclick="selectMention('${u.username}')" class="p-3 hover:bg-[#252525] cursor-pointer flex items-center gap-2">
+                    <div class="profile-ring-container"><div class="profile-circle bg-gradient-to-br ${u.color} text-white text-xs">${u.initial}</div></div>
+                    <div>
+                        <div class="text-sm font-medium text-white">${u.name}</div>
+                        <div class="text-xs text-gray-500">@${u.username}</div>
+                    </div>
+                </div>
+            `).join('');
+            mentionDropdown.classList.remove('hidden');
+        }
+
+        function selectMention(username) {
+            const val = postInput.value;
+            const cursorPos = postInput.selectionStart;
+            const textBefore = val.substring(0, cursorPos);
+            const newText = textBefore.replace(/@\w*$/, `@${username} `);
+            postInput.value = newText + val.substring(cursorPos);
+            mentionDropdown.classList.add('hidden');
+            postInput.focus();
+        }
+
+        function setFont(style) {
+            const fonts = {
+                'default': "'Inter', sans-serif",
+                'display': "'Playfair Display', serif",
+                'mono': "'Space Mono', monospace",
+                'cursive': "'Dancing Script', cursive",
+                'bold': "'Bebas Neue', sans-serif"
+            };
+            postInput.style.fontFamily = fonts[style];
+            
+            const buttons = event.target.parentElement.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-[#F4D03F]', 'text-[#0D0D0D]');
+                btn.classList.add('bg-[#1A1A1A]', 'text-white', 'border', 'border-[#333]');
+            });
+            event.target.classList.remove('bg-[#1A1A1A]', 'text-white', 'border', 'border-[#333]');
+            event.target.classList.add('bg-[#F4D03F]', 'text-[#0D0D0D]');
+        }
+
+        function createPost() {
+            const content = postInput.value.trim();
+            const commentsEnabled = document.getElementById('commentsToggle').checked;
+            
+            if (!content && !capturedMedia) return;
+            
+            const newPost = {
+                id: Date.now(),
+                author: { id: 'me', name: 'Kendal Symes', username: 'kendal', initial: 'K', color: 'from-[#F4D03F] to-[#D4AC0D]' },
+                content: content,
+                time: "Just now",
+                likes: 0,
+                liked: false,
+                loves: 0,
+                loved: false,
+                dislikes: 0,
+                disliked: false,
+                comments: commentsEnabled
+            };
+            
+            posts.unshift(newPost);
+            renderFeed();
+            postInput.value = '';
+            clearMedia();
+            document.getElementById('tagPreview').innerHTML = '';
+        }
+
+        // CAMERA
+        function openCameraModal() {
+            document.getElementById('cameraModal').classList.remove('hidden');
+            startCamera();
+        }
+
+        function closeCameraModal() {
+            document.getElementById('cameraModal').classList.add('hidden');
+            stopCamera();
+            document.getElementById('photoPreview').classList.add('hidden');
+        }
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: currentFacingMode },
+                    audio: false
+                });
+                currentStream = stream;
+                document.getElementById('cameraVideo').srcObject = stream;
+            } catch (e) {
+                alert('Camera access denied');
+            }
+        }
+
+        function stopCamera() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+                currentStream = null;
+            }
+        }
+
+        function flipCamera() {
+            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            stopCamera();
+            startCamera();
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.getElementById('cameraCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+            
+            document.getElementById('flash').classList.add('active');
+            setTimeout(() => document.getElementById('flash').classList.remove('active'), 100);
+            
+            const dataUrl = canvas.toDataURL('image/jpeg');
+            capturedMedia = dataUrl;
+            
+            document.getElementById('previewImage').src = dataUrl;
+            document.getElementById('photoPreview').classList.remove('hidden');
+        }
+
+        function retakePhoto() {
+            document.getElementById('photoPreview').classList.add('hidden');
+            capturedMedia = null;
+        }
+
+        function usePhoto() {
+            if (capturedMedia) {
+                document.getElementById('capturedImage').src = capturedMedia;
+                document.getElementById('mediaPreview').classList.remove('hidden');
+                closeCameraModal();
+            }
+        }
+
+        function clearMedia() {
+            document.getElementById('mediaPreview').classList.add('hidden');
+            capturedMedia = null;
+        }
+
+        // EXPLORE
+        function renderExplore() {
+            const grid = document.getElementById('explore-grid');
+            grid.innerHTML = Array(12).fill(0).map((_, i) => `
+                <div class="photo-grid-item bg-gradient-to-br from-[#1A1A1A] to-[#252525]">
+                    <span class="text-2xl opacity-50">${['📷', '🎨', '💻', '🎵', '📝', '🎬', '📱', '🎮', '💡', '🌟', '🔥', '💎'][i]}</span>
+                </div>
+            `).join('');
+        }
+
+        function handleSearch(query) {
+            const results = document.getElementById('search-results');
+            const grid = document.getElementById('explore-grid');
+            
+            if (query.length > 0) {
+                results.classList.remove('hidden');
+                grid.classList.add('hidden');
+                results.innerHTML = mockUsers.filter(u => u.username.includes(query) || u.name.toLowerCase().includes(query.toLowerCase())).map(u => `
+                    <div class="flex items-center gap-3 p-3 bg-[#1A1A1A] rounded-lg cursor-pointer hover:bg-[#252525]" onclick="goToProfile('${u.username}')">
+                        <div class="profile-ring-container"><div class="profile-circle bg-gradient-to-br ${u.color} text-white text-xs">${u.initial}</div></div>
+                        <div>
+                            <div class="font-medium text-white">${u.name}</div>
+                            <div class="text-sm text-gray-500">@${u.username}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                results.classList.add('hidden');
+                grid.classList.remove('hidden');
+            }
+        }
+
+        // LIVE STREAMING
+        function renderLiveStreams() {
+            const container = document.getElementById('live-streams-list');
+            container.innerHTML = `
+                <div class="bg-[#1A1A1A] rounded-xl p-4 flex items-center gap-4 cursor-pointer" onclick="joinLiveStream(1)">
+                    <div class="relative">
+                        <div class="profile-ring-container">
+                            <div class="profile-circle bg-gradient-to-br from-red-500 to-pink-500 text-white">S</div>
+                        </div>
+                        <div class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] px-1.5 rounded-full">LIVE</div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-bold">Sarah Chen is live</div>
+                        <div class="text-sm text-gray-500">Design Q&A Session • 234 viewers</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startLiveStream() {
+            document.getElementById('active-live-modal').classList.remove('hidden');
+            updateViewerCount();
+        }
+
+        function joinLiveStream(id) {
+            document.getElementById('active-live-modal').classList.remove('hidden');
+            updateViewerCount();
+        }
+
+        function endLiveStream() {
+            document.getElementById('active-live-modal').classList.add('hidden');
+        }
+
+        function updateViewerCount() {
+            let count = Math.floor(Math.random() * 500) + 50;
+            document.getElementById('viewer-count').textContent = count;
+            setInterval(() => {
+                count += Math.floor(Math.random() * 10) - 5;
+                document.getElementById('viewer-count').textContent = Math.max(0, count);
+            }, 3000);
+        }
+
+        function sendLiveChat() {
+            const input = document.getElementById('live-chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const chat = document.getElementById('live-chat');
+            const div = document.createElement('div');
+            div.className = 'text-sm';
+            div.innerHTML = `<span class="text-[#F4D03F] font-bold">You:</span> <span class="text-white">${text}</span>`;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+            input.value = '';
+        }
+
+        // MESSAGES
+        function renderConversations() {
+            const inbox = document.getElementById('inbox-list');
+            const requestsList = document.getElementById('requests-list');
+            
+            inbox.innerHTML = conversations.map(c => `
+                <div onclick="openChat(${c.id}, false)" class="p-3 border-b border-[#1A1A1A] hover:bg-[#1A1A1A] cursor-pointer flex items-center gap-3 ${c.unread ? 'bg-[#1A1A1A]/50' : ''}">
+                    <div class="profile-ring-container">
+                        <div class="profile-circle bg-gradient-to-br ${c.user.color} text-white text-xs">${c.user.initial}</div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-baseline">
+                            <span class="font-bold text-white text-sm truncate">${c.user.name}</span>
+                            <span class="text-xs text-gray-500">${c.time}</span>
+                        </div>
+                        <p class="text-sm text-gray-400 truncate ${c.unread ? 'text-white' : ''}">${c.lastMsg}</p>
+                    </div>
+                    ${c.unread ? `<div class="w-5 h-5 bg-[#F4D03F] rounded-full flex items-center justify-center text-[#0D0D0D] text-xs font-bold">${c.unread}</div>` : ''}
+                </div>
+            `).join('');
+            
+            requestsList.innerHTML = requests.length ? requests.map(r => `
+                <div onclick="openChat(${r.id}, true)" class="p-3 border-b border-[#1A1A1A] hover:bg-[#1A1A1A] cursor-pointer flex items-center gap-3">
+                    <div class="profile-ring-container">
+                        <div class="profile-circle bg-gradient-to-br ${r.user.color} text-white text-xs">${r.user.initial}</div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-baseline">
+                            <span class="font-bold text-white text-sm truncate">${r.user.name}</span>
+                            <span class="text-xs text-gray-500">${r.time}</span>
+                        </div>
+                        <p class="text-sm text-gray-400 truncate">${r.lastMsg}</p>
+                        <p class="text-[10px] text-red-400 mt-0.5">Message Request</p>
+                    </div>
+                    ${r.unread ? `<div class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">${r.unread}</div>` : ''}
+                </div>
+            `).join('') : '<div class="text-center text-gray-500 py-12">No message requests</div>';
+        }
+
+        function updateBadge() {
+            const total = requests.reduce((a, b) => a + b.unread, 0);
+            const badge = document.getElementById('msg-badge');
+            const reqBadge = document.getElementById('request-badge');
+            
+            if (total > 0) {
+                badge.textContent = total;
+                badge.classList.remove('hidden');
+                reqBadge.textContent = total;
+                reqBadge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+                reqBadge.classList.add('hidden');
+            }
+        }
+
+        function switchMsgTab(tab) {
+            document.getElementById('inbox-list').classList.toggle('hidden', tab !== 'inbox');
+            document.getElementById('requests-list').classList.toggle('hidden', tab !== 'requests');
+            
+            document.getElementById('msg-tab-inbox').classList.toggle('tab-active', tab === 'inbox');
+            document.getElementById('msg-tab-requests').classList.toggle('tab-active', tab === 'requests');
+        }
+
+        function openChat(chatId, isRequest) {
+            currentChatId = chatId;
+            const allConvos = [...conversations, ...requests];
+            const convo = allConvos.find(c => c.id === chatId);
+            if (!convo) return;
+            
+            document.getElementById('chat-avatar').className = `profile-circle bg-gradient-to-br ${convo.user.color} text-white text-xs`;
+            document.getElementById('chat-avatar').textContent = convo.user.initial;
+            document.getElementById('chat-name').textContent = convo.user.name;
+            document.getElementById('chat-status').textContent = isRequest ? 'Message Request' : 'Online';
+            
+            const msgs = messages[chatId] || [];
+            document.getElementById('chat-messages').innerHTML = msgs.map(m => `
+                <div class="chat-bubble ${m.sender === 'me' ? 'chat-bubble-sent' : 'chat-bubble-received'}">
+                    ${m.text}
+                    <div class="text-[10px] opacity-70 mt-1 text-right">${m.time}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('chat-input-container').classList.toggle('hidden', isRequest);
+            document.getElementById('request-actions').classList.toggle('hidden', !isRequest);
+            
+            if (window.innerWidth < 768) {
+                document.getElementById('chat-area').classList.remove('hidden');
+                document.getElementById('chat-area').classList.add('flex');
+            }
+        }
+
+        function acceptRequest() {
+            const reqIndex = requests.findIndex(r => r.id === currentChatId);
+            if (reqIndex > -1) {
+                const req = requests[reqIndex];
+                req.isMutual = true;
+                conversations.push(req);
+                requests.splice(reqIndex, 1);
+                renderConversations();
+                updateBadge();
+                openChat(currentChatId, false);
+            }
+        }
+
+        function declineRequest() {
+            if (confirm('Delete this message request?')) {
+                requests = requests.filter(r => r.id !== currentChatId);
+                renderConversations();
+                updateBadge();
+                document.getElementById('chat-area').classList.add('hidden');
+                document.getElementById('chat-area').classList.remove('flex');
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text || !currentChatId) return;
+            
+            if (!messages[currentChatId]) messages[currentChatId] = [];
+            messages[currentChatId].push({
+                sender: 'me',
+                text: text,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            });
+            
+            input.value = '';
+            openChat(currentChatId, false);
+        }
+
+        // PROFILE
+        function renderProfile() {
+            const grid = document.getElementById('profile-posts-grid');
+            grid.innerHTML = Array(9).fill(0).map((_, i) => `
+                <div class="photo-grid-item bg-gradient-to-br from-[#1A1A1A] to-[#252525]">
+                    <span class="text-2xl opacity-50">${['📹', '📸', '🎵', '🎥', '💭', '🌟', '🔥', '💎', '🎨'][i]}</span>
+                </div>
+            `).join('');
+        }
+
+        function setTheme(theme) {
+            const avatar = document.getElementById('profile-avatar-lg');
+            const themes = {
+                'pink': 'from-pink-500 to-purple-500',
+                'blue': 'from-blue-500 to-cyan-500',
+                'green': 'from-green-500 to-emerald-500',
+                'purple': 'from-purple-500 to-violet-500',
+                'orange': 'from-orange-500 to-red-500',
+                'yellow': 'from-[#F4D03F] to-[#D4AC0D]'
+            };
+            avatar.className = `profile-circle profile-circle-xl bg-gradient-to-br ${themes[theme]} text-[#0D0D0D]`;
+        }
+
+        function switchProfileTab(tab) {
+            ['posts', 'liked', 'saved'].forEach(t => {
+                const btn = document.getElementById(`profile-tab-${t}`);
+                const grid = document.getElementById(`profile-${t}-grid`);
+                const empty = document.getElementById(`profile-${t}-empty`);
+                
+                if (t === tab) {
+                    btn.classList.add('tab-active');
+                    btn.classList.remove('text-gray-500', 'border-transparent');
+                    if (grid) grid.classList.remove('hidden');
+                } else {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('text-gray-500', 'border-transparent');
+                    if (grid) grid.classList.add('hidden');
+                }
+                
+                if (empty) empty.classList.toggle('hidden', t !== tab || t === 'posts');
+            });
+        }
+
+        function subscribeUser() {
+            alert('Subscribe $5.99/month\n\nCreators keep 94%\nPlatform fee: 6%\n\nPayment processing coming soon!');
+        }
+
+        function changeCover() {
+            alert('Camera will open to capture cover photo (no gallery uploads)');
+        }
+
+        // SETTINGS
+        function saveSettings() {
+            alert('Settings saved!');
+        }
+
+        function toggle2FA() {
+            const container = document.getElementById('2fa-qr-container');
+            container.classList.remove('hidden');
+            
+            // Generate QR code
+            const qrcode = document.getElementById('qrcode');
+            qrcode.innerHTML = '';
+            new QRCode(qrcode, {
+                text: 'otpauth://totp/CHAINLink:kendal?secret=JBSWY3DPEHPK3PXP&issuer=CHAINLink',
+                width: 128,
+                height: 128,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function verify2FA() {
+            alert('2FA enabled successfully!');
+            document.getElementById('2fa-qr-container').classList.add('hidden');
+            document.getElementById('btn-2fa').textContent = 'Enabled';
+        }
+
+        function changePassword() {
+            const newPass = prompt('Enter new password (must include uppercase, lowercase, number, symbol):');
+            if (newPass) {
+                if (newPass.length < 8 || !/[A-Z]/.test(newPass) || !/[a-z]/.test(newPass) || !/[0-9]/.test(newPass) || !/[!@#$%^&*]/.test(newPass)) {
+                    alert('Password does not meet requirements');
+                } else {
+                    alert('Password changed successfully!');
+                }
+            }
+        }
+
+        function breakChain() {
+            if (confirm('⚠️ Permanently delete your account? This cannot be undone.')) {
+                if (prompt('Type "DELETE" to confirm:') === 'DELETE') {
+                    alert('Account deleted. Thank you for being part of CHAIN Link.');
+                    handleLogout();
+                }
+            }
+        }
+
+        // UTILITIES
+        function goToProfile(username) {
+            showView('profile');
+        }
+
+        function searchTag(tag) {
+            showView('explore');
+            document.getElementById('search-input').value = '#' + tag;
+            handleSearch('#' + tag);
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            checkSession();
+        });
+    </script>
+</body>
+</html>
+
