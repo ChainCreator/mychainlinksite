@@ -1,3 +1,11 @@
 .env
 .env.local
 .env.*.local
+# Secrets - NEVER commit these
+config.js
+.env
+.env.local
+
+# Dependencies
+node_modules
+dist
