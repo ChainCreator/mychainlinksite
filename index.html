@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CHAIN Link - The social media platform that lets you be you. No filters, no gallery uploads, just real connections.">
+    <meta name="description" content="CHAIN Link - The social media platform that lets you, be you.. No filters, no gallery uploads, just real connections.">
     <meta name="theme-color" content="#0D0D0D">
     <meta name="google-signin-client_id" content="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com">
-    <title>MyCHAIN⛓️Link</title>
+    <title>CHAIN⛓️Link</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&display=swap');
+        
         :root {
             --chain-dark: #0D0D0D;
             --chain-yellow: #F4D03F;
@@ -95,16 +97,14 @@
             font-size: 0.875rem;
         }
         
-       .brand-title {
-   font-size: 3.5rem;
-letter-spacing: 0.05em;
-color: #F4D03F;
-text-align: center;
-margin-bottom: 0.5rem;
-font-weight: 700;
-
-      
- }
+        .brand-title {
+            font-size: 3.5rem;
+            letter-spacing: 0.05em;
+            color: #F4D03F;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
         
         .brand-subtitle {
             text-align: center;
@@ -116,7 +116,7 @@ font-weight: 700;
         
         .brand-tagline {
             text-align: center;
-            color: #F4D03F;
+            color: #white;
             font-size: 0.95rem;
             margin-bottom: 2rem;
             font-style: italic;
@@ -238,18 +238,19 @@ font-weight: 700;
         
         .capture-btn:active { transform: scale(0.95); }
         
-        /* Profile Circle with Ring */
+        /* Profile Circle with Ring - FIXED */
         .profile-ring-container {
             position: relative;
-            display: inline-block;
+            display: inline-flex;
             padding: 3px;
             border-radius: 50%;
             background: linear-gradient(45deg, #F4D03F, #D4AC0D);
+            flex-shrink: 0;
         }
         
         .profile-circle {
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -258,12 +259,14 @@ font-weight: 700;
             font-size: 0.875rem;
             background: #0D0D0D;
             color: white;
+            aspect-ratio: 1;
+            overflow: hidden;
         }
         
         .profile-circle-lg {
-            width: 50px;
-            height: 50px;
-            font-size: 1.5rem;
+            width: 56px;
+            height: 56px;
+            font-size: 1.25rem;
         }
         
         .profile-circle-xl {
@@ -439,7 +442,27 @@ font-weight: 700;
         #qrcode img {
             margin: 0 auto;
             border-radius: 0.5rem;
-        link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&family=Playfair+Display&family=Space+Mono&family=Dancing+Script&display=swap" rel="stylesheet">
+        }
+        
+        /* Tab Active State */
+        .tab-active {
+            color: #F4D03F !important;
+            border-bottom-color: #F4D03F !important;
+        }
+        
+        /* App Container */
+        .app-container {
+            max-width: 672px; /* max-w-2xl equivalent */
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+        
+        @media (max-width: 672px) {
+            .app-container {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 <body class="bg-[#0D0D0D] text-gray-100">
@@ -463,11 +486,11 @@ font-weight: 700;
             <div class="w-full max-w-sm">
                 <h1 class="brand-title">CHAIN⛓️Link</h1>
                 <p class="brand-subtitle">Join for free today</p>
-                <p class="brand-tagline">Welcome to the social media platform that lets you, be you.</p>
+                <p class="brand-tagline">Welcome to the social media platform that lets you be you</p>
                 
                 <div class="mb-6 p-4 bg-[#1A1A1A] rounded-lg border border-[#F4D03F]/30">
                     <p class="text-[#F4D03F] text-sm font-bold text-center mb-2">💰 Creator Earnings</p>
-                    <p class="text-gray-400 text-xs text-center">Subscribe for $5.99/month. Creators keep 94%.</p>
+                    <p class="text-gray-400 text-xs text-center">Subscribe for $4.99/month. Creators keep 94% (we take 6%).</p>
                 </div>
                 
                 <button onclick="signInWithGoogle()" class="social-btn">
@@ -554,7 +577,7 @@ font-weight: 700;
         
         <!-- HEADER -->
         <header class="sticky top-0 z-40 bg-[#0D0D0D]/95 backdrop-blur-md border-b border-[#1A1A1A]">
-            <div class="max-w-2xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="app-container px-4 py-3 flex justify-between items-center">
                 <h1 class="text-2xl font-bold text-[#F4D03F]" style="font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px;">
                     CHAIN⛓️Link
                 </h1>
@@ -595,7 +618,7 @@ font-weight: 700;
         <div id="feed-view" class="view-section active pb-20">
             
             <!-- Spotify Widget -->
-            <div class="mx-4 mt-4">
+            <div class="app-container px-4 mt-4">
                 <div class="spotify-widget">
                     <div class="w-10 h-10 bg-black/30 rounded-full flex items-center justify-center">
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
@@ -614,12 +637,12 @@ font-weight: 700;
             </div>
 
             <!-- Create Post -->
-            <div class="p-4 border-b border-[#1A1A1A]">
+            <div class="app-container px-4 py-4 border-b border-[#1A1A1A]">
                 <div class="flex gap-3">
-                    <div class="profile-ring-container">
+                    <div class="profile-ring-container flex-shrink-0">
                         <div class="profile-circle bg-gradient-to-br from-[#F4D03F] to-[#D4AC0D] text-[#0D0D0D]">K</div>
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                         <textarea id="postInput" class="w-full bg-transparent border-none text-white placeholder-gray-500 focus:outline-none resize-none text-lg" style="min-height: 100px; font-family: 'Inter', sans-serif;" placeholder="Let's connect today..." rows="3"></textarea>
                         
                         <div id="mentionDropdown" class="hidden absolute bg-[#1A1A1A] border border-[#333] rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto w-64 mt-1"></div>
@@ -663,26 +686,28 @@ font-weight: 700;
             </div>
             
             <!-- Posts Feed -->
-            <div id="feed-posts" class="divide-y divide-[#1A1A1A]"></div>
+            <div id="feed-posts" class="app-container divide-y divide-[#1A1A1A]"></div>
         </div>
 
         <!-- EXPLORE VIEW -->
         <div id="explore-view" class="view-section pb-20">
-            <div class="p-4 border-b border-[#1A1A1A]">
+            <div class="app-container px-4 py-4 border-b border-[#1A1A1A]">
                 <div class="relative">
                     <input type="text" id="search-input" placeholder="Search..." class="w-full bg-[#1A1A1A] border border-[#333] rounded-full py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:border-[#F4D03F] focus:outline-none" oninput="handleSearch(this.value)">
                     <svg class="w-5 h-5 text-gray-500 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </div>
             </div>
             
-            <div class="photo-grid" id="explore-grid"></div>
+            <div class="app-container">
+                <div class="photo-grid" id="explore-grid"></div>
+            </div>
             
-            <div id="search-results" class="hidden p-4 space-y-3"></div>
+            <div id="search-results" class="hidden app-container px-4 space-y-3"></div>
         </div>
 
         <!-- LIVE VIEW -->
         <div id="live-view" class="view-section pb-20">
-            <div class="p-4 border-b border-[#1A1A1A] flex justify-between items-center">
+            <div class="app-container px-4 py-4 border-b border-[#1A1A1A] flex justify-between items-center">
                 <h2 class="text-xl font-bold">Live Streams</h2>
                 <button onclick="startLiveStream()" class="px-4 py-2 bg-red-500 text-white rounded-full font-bold text-sm hover:bg-red-600 transition flex items-center gap-2">
                     <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
@@ -690,7 +715,7 @@ font-weight: 700;
                 </button>
             </div>
             
-            <div id="live-streams-list" class="p-4 space-y-4">
+            <div id="live-streams-list" class="app-container px-4 py-4 space-y-4">
                 <!-- Live streams populated here -->
             </div>
             
@@ -775,23 +800,25 @@ font-weight: 700;
         <!-- PROFILE VIEW (TUMBLR STYLE) -->
         <div id="profile-view" class="view-section pb-20">
             <!-- Cover Photo -->
-            <div class="relative h-48 bg-gradient-to-br from-[#1A1A1A] to-[#333] overflow-hidden">
-                <div class="absolute inset-0 flex items-center justify-center text-gray-600">
-                    <button onclick="changeCover()" class="flex flex-col items-center gap-2 hover:text-[#F4D03F] transition">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
-                        <span class="text-sm">Tap to add cover photo</span>
-                    </button>
-                </div>
-                
-                <!-- Avatar overlapping cover -->
-                <div class="absolute -bottom-10 left-4">
-                    <div class="profile-ring-container p-1 bg-[#0D0D0D]">
-                        <div class="profile-circle profile-circle-xl bg-gradient-to-br from-[#F4D03F] to-[#D4AC0D] text-[#0D0D0D]" id="profile-avatar-lg">K</div>
+            <div class="app-container">
+                <div class="relative h-48 bg-gradient-to-br from-[#1A1A1A] to-[#333] overflow-hidden rounded-b-2xl">
+                    <div class="absolute inset-0 flex items-center justify-center text-gray-600">
+                        <button onclick="changeCover()" class="flex flex-col items-center gap-2 hover:text-[#F4D03F] transition">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+                            <span class="text-sm">Tap to add cover photo</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Avatar overlapping cover -->
+                    <div class="absolute -bottom-10 left-4">
+                        <div class="profile-ring-container p-1 bg-[#0D0D0D]">
+                            <div class="profile-circle profile-circle-xl bg-gradient-to-br from-[#F4D03F] to-[#D4AC0D] text-[#0D0D0D]" id="profile-avatar-lg">K</div>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <div class="pt-12 px-4 pb-4 border-b border-[#1A1A1A]">
+            <div class="app-container px-4 pt-12 pb-4 border-b border-[#1A1A1A]">
                 <div class="flex justify-between items-start">
                     <div>
                         <h2 class="text-xl font-bold">Official CHAINLink Creator</h2>
@@ -800,7 +827,7 @@ font-weight: 700;
                     <button onclick="showView('settings')" class="px-4 py-2 bg-[#1A1A1A] border border-[#333] rounded-full text-sm hover:border-[#F4D03F] transition">Edit Profile</button>
                 </div>
                 
-                <p class="mt-2 text-gray-300 text-sm">Bartender • Builder • Dog Mom 🐕</p>
+                <p class="mt-2 text-gray-300 text-sm"> Connect • Create • Be You</p>
                 
                 <!-- Pastel Theme Selector -->
                 <div class="flex gap-2 mt-3">
@@ -837,27 +864,29 @@ font-weight: 700;
                 <p class="text-center text-xs text-gray-500 mt-2">Creators keep 94% • Platform fee 6%</p>
             </div>
             
-            <div class="flex border-b border-[#1A1A1A]">
+            <div class="app-container flex border-b border-[#1A1A1A]">
                 <button onclick="switchProfileTab('posts')" id="profile-tab-posts" class="flex-1 py-3 text-[#F4D03F] border-b-2 border-[#F4D03F] font-medium text-sm">Posts</button>
                 <button onclick="switchProfileTab('liked')" id="profile-tab-liked" class="flex-1 py-3 text-gray-500 border-b-2 border-transparent font-medium text-sm">Liked</button>
                 <button onclick="switchProfileTab('saved')" id="profile-tab-saved" class="flex-1 py-3 text-gray-500 border-b-2 border-transparent font-medium text-sm">Saved</button>
             </div>
             
-            <div id="profile-posts-grid" class="photo-grid"></div>
-            <div id="profile-liked-empty" class="hidden text-center text-gray-500 py-12">No liked posts yet</div>
-            <div id="profile-saved-empty" class="hidden text-center text-gray-500 py-12">No saved posts yet</div>
+            <div class="app-container">
+                <div id="profile-posts-grid" class="photo-grid"></div>
+                <div id="profile-liked-empty" class="hidden text-center text-gray-500 py-12">No liked posts yet</div>
+                <div id="profile-saved-empty" class="hidden text-center text-gray-500 py-12">No saved posts yet</div>
+            </div>
         </div>
 
         <!-- SETTINGS VIEW -->
         <div id="settings-view" class="view-section pb-20">
-            <div class="p-4 border-b border-[#1A1A1A] flex items-center gap-3">
+            <div class="app-container px-4 py-4 border-b border-[#1A1A1A] flex items-center gap-3">
                 <button onclick="showView('profile')" class="text-gray-400 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                 </button>
                 <h2 class="text-xl font-bold">Settings</h2>
             </div>
             
-            <div class="p-4 space-y-4">
+            <div class="app-container px-4 py-4 space-y-4">
                 <div class="bg-[#1A1A1A] rounded-xl p-4">
                     <h3 class="text-[#F4D03F] font-bold mb-4 text-sm uppercase tracking-wide">Account</h3>
                     <div class="space-y-3">
@@ -971,9 +1000,9 @@ font-weight: 700;
     </div>
 
     <script>
-        // SUPABASE CONFIG - REAL CREDENTIALS
-        const supabaseUrl = '';
-        const supabaseKey = '';
+        // SUPABASE CONFIG - Load securely
+        const supabaseUrl = window.SUPABASE_CONFIG?.url || '';
+        const supabaseKey = window.SUPABASE_CONFIG?.key || '';
         let supabaseClient = null;
         let currentUser = null;
         let isDemoMode = false;
@@ -985,7 +1014,9 @@ font-weight: 700;
 
         // Initialize Supabase
         try {
-            supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+            if (supabaseUrl && supabaseKey) {
+                supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+            }
         } catch (e) {
             console.error('Supabase init failed:', e);
         }
@@ -1228,10 +1259,10 @@ font-weight: 700;
         function renderFeed() {
             const container = document.getElementById('feed-posts');
             container.innerHTML = posts.map(post => `
-                <div class="p-4 border-b border-[#1A1A1A]">
+                <div class="py-4 border-b border-[#1A1A1A]">
                     <div class="flex gap-3">
-                        <div class="profile-ring-container">
-                            <div class="profile-circle bg-gradient-to-br ${post.author.color} text-white text-xs">${post.author.initial}</div>
+                        <div class="profile-ring-container flex-shrink-0">
+                            <div class="profile-circle bg-gradient-to-br ${post.author.color} text-white">${post.author.initial}</div>
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex items-baseline gap-2">
@@ -1262,8 +1293,8 @@ font-weight: 700;
                             ${post.comments ? `
                             <div class="mt-3 pt-3 border-t border-[#1A1A1A]">
                                 <div class="flex gap-2">
-                                    <div class="profile-ring-container">
-                                        <div class="profile-circle bg-gradient-to-br from-[#F4D03F] to-[#D4AC0D] text-[#0D0D0D] text-xs">K</div>
+                                    <div class="profile-ring-container flex-shrink-0">
+                                        <div class="profile-circle bg-gradient-to-br from-[#F4D03F] to-[#D4AC0D] text-[#0D0D0D]">K</div>
                                     </div>
                                     <input type="text" placeholder="Add a comment..." class="flex-1 bg-[#1A1A1A] border-none rounded-full px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none">
                                 </div>
@@ -1315,7 +1346,6 @@ font-weight: 700;
                     console.log('Share cancelled');
                 }
             } else {
-                // Fallback to SMS
                 const smsBody = encodeURIComponent(`Check out this CHAIN Link post: ${window.location.href}`);
                 window.location.href = `sms:?body=${smsBody}`;
             }
@@ -1351,7 +1381,7 @@ font-weight: 700;
             
             mentionDropdown.innerHTML = filtered.map(u => `
                 <div onclick="selectMention('${u.username}')" class="p-3 hover:bg-[#252525] cursor-pointer flex items-center gap-2">
-                    <div class="profile-ring-container"><div class="profile-circle bg-gradient-to-br ${u.color} text-white text-xs">${u.initial}</div></div>
+                    <div class="profile-ring-container flex-shrink-0"><div class="profile-circle bg-gradient-to-br ${u.color} text-white">${u.initial}</div></div>
                     <div>
                         <div class="text-sm font-medium text-white">${u.name}</div>
                         <div class="text-xs text-gray-500">@${u.username}</div>
@@ -1511,7 +1541,7 @@ font-weight: 700;
                 grid.classList.add('hidden');
                 results.innerHTML = mockUsers.filter(u => u.username.includes(query) || u.name.toLowerCase().includes(query.toLowerCase())).map(u => `
                     <div class="flex items-center gap-3 p-3 bg-[#1A1A1A] rounded-lg cursor-pointer hover:bg-[#252525]" onclick="goToProfile('${u.username}')">
-                        <div class="profile-ring-container"><div class="profile-circle bg-gradient-to-br ${u.color} text-white text-xs">${u.initial}</div></div>
+                        <div class="profile-ring-container flex-shrink-0"><div class="profile-circle bg-gradient-to-br ${u.color} text-white">${u.initial}</div></div>
                         <div>
                             <div class="font-medium text-white">${u.name}</div>
                             <div class="text-sm text-gray-500">@${u.username}</div>
@@ -1587,8 +1617,8 @@ font-weight: 700;
             
             inbox.innerHTML = conversations.map(c => `
                 <div onclick="openChat(${c.id}, false)" class="p-3 border-b border-[#1A1A1A] hover:bg-[#1A1A1A] cursor-pointer flex items-center gap-3 ${c.unread ? 'bg-[#1A1A1A]/50' : ''}">
-                    <div class="profile-ring-container">
-                        <div class="profile-circle bg-gradient-to-br ${c.user.color} text-white text-xs">${c.user.initial}</div>
+                    <div class="profile-ring-container flex-shrink-0">
+                        <div class="profile-circle bg-gradient-to-br ${c.user.color} text-white">${c.user.initial}</div>
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex justify-between items-baseline">
@@ -1597,14 +1627,14 @@ font-weight: 700;
                         </div>
                         <p class="text-sm text-gray-400 truncate ${c.unread ? 'text-white' : ''}">${c.lastMsg}</p>
                     </div>
-                    ${c.unread ? `<div class="w-5 h-5 bg-[#F4D03F] rounded-full flex items-center justify-center text-[#0D0D0D] text-xs font-bold">${c.unread}</div>` : ''}
+                    ${c.unread ? `<div class="w-5 h-5 bg-[#F4D03F] rounded-full flex items-center justify-center text-[#0D0D0D] text-xs font-bold flex-shrink-0">${c.unread}</div>` : ''}
                 </div>
             `).join('');
             
             requestsList.innerHTML = requests.length ? requests.map(r => `
                 <div onclick="openChat(${r.id}, true)" class="p-3 border-b border-[#1A1A1A] hover:bg-[#1A1A1A] cursor-pointer flex items-center gap-3">
-                    <div class="profile-ring-container">
-                        <div class="profile-circle bg-gradient-to-br ${r.user.color} text-white text-xs">${r.user.initial}</div>
+                    <div class="profile-ring-container flex-shrink-0">
+                        <div class="profile-circle bg-gradient-to-br ${r.user.color} text-white">${r.user.initial}</div>
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex justify-between items-baseline">
@@ -1614,7 +1644,7 @@ font-weight: 700;
                         <p class="text-sm text-gray-400 truncate">${r.lastMsg}</p>
                         <p class="text-[10px] text-red-400 mt-0.5">Message Request</p>
                     </div>
-                    ${r.unread ? `<div class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">${r.unread}</div>` : ''}
+                    ${r.unread ? `<div class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">${r.unread}</div>` : ''}
                 </div>
             `).join('') : '<div class="text-center text-gray-500 py-12">No message requests</div>';
         }
@@ -1639,8 +1669,20 @@ font-weight: 700;
             document.getElementById('inbox-list').classList.toggle('hidden', tab !== 'inbox');
             document.getElementById('requests-list').classList.toggle('hidden', tab !== 'requests');
             
-            document.getElementById('msg-tab-inbox').classList.toggle('tab-active', tab === 'inbox');
-            document.getElementById('msg-tab-requests').classList.toggle('tab-active', tab === 'requests');
+            const inboxTab = document.getElementById('msg-tab-inbox');
+            const requestsTab = document.getElementById('msg-tab-requests');
+            
+            if (tab === 'inbox') {
+                inboxTab.classList.add('tab-active');
+                inboxTab.classList.remove('text-gray-500', 'border-transparent');
+                requestsTab.classList.remove('tab-active');
+                requestsTab.classList.add('text-gray-500', 'border-transparent');
+            } else {
+                requestsTab.classList.add('tab-active');
+                requestsTab.classList.remove('text-gray-500', 'border-transparent');
+                inboxTab.classList.remove('tab-active');
+                inboxTab.classList.add('text-gray-500', 'border-transparent');
+            }
         }
 
         function openChat(chatId, isRequest) {
@@ -1649,7 +1691,7 @@ font-weight: 700;
             const convo = allConvos.find(c => c.id === chatId);
             if (!convo) return;
             
-            document.getElementById('chat-avatar').className = `profile-circle bg-gradient-to-br ${convo.user.color} text-white text-xs`;
+            document.getElementById('chat-avatar').className = `profile-circle bg-gradient-to-br ${convo.user.color} text-white`;
             document.getElementById('chat-avatar').textContent = convo.user.initial;
             document.getElementById('chat-name').textContent = convo.user.name;
             document.getElementById('chat-status').textContent = isRequest ? 'Message Request' : 'Online';
@@ -1770,7 +1812,6 @@ font-weight: 700;
             const container = document.getElementById('2fa-qr-container');
             container.classList.remove('hidden');
             
-            // Generate QR code
             const qrcode = document.getElementById('qrcode');
             qrcode.innerHTML = '';
             new QRCode(qrcode, {
@@ -1827,4 +1868,3 @@ font-weight: 700;
     </script>
 </body>
 </html>
-
