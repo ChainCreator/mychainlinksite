@@ -9,3 +9,14 @@ config.js
 # Dependencies
 node_modules
 dist
+# 1. Add config.js to .gitignore (if not already)
+echo "config.js" >> .gitignore
+
+# 2. Remove config.js from Git tracking (but keep file locally)
+git rm --cached config.js
+
+# 3. Commit the removal
+git commit -m "Remove config.js from tracking"
+
+# 4. Push
+git push
