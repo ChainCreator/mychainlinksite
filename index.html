@@ -2,319 +2,1298 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#000000">
-    <title>CHAIN&#x26D3;&#xFE0F;Link</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26D3;&#xFE0F;</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAIN⛓️Link - Be You. Connect. Create.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Bebas+Neue&family=Dancing+Script:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD&vault=true" data-namespace="PayPalSDK" async defer></script>
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         :root {
-            --primary: #d4c76a;
-            --primary-hover: #c4b75a;
-            --accent: #e8d88a;
-            --danger: #e0245e;
-            --success: #17bf63;
-            --bg: #0d0d0d;
-            --bg-card: #1a1a1a;
-            --bg-tertiary: #222222;
-            --text: #e7e9ea;
-            --text-secondary: #71767b;
-            --text-muted: #536471;
-            --border: #333333;
-            --ring-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            --shadow: 0 0 20px rgba(212, 199, 106, 0.15);
+            --chain-dark: #0D0D0D;
+            --chain-yellow: #F4D03F;
+            --chain-gray: #1A1A1A;
+            --primary: #F4D03F;
+            --primary-dark: #D4AC0D;
+            --bg-dark: #0D0D0D;
+            --bg-card: #141414;
+            --bg-input: #1A1A1A;
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --text-muted: #737373;
+            --border: #262626;
+            --success: #22c55e;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --love: #ef4444;
+            --like: #3b82f6;
+            --dislike: #6b7280;
+            --repeat: #22c55e;
+            --paypal-blue: #0070BA;
         }
-
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100dvh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
         }
-
-        /* ===== AUTH PAGE ===== */
-        #auth-page { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 1rem; background: radial-gradient(ellipse at top, var(--bg-card) 0%, var(--bg) 70%); }
-        #auth-page .auth-container { width: 100%; max-width: 400px; animation: fadeInUp 0.6s ease; }
-        .quote-section { text-align: center; margin-bottom: 2rem; padding: 1.25rem; background: rgba(26,26,26,0.6); border: 1px solid var(--border); border-radius: 12px; backdrop-filter: blur(10px); }
-        .quote-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: var(--primary); margin-bottom: 0.5rem; font-weight: 700; }
-        .quote-text { font-style: italic; font-size: 1rem; line-height: 1.6; margin-bottom: 0.5rem; color: var(--text); }
-        .quote-author { font-size: 0.8rem; color: var(--text-muted); }
-        .brand-title { font-size: 2.8rem; font-weight: 900; text-align: center; margin-bottom: 0.25rem; letter-spacing: -1px; background: linear-gradient(135deg, #fff 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .brand-subtitle { font-size: 1.1rem; color: var(--text-secondary); text-align: center; margin-bottom: 1.5rem; }
-        .brand-tagline { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 0.5rem; }
-        .brand-cta { font-size: 0.8rem; color: var(--primary); text-align: center; font-weight: 600; margin-bottom: 1.5rem; }
-
-        .auth-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
-        .social-btn { width: 100%; padding: 0.75rem; border: none; border-radius: 9999px; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.75rem; transition: all 0.2s; color: white; }
-        .social-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        .social-btn.google { background: #db4437; }
-        .social-btn.facebook { background: #1877f2; }
-        .social-btn.paypal { background: #0070ba; }
-
-        .divider { display: flex; align-items: center; margin: 1.25rem 0; color: var(--text-muted); font-size: 0.8rem; }
-        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-        .divider span { padding: 0 1rem; }
-
-        .input-group { margin-bottom: 1rem; }
-        .input-row { display: flex; gap: 0.75rem; }
-        .input-row .input-group { flex: 1; margin-bottom: 0; }
-        .input-field { width: 100%; padding: 0.875rem 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.95rem; outline: none; transition: all 0.2s; font-family: inherit; }
-        .input-field:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(212, 199, 106, 0.15); }
-        .input-field::placeholder { color: var(--text-muted); }
-
-        .password-requirements { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
-        .password-requirements span { font-size: 0.7rem; padding: 0.25rem 0.5rem; border-radius: 4px; transition: all 0.3s; }
-        .requirement-unmet { background: var(--bg-tertiary); color: var(--text-muted); }
-        .requirement-met { background: rgba(23, 191, 99, 0.15); color: var(--success); }
-
-        .submit-btn { width: 100%; padding: 0.875rem; background: var(--primary); color: var(--bg); border: none; border-radius: 9999px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .submit-btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
-
-        .auth-switch { text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary); }
-        .auth-switch a { color: var(--primary); cursor: pointer; font-weight: 600; }
-        .auth-switch a:hover { text-decoration: underline; }
-
-        /* ===== NAVBAR ===== */
-        .navbar { position: fixed; top: 0; left: 0; right: 0; height: 56px; background: rgba(13, 13, 13, 0.85); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid var(--border); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        .navbar-content { width: 100%; max-width: 600px; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; }
-        .logo { font-size: 1.3rem; font-weight: 900; cursor: pointer; background: linear-gradient(135deg, #fff 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
-        .nav-links { display: flex; align-items: center; gap: 0.25rem; }
-        .nav-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.5rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; position: relative; }
-        .nav-btn:hover { color: var(--primary); background: rgba(212, 199, 106, 0.1); }
-        .nav-btn.profile-btn { padding: 2px; }
-        .profile-ring-container { width: 32px; height: 32px; border-radius: 50%; padding: 2px; background: var(--ring-gradient); }
-        .profile-circle { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem; }
-
-        /* ===== LAYOUT ===== */
-        .app-container { max-width: 600px; margin: 0 auto; padding: 72px 0.75rem 80px; }
-        .page { display: none; animation: fadeIn 0.3s ease; }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(244, 208, 63, 0.3); } 50% { box-shadow: 0 0 40px rgba(244, 208, 63, 0.6); } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        .page { display: none; min-height: 100vh; animation: fadeIn 0.3s ease-out; }
         .page.active { display: block; }
-
-        /* ===== SPOTIFY ===== */
-        .spotify-widget { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: linear-gradient(90deg, #1db954 0%, #1ed760 100%); border-radius: 12px; margin-bottom: 0.75rem; cursor: pointer; transition: all 0.2s; }
-        .spotify-widget:hover { transform: scale(1.01); }
-        .spotify-icon { width: 36px; height: 36px; background: rgba(0,0,0,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .spotify-info { flex: 1; min-width: 0; }
-        .spotify-title { font-size: 0.7rem; font-weight: 700; opacity: 0.9; color: white; text-transform: uppercase; letter-spacing: 0.5px; }
-        .spotify-artist { font-size: 0.85rem; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* ===== CREATE POST ===== */
-        .create-post { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1rem; margin-bottom: 0.75rem; }
-        .create-post-header { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; }
-        .create-post-header .profile-ring-container { width: 40px; height: 40px; flex-shrink: 0; }
-        .post-input { flex: 1; background: transparent; border: none; color: var(--text); font-size: 1rem; resize: none; outline: none; font-family: inherit; min-height: 60px; padding-top: 0.5rem; }
-        .post-input::placeholder { color: var(--text-muted); }
-        .font-selector { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
-        .font-btn { padding: 0.3rem 0.7rem; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text-muted); border-radius: 6px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
-        .font-btn:hover { border-color: var(--primary); color: var(--text); }
-        .font-btn.active { border-color: var(--primary); color: var(--primary); background: rgba(212, 199, 106, 0.1); }
-        .font-btn.display { font-family: Georgia, serif; font-weight: 900; text-transform: uppercase; }
-        .font-btn.mono { font-family: 'Courier New', monospace; }
-        .font-btn.cursive { font-family: 'Brush Script MT', cursive; font-style: italic; }
-        .font-btn.bold { font-weight: 900; }
-        .post-actions-bar { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 0.75rem; }
-        .post-actions-left { display: flex; align-items: center; gap: 0.25rem; }
-        .action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.5rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .action-btn:hover { color: var(--primary); background: rgba(212, 199, 106, 0.1); }
-        .toggle-container { display: flex; align-items: center; gap: 0.4rem; margin-left: 0.5rem; font-size: 0.75rem; color: var(--text-muted); }
-        .toggle-switch { position: relative; width: 38px; height: 20px; cursor: pointer; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider { position: absolute; inset: 0; background: var(--bg-tertiary); border-radius: 20px; transition: 0.3s; border: 1px solid var(--border); }
-        .toggle-slider::before { content: ''; position: absolute; height: 14px; width: 14px; left: 2px; bottom: 2px; background: var(--text-muted); border-radius: 50%; transition: 0.3s; }
-        .toggle-switch input:checked + .toggle-slider { background: var(--primary); border-color: var(--primary); }
-        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); background: var(--bg); }
-        .post-btn { padding: 0.5rem 1.25rem; background: var(--primary); color: var(--bg); border: none; border-radius: 9999px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
-        .post-btn:hover { background: var(--primary-hover); }
-
-        /* ===== POSTS ===== */
-        .post { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1rem; margin-bottom: 0.75rem; transition: all 0.2s; animation: fadeInUp 0.4s ease; }
-        .post:hover { border-color: rgba(212, 199, 106, 0.15); }
-        .post-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
-        .post-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--ring-gradient); padding: 2px; flex-shrink: 0; }
-        .post-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; overflow: hidden; }
-        .post-avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
-        .post-meta { flex: 1; min-width: 0; }
-        .post-author-name { font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.25rem; }
-        .verified-small { color: var(--primary); font-size: 0.8rem; }
-        .post-time { font-size: 0.75rem; color: var(--text-muted); }
-        .post-menu-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.25rem; border-radius: 9999px; margin-left: auto; flex-shrink: 0; }
-        .post-menu-btn:hover { color: var(--text); background: var(--bg-tertiary); }
-        .post-content { margin-bottom: 0.75rem; line-height: 1.5; word-wrap: break-word; font-size: 0.95rem; }
-        .post-content.font-display { font-family: Georgia, serif; font-weight: 900; text-transform: uppercase; font-size: 1.4rem; }
-        .post-content.font-mono { font-family: 'Courier New', monospace; }
-        .post-content.font-cursive { font-family: 'Brush Script MT', cursive; font-size: 1.25rem; }
-        .post-content.font-bold { font-weight: 900; font-size: 1.1rem; }
-        .post-image { width: 100%; border-radius: 12px; margin-bottom: 0.75rem; cursor: pointer; object-fit: cover; max-height: 500px; }
-        .post-stats { display: flex; gap: 1rem; color: var(--text-muted); font-size: 0.75rem; margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
-        .post-actions { display: flex; justify-content: space-around; }
-        .post-action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; padding: 0.5rem; border-radius: 8px; transition: all 0.2s; }
-        .post-action-btn:hover { background: rgba(212, 199, 106, 0.08); color: var(--primary); }
-        .post-action-btn.liked { color: var(--danger); }
-        .post-action-btn.liked:hover { background: rgba(224, 36, 94, 0.08); }
-        .post-action-btn.reposted { color: var(--success); }
-        .post-action-btn.reposted:hover { background: rgba(23, 191, 99, 0.08); }
-
-        /* ===== EXPLORE ===== */
-        .explore-header { margin-bottom: 0.75rem; }
-        .search-bar { display: flex; align-items: center; gap: 0.75rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 9999px; padding: 0.75rem 1rem; }
-        .search-bar input { background: none; border: none; color: var(--text); outline: none; font-size: 0.9rem; width: 100%; font-family: inherit; }
-        .search-bar input::placeholder { color: var(--text-muted); }
-        .trending-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1rem; margin-bottom: 0.75rem; }
-        .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
-        .trending-item { padding: 0.75rem 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
-        .trending-item:last-child { border-bottom: none; }
-        .trending-item:hover { background: var(--bg-tertiary); margin: 0 -1rem; padding-left: 1rem; padding-right: 1rem; }
-        .trending-category { font-size: 0.75rem; color: var(--text-muted); }
-        .trending-topic { font-weight: 700; margin: 0.2rem 0; font-size: 0.95rem; }
-        .trending-count { font-size: 0.75rem; color: var(--text-muted); }
-        .explore-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-        .explore-grid-item { aspect-ratio: 1; background: var(--bg-card); border-radius: 12px; overflow: hidden; cursor: pointer; position: relative; }
-        .explore-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .explore-grid-item:hover img { transform: scale(1.05); }
-
-        /* ===== NOTIFICATIONS ===== */
-        .notifications-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; padding: 0 0.25rem; }
-        .notifications-title { font-size: 1.3rem; font-weight: 800; }
-        .mark-all-read { background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.8rem; font-weight: 600; }
-        .notification-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.875rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; }
-        .notification-item:hover { background: var(--bg-tertiary); }
-        .notification-item.unread { border-left: 3px solid var(--primary); }
-        .notification-icon { width: 32px; height: 32px; border-radius: 50%; background: rgba(212, 199, 106, 0.12); display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0; }
-        .notification-content { flex: 1; min-width: 0; }
-        .notification-text { font-size: 0.85rem; line-height: 1.4; }
-        .notification-text strong { color: var(--text); font-weight: 600; }
-        .notification-time { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
-
-        /* ===== PROFILE ===== */
-        .profile-header { position: relative; margin-bottom: 3rem; }
-        .profile-cover { height: 140px; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 40%, var(--danger) 100%); border-radius: 16px; }
-        .profile-info { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 1rem; margin-top: -36px; }
-        .profile-avatar-large { width: 72px; height: 72px; border-radius: 50%; background: var(--bg); border: 3px solid var(--bg); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 900; overflow: hidden; }
-        .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-actions { display: flex; gap: 0.5rem; margin-bottom: 0.25rem; }
-        .profile-btn { padding: 0.4rem 0.875rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.3rem; border: 1px solid var(--border); background: transparent; color: var(--text); }
-        .profile-btn:hover { background: var(--bg-tertiary); }
-        .profile-btn.primary { background: var(--primary); border-color: var(--primary); color: var(--bg); }
-        .profile-btn.primary:hover { background: var(--primary-hover); }
-        .profile-details { padding: 0 0.25rem; margin-bottom: 1.25rem; }
-        .profile-name { font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 0.3rem; margin-bottom: 0.2rem; }
-        .verified-badge { color: var(--bg); background: var(--primary); width: 16px; height: 16px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 900; }
-        .profile-handle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
-        .profile-bio { font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem; }
-        .profile-stats { display: flex; gap: 1.25rem; }
-        .stat-item { cursor: pointer; display: flex; gap: 0.3rem; font-size: 0.85rem; }
-        .stat-item:hover .stat-value { text-decoration: underline; }
-        .stat-value { font-weight: 700; color: var(--text); }
-        .stat-label { color: var(--text-muted); }
-        .profile-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 0.75rem; }
-        .profile-tab { flex: 1; text-align: center; padding: 0.875rem 0.5rem; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; transition: all 0.2s; font-size: 0.85rem; }
-        .profile-tab:hover { color: var(--text); background: rgba(26,26,26,0.5); }
-        .profile-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-
-        /* ===== MOBILE NAV ===== */
-        .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 56px; background: rgba(13, 13, 13, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border); z-index: 1000; }
-        .mobile-nav-items { display: flex; justify-content: space-around; align-items: center; height: 100%; }
-        .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; color: var(--text-muted); cursor: pointer; font-size: 0.6rem; transition: all 0.2s; padding: 0.25rem 0.5rem; }
-        .mobile-nav-item svg { width: 22px; height: 22px; }
-        .mobile-nav-item.active { color: var(--primary); }
-
-        /* ===== CAMERA MODAL ===== */
-        .camera-modal { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 2000; flex-direction: column; }
-        .camera-modal.active { display: flex; }
-        .camera-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
-        .camera-title { font-weight: 700; font-size: 1rem; }
-        .camera-close { background: none; border: none; color: var(--text); cursor: pointer; padding: 0.5rem; border-radius: 9999px; }
-        .camera-preview { flex: 1; display: flex; align-items: center; justify-content: center; background: var(--bg-card); position: relative; overflow: hidden; }
-        .camera-video, .camera-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-        .camera-canvas { display: none; }
-        .camera-placeholder { text-align: center; color: var(--text-muted); padding: 2rem; }
-        .camera-placeholder svg { width: 64px; height: 64px; margin-bottom: 1rem; opacity: 0.4; }
-        .camera-controls { display: flex; align-items: center; justify-content: center; gap: 3rem; padding: 1.5rem 2rem; }
-        .camera-switch { background: var(--bg-tertiary); border: none; color: var(--text); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .camera-btn { width: 60px; height: 60px; border-radius: 50%; border: 3px solid white; background: none; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 3px; }
-        .camera-btn-inner { width: 100%; height: 100%; border-radius: 50%; background: white; transition: transform 0.1s; }
-        .camera-btn:active .camera-btn-inner { transform: scale(0.9); }
-
-        /* ===== MODALS ===== */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 2002; align-items: center; justify-content: center; padding: 1rem; }
-        .modal-overlay.active { display: flex; }
-        .modal-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 420px; max-height: 85vh; display: flex; flex-direction: column; animation: modalIn 0.25s ease; overflow: hidden; }
-        .modal-card-lg { max-width: 600px; max-height: 90vh; overflow-y: auto; }
-        .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-card); z-index: 10; }
-        .modal-header h3 { font-size: 1rem; font-weight: 700; }
-        .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.4rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; }
-        .modal-close:hover { color: var(--text); background: var(--bg-tertiary); }
-        .modal-body { padding: 1rem; overflow-y: auto; flex: 1; }
-
-        /* Follow modal uses same structure */
-        .follow-list-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 0; }
-        .follow-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--ring-gradient); padding: 2px; flex-shrink: 0; }
-        .follow-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; }
-        .follow-info { flex: 1; min-width: 0; }
-        .follow-name { font-weight: 700; font-size: 0.85rem; }
-        .follow-handle { font-size: 0.75rem; color: var(--text-muted); }
-        .follow-btn { padding: 0.35rem 0.875rem; border-radius: 9999px; border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .follow-btn:hover { background: var(--bg-tertiary); }
-        .follow-btn.following { background: var(--primary); border-color: var(--primary); color: var(--bg); }
-
-        /* ===== COMMENTS ===== */
-        .comment-section { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
-        .comment-input-row { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; align-items: center; }
-        .comment-input { flex: 1; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 9999px; padding: 0.5rem 1rem; color: var(--text); font-size: 0.85rem; outline: none; font-family: inherit; }
-        .comment-input:focus { border-color: var(--primary); }
-        .comment-submit { background: var(--primary); border: none; color: var(--bg); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .comment { display: flex; gap: 0.625rem; margin-bottom: 0.75rem; }
-        .comment-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--ring-gradient); padding: 2px; flex-shrink: 0; }
-        .comment-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem; }
-        .comment-content { flex: 1; min-width: 0; }
-        .comment-author { font-weight: 700; font-size: 0.8rem; margin-bottom: 0.1rem; }
-        .comment-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
-        .comment-time { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; }
-
-        /* ===== TOAST ===== */
-        .toast { position: fixed; bottom: 76px; left: 50%; transform: translateX(-50%) translateY(120px); background: var(--primary); color: var(--bg); padding: 0.625rem 1.25rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; z-index: 3000; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; white-space: nowrap; }
-        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-        .file-input { display: none; }
-        .loading-spinner { width: 28px; height: 28px; border: 2.5px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 2rem auto; }
-
-        /* ===== ANIMATIONS ===== */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .navbar { display: none; }
-            .mobile-nav { display: block; }
-            .app-container { padding: 0.75rem 0.5rem 72px; }
+        
+        /* AUTH PAGE */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--chain-gray) 100%);
         }
+        
+        .quote-section { 
+            text-align: center; 
+            margin-bottom: 2rem; 
+            animation: fadeIn 0.8s ease-out;
+            max-width: 500px;
+        }
+        .quote-label { 
+            color: var(--text-muted); 
+            font-size: 0.7rem; 
+            letter-spacing: 0.3em; 
+            text-transform: uppercase; 
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .quote-text { 
+            color: var(--text-secondary); 
+            font-size: 1.1rem; 
+            font-family: 'Dancing Script', cursive;
+            line-height: 1.6; 
+            margin: 0 auto 0.5rem;
+            min-height: 60px;
+            transition: opacity 0.5s ease;
+        }
+        .quote-author { 
+            color: var(--primary); 
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .brand-title { 
+            font-family: 'Bebas Neue', sans-serif; 
+            font-size: 4rem; 
+            letter-spacing: 0.15em; 
+            color: var(--primary); 
+            text-align: center; 
+            margin-bottom: 0.25rem;
+            text-shadow: 0 0 30px rgba(244, 208, 63, 0.3);
+        }
+        .brand-subtitle { 
+            text-align: center; 
+            color: var(--text-primary); 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            margin-bottom: 0.5rem; 
+        }
+        .brand-tagline { 
+            text-align: center; 
+            color: var(--text-secondary); 
+            font-size: 1rem; 
+            margin-bottom: 0.5rem; 
+        }
+        .brand-cta {
+            text-align: center;
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+        
+        .auth-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            animation: scaleIn 0.5s ease-out;
+        }
+        
+        .social-btn {
+            width: 100%; 
+            padding: 0.875rem; 
+            border-radius: 9999px; 
+            border: none; 
+            font-weight: 600;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 0.75rem;
+            margin-bottom: 0.75rem; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            background: var(--bg-input); 
+            color: white; 
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        .social-btn:hover { 
+            background: var(--border); 
+            border-color: var(--primary); 
+            transform: translateY(-1px);
+        }
+        .social-btn.google { background: #4285F4; border-color: #4285F4; }
+        .social-btn.google:hover { background: #3367D6; }
+        .social-btn.facebook { background: #1877F2; border-color: #1877F2; }
+        .social-btn.facebook:hover { background: #166fe5; }
+        .social-btn.paypal { 
+            background: var(--paypal-blue); 
+            border-color: var(--paypal-blue); 
+        }
+        .social-btn.paypal:hover { background: #005ea6; }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .divider span { padding: 0 1rem; }
+        
+        .input-group { position: relative; width: 100%; margin-bottom: 0.75rem; }
+        .input-field {
+            width: 100%; 
+            padding: 0.875rem 1rem; 
+            background: var(--bg-input);
+            border: 1px solid var(--border); 
+            border-radius: 0.75rem; 
+            color: white;
+            font-size: 0.9rem; 
+            transition: all 0.2s;
+        }
+        .input-field:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(244, 208, 63, 0.1);
+        }
+        .input-field::placeholder { color: var(--text-muted); }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        
+        .submit-btn {
+            width: 100%; 
+            padding: 0.875rem; 
+            background: var(--primary); 
+            color: var(--bg-dark);
+            border: none; 
+            border-radius: 9999px; 
+            font-weight: 700; 
+            font-size: 1rem;
+            cursor: pointer; 
+            transition: all 0.2s; 
+            margin-top: 0.5rem;
+        }
+        .submit-btn:hover { 
+            filter: brightness(1.1); 
+            transform: translateY(-1px);
+        }
+        
+        .password-requirements { 
+            font-size: 0.7rem; 
+            color: var(--text-muted); 
+            margin-top: 0.5rem; 
+            text-align: left; 
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.25rem;
+        }
+        .requirement-met { color: var(--success); }
+        .requirement-unmet { color: var(--text-muted); }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .auth-switch a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* NAVIGATION */
+        .navbar {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            z-index: 1000;
+            background: rgba(13, 13, 13, 0.95); 
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border); 
+            padding: 0.75rem 1rem;
+        }
+        .navbar-content { 
+            max-width: 672px; 
+            margin: 0 auto; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .logo { 
+            font-family: 'Bebas Neue', sans-serif; 
+            font-size: 1.75rem; 
+            color: var(--primary); 
+            cursor: pointer; 
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .logo .chain-emoji { font-size: 1.5rem; }
+        
+        .nav-links { 
+            display: flex; 
+            gap: 0.5rem; 
+            align-items: center; 
+        }
+        .nav-btn { 
+            padding: 0.5rem; 
+            background: none; 
+            border: none; 
+            color: var(--text-secondary); 
+            cursor: pointer; 
+            border-radius: 50%; 
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-btn:hover { 
+            color: var(--primary); 
+            background: rgba(244, 208, 63, 0.1);
+        }
+        .nav-btn.active { color: var(--primary); }
+        
+        .profile-ring-container { 
+            position: relative; 
+            display: inline-flex; 
+            padding: 2px; 
+            border-radius: 50%; 
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark)); 
+            cursor: pointer;
+        }
+        .profile-circle { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 600; 
+            font-size: 0.875rem; 
+            background: var(--bg-dark); 
+            color: white; 
+        }
+        
+        /* MOBILE NAV */
+        .mobile-nav { 
+            display: none; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: var(--bg-card); 
+            border-top: 1px solid var(--border); 
+            padding: 0.5rem; 
+            z-index: 1000; 
+        }
+        .mobile-nav-items { 
+            display: flex; 
+            justify-content: space-around; 
+            max-width: 672px; 
+            margin: 0 auto; 
+        }
+        .mobile-nav-item { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 0.25rem; 
+            color: var(--text-secondary); 
+            font-size: 0.625rem; 
+            cursor: pointer; 
+            padding: 0.5rem; 
+            transition: all 0.3s;
+            flex: 1;
+        }
+        .mobile-nav-item.active { color: var(--primary); }
+        .mobile-nav-item svg { width: 24px; height: 24px; }
+        
+        /* APP CONTAINER */
+        .app-container { 
+            max-width: 672px; 
+            margin: 0 auto; 
+            width: 100%; 
+            padding-top: 70px; 
+            padding-bottom: 80px; 
+        }
+        
+        /* SPOTIFY WIDGET */
+        .spotify-widget {
+            background: linear-gradient(135deg, #1DB954, #1ed760); 
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.75rem; 
+            margin: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .spotify-widget:hover { transform: scale(1.02); }
+        .spotify-icon { width: 40px; height: 40px; background: rgba(0,0,0,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .spotify-info { flex: 1; }
+        .spotify-title { font-weight: 700; font-size: 0.9rem; color: white; }
+        .spotify-artist { font-size: 0.8rem; color: rgba(255,255,255,0.8); }
+        
+        /* CREATE POST */
+        .create-post { 
+            padding: 1rem; 
+            background: var(--bg-card);
+            margin: 1rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+        }
+        .create-post-header { 
+            display: flex; 
+            gap: 0.75rem; 
+            align-items: flex-start;
+        }
+        .post-input { 
+            flex: 1; 
+            background: transparent; 
+            border: none; 
+            color: white; 
+            font-size: 1rem; 
+            resize: none; 
+            min-height: 80px; 
+            font-family: inherit;
+            padding-top: 0.5rem;
+        }
+        .post-input:focus { outline: none; }
+        .post-input::placeholder { color: var(--text-muted); }
+        
+        .font-selector { 
+            display: flex; 
+            gap: 0.5rem; 
+            margin: 0.75rem 0; 
+            overflow-x: auto; 
+            padding-bottom: 0.5rem;
+        }
+        .font-btn { 
+            padding: 0.375rem 0.875rem; 
+            border-radius: 9999px; 
+            font-size: 0.75rem; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            background: var(--bg-input); 
+            color: var(--text-secondary); 
+            border: 1px solid var(--border); 
+            white-space: nowrap; 
+        }
+        .font-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .font-btn.active { 
+            background: var(--primary); 
+            color: var(--bg-dark); 
+            border-color: var(--primary); 
+        }
+        .font-btn.display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+        .font-btn.mono { font-family: 'Space Mono', monospace; }
+        .font-btn.cursive { font-family: 'Dancing Script', cursive; font-size: 0.9rem; }
+        .font-btn.bold { font-weight: 800; }
+        
+        .post-actions-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding-top: 0.75rem; 
+            border-top: 1px solid var(--border); 
+        }
+        .post-actions-left { 
+            display: flex; 
+            gap: 1rem; 
+            align-items: center; 
+        }
+        .action-btn { 
+            background: none; 
+            border: none; 
+            color: var(--primary); 
+            cursor: pointer; 
+            padding: 0.5rem; 
+            border-radius: 50%; 
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-btn:hover { background: rgba(244, 208, 63, 0.1); }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .toggle-switch { 
+            position: relative; 
+            display: inline-block; 
+            width: 44px; 
+            height: 24px; 
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { 
+            position: absolute; 
+            cursor: pointer; 
+            top: 0; left: 0; right: 0; bottom: 0; 
+            background-color: var(--border); 
+            transition: .3s; 
+            border-radius: 34px; 
+        }
+        .toggle-slider:before { 
+            position: absolute; 
+            content: ""; 
+            height: 18px; width: 18px; 
+            left: 3px; bottom: 3px; 
+            background-color: white; 
+            transition: .3s; 
+            border-radius: 50%; 
+        }
+        input:checked + .toggle-slider { background-color: var(--primary); }
+        input:checked + .toggle-slider:before { transform: translateX(20px); }
+        
+        .post-btn {
+            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .post-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .post-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        
+        /* POSTS */
+        .post-card { 
+            padding: 1rem; 
+            background: var(--bg-card);
+            margin: 0.5rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            animation: fadeIn 0.3s ease-out;
+        }
+        .post-header { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.75rem; 
+            margin-bottom: 0.75rem; 
+        }
+        .post-author-info { flex: 1; }
+        .post-author-name { font-weight: 700; color: white; font-size: 0.95rem; }
+        .post-meta { color: var(--text-muted); font-size: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+        .verified-badge { color: var(--primary); font-size: 0.9rem; }
+        .scheduled-badge {
+            background: rgba(244, 208, 63, 0.1);
+            color: var(--primary);
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .post-content { 
+            margin-bottom: 0.75rem; 
+            line-height: 1.5; 
+            color: var(--text-secondary); 
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+        }
+        .post-content.display { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 1px; color: var(--text-primary); }
+        .post-content.mono { font-family: 'Space Mono', monospace; background: var(--bg-input); padding: 0.75rem; border-radius: 0.5rem; }
+        .post-content.cursive { font-family: 'Dancing Script', cursive; font-size: 1.25rem; color: var(--text-primary); }
+        .post-content.bold { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); }
+        
+        .post-media { 
+            width: 100%; 
+            border-radius: 0.75rem; 
+            margin-bottom: 0.75rem; 
+            max-height: 500px; 
+            object-fit: cover;
+            cursor: pointer;
+        }
+        
+        .post-reactions { 
+            display: flex; 
+            gap: 1.5rem; 
+            padding-top: 0.5rem;
+        }
+        .reaction-btn { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.375rem; 
+            background: none; 
+            border: none; 
+            color: var(--text-muted); 
+            cursor: pointer; 
+            font-size: 0.85rem; 
+            transition: all 0.2s;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+        .reaction-btn:hover { background: var(--bg-input); tra
+              .reaction-btn:hover { background: var(--bg-input); transform: scale(1.05); }
+        .reaction-btn.love:hover, .reaction-btn.love.active { color: var(--love); background: rgba(239, 68, 68, 0.1); }
+        .reaction-btn.like:hover, .reaction-btn.like.active { color: var(--like); background: rgba(59, 130, 246, 0.1); }
+        .reaction-btn.dislike:hover, .reaction-btn.dislike.active { color: var(--dislike); background: rgba(107, 114, 128, 0.1); }
+        .reaction-btn.repeat:hover, .reaction-btn.repeat.active { color: var(--repeat); background: rgba(34, 197, 94, 0.1); }
+        
+        /* CAMERA MODAL */
+        .camera-modal { 
+            position: fixed; inset: 0; 
+            background: rgba(13, 13, 13, 0.98); 
+            z-index: 2000; 
+            display: none; flex-direction: column; 
+        }
+        .camera-modal.active { display: flex; }
+        .camera-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 1rem; 
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+        }
+        .camera-title { font-weight: 700; font-size: 1.1rem; }
+        .camera-close { 
+            background: rgba(255,255,255,0.1); 
+            border: none; 
+            color: white; 
+            width: 40px; height: 40px; 
+            border-radius: 50%; 
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .camera-close:hover { background: rgba(255,255,255,0.2); }
+        
+        .camera-preview { 
+            flex: 1; 
+            display: flex; align-items: center; justify-content: center; 
+            position: relative;
+            background: #000;
+        }
+        .camera-video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+        .camera-canvas { display: none; }
+        .camera-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem;
+        }
+        .camera-placeholder svg { 
+            width: 80px; height: 80px; 
+            margin-bottom: 1rem; 
+            opacity: 0.5;
+        }
+        
+        .camera-controls { 
+            padding: 1.5rem; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 2rem;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+        }
+        .camera-btn {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            border: 4px solid white;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .camera-btn:hover { transform: scale(1.05); }
+        .camera-btn-inner {
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            background: white;
+            transition: all 0.2s;
+        }
+        .camera-btn:hover .camera-btn-inner { background: var(--primary); }
+        
+        .camera-switch {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .camera-switch:hover { background: rgba(255,255,255,0.2); }
+        
+        /* IMAGE PREVIEW MODAL */
+        .image-preview-modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 2001;
+            display: none;
+            flex-direction: column;
+        }
+        .image-preview-modal.active { display: flex; }
+        .image-preview-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem;
+        }
+        .image-preview-content {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center;
+            padding: 1rem;
+        }
+        .image-preview-content img {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 0.75rem;
+            object-fit: contain;
+        }
+        .image-preview-actions {
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .preview-btn {
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .preview-btn.retake {
+            background: var(--bg-input);
+            color: white;
+            border: 1px solid var(--border);
+        }
+        .preview-btn.retake:hover { background: var(--border); }
+        .preview-btn.use {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+        .preview-btn.use:hover { filter: brightness(1.1); }
+        
+        /* PROFILE PAGE */
+        .profile-header {
+            padding: 1rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+        .profile-cover {
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 1rem;
+            margin-bottom: -40px;
+        }
+        .profile-info {
+            display: flex;
+            align-items: flex-end;
+            padding: 0 1rem;
+            gap: 1rem;
+        }
+        .profile-avatar-large {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            border: 4px solid var(--bg-card);
+            color: var(--primary);
+        }
+        .profile-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+            margin-bottom: 0.5rem;
+        }
+        .profile-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .profile-btn.primary {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+        .profile-btn.primary:hover { filter: brightness(1.1); }
+        .profile-btn.secondary {
+            background: var(--bg-input);
+            color: white;
+            border: 1px solid var(--border);
+        }
+        .profile-btn.secondary:hover { background: var(--border); }
+        
+        .profile-details {
+            padding: 1rem;
+        }
+        .profile-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .profile-handle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .profile-bio {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        .profile-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .stat-item {
+            display: flex; align-items: center; gap: 0.25rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .stat-item:hover { color: var(--primary); }
+        .stat-value { font-weight: 700; color: white; }
+        .stat-label { color: var(--text-muted); }
+        
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+        .profile-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .profile-tab:hover { color: var(--text-primary); }
+        .profile-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        /* FOLLOWERS/FOLLOWING MODAL */
+        .follow-modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2002;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .follow-modal.active { display: flex; }
+        .follow-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 400px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .follow-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .follow-title { font-weight: 700; font-size: 1.1rem; }
+        .follow-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+        .follow-close:hover { color: white; background: var(--bg-input); }
+        .follow-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+        .follow-tab {
+            flex: 1;
+            padding: 0.875rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .follow-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .follow-list {
+            overflow-y: auto;
+            max-height: 50vh;
+        }
+        .follow-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .follow-item-info { flex: 1; }
+        .follow-item-name { font-weight: 600; }
+        .follow-item-handle { color: var(--text-muted); font-size: 0.85rem; }
+        .follow-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .follow-btn.follow {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+        .follow-btn.following {
+            background: var(--bg-input);
+            color: white;
+            border: 1px solid var(--border);
+        }
+        
+        /* PAYPAL MODAL */
+        .paypal-modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2003;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .paypal-modal.active { display: flex; }
+        .paypal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 450px;
+            padding: 1.5rem;
+        }
+        .paypal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .paypal-title { 
+            font-weight: 700; 
+            font-size: 1.2rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+        }
+        .paypal-logo {
+            color: var(--paypal-blue);
+            font-weight: 800;
+            font-style: italic;
+        }
+        .paypal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+        .paypal-close:hover { color: white; background: var(--bg-input); }
+        .paypal-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        #paypal-button-container {
+            min-height: 150px;
+        }
+        .paypal-connected {
+            text-align: center;
+            padding: 2rem;
+        }
+        .paypal-connected svg {
+            width: 64px; height: 64px;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+        .paypal-connected h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        .paypal-connected p {
+            color: var(--text-secondary);
+        }
+        
+        /* EXPLORE PAGE */
+        .explore-header {
+            padding: 1rem;
+            position: sticky;
+            top: 60px;
+            background: var(--bg-dark);
+            z-index: 100;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            padding: 0.75rem 1rem;
+        }
+        .search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.95rem;
+        }
+        .search-bar input:focus { outline: none; }
+        .search-bar input::placeholder { color: var(--text-muted); }
+        
+        .trending-section {
+            padding: 1rem;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .trending-item {
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .trending-item:hover { border-color: var(--primary); }
+        .trending-rank {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
+        }
+        .trending-topic { font-weight: 600; margin-bottom: 0.25rem; }
+        .trending-posts { color: var(--text-muted); font-size: 0.85rem; }
+        
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            padding: 2px;
+        }
+        .explore-grid-item {
+            aspect-ratio: 1;
+            background: var(--bg-card);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .explore-grid-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .explore-grid-item:hover img { transform: scale(1.05); }
+        
+        /* NOTIFICATIONS PAGE */
+        .notifications-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .notifications-title { font-size: 1.25rem; font-weight: 700; }
+        .mark-all-read {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .notification-item:hover { background: var(--bg-card); }
+        .notification-item.unread { background: rgba(244, 208, 63, 0.05); }
+        
+        .notification-icon {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .notification-icon.love { background: rgba(239, 68, 68, 0.1); color: var(--love); }
+        .notification-icon.follow { background: rgba(59, 130, 246, 0.1); color: var(--like); }
+        .notification-icon.repeat { background: rgba(34, 197, 94, 0.1); color: var(--repeat); }
+        .notification-icon.mention { background: rgba(244, 208, 63, 0.1); color: var(--primary); }
+        
+        .notification-content { flex: 1; }
+        .notification-text { font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.25rem; }
+        .notification-text strong { color: white; }
+        .notification-time { color: var(--text-muted); font-size: 0.8rem; }
+        
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+        .empty-state svg {
+            width: 64px; height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        .empty-state h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* LOADING */
+        .loading-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 2rem auto;
+        }
+        
+        /* TOAST */
+        .toast-container {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.875rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--error); }
+        .toast.info { border-color: var(--info); }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .brand-title { font-size: 3rem; }
+            .mobile-nav { display: block; }
+            .app-container { padding-bottom: 80px; }
+            .nav-links .nav-btn:not(.profile-btn) { display: none; }
+            .input-row { grid-template-columns: 1fr; }
+            .explore-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
         @media (min-width: 769px) {
             .mobile-nav { display: none !important; }
-            .app-container { padding-top: 72px; }
+            .app-container { padding-bottom: 20px; }
         }
+        
+        /* HIDDEN FILE INPUT */
+        .file-input { display: none; }
+        
+        /* POST OPTIONS MENU */
+        .post-menu {
+            position: relative;
+        }
+        .post-menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .post-menu-btn:hover { color: var(--text-primary); background: var(--bg-input); }
+        .post-menu-dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            min-width: 150px;
+            display: none;
+            z-index: 100;
+            overflow: hidden;
+        }
+        .post-menu-dropdown.active { display: block; }
+        .post-menu-item {
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .post-menu-item:hover { background: var(--bg-input); color: white; }
+        .post-menu-item.delete { color: var(--error); }
+        .post-menu-item.delete:hover { background: rgba(239, 68, 68, 0.1); }
+        
+        /* SCHEDULE MODAL */
+        .schedule-modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2002;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .schedule-modal.active { display: flex; }
+        .schedule-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 350px;
+        }
+        .schedule-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .schedule-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .schedule-input:focus { outline: none; border-color: var(--primary); }
+        .schedule-actions {
+            display: flex; gap: 0.75rem;
+        }
+        .schedule-actions button {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        .schedule-cancel { background: var(--bg-input); color: white; }
+        .schedule-confirm { background: var(--primary); color: var(--bg-dark); }
     </style>
 </head>
 <body>
-
-    <!-- ==================== AUTH PAGE ==================== -->
+    <!-- AUTH PAGE -->
     <div id="auth-page" class="page active">
         <div class="auth-container">
             <div class="quote-section">
                 <div class="quote-label">Daily Inspiration</div>
-                <div class="quote-text" id="quote-text">Loading...</div>
-                <div class="quote-author" id="quote-author"></div>
+                <div class="quote-text" id="quote-text">"Be yourself; everyone else is already taken."</div>
+                <div class="quote-author" id="quote-author">— Oscar Wilde</div>
             </div>
-            <h1 class="brand-title">CHAIN&#x26D3;&#xFE0F;Link</h1>
-            <p class="brand-subtitle">Link up with your friends today and stay connected</p>
-            <p class="brand-tagline">Be You. Connect. Create.</p>
+            
+            <h1 class="brand-title">CHAIN<span class="chain-emoji">⛓️</span>Link</h1>
+            <p class="brand-subtitle">Be You. Connect. Create.</p>
+            <p class="brand-tagline">Link up with your friends today and stay connected</p>
             <p class="brand-cta">Join for free today</p>
+            
             <div class="auth-card">
+                <!-- Login Form -->
                 <div id="login-form">
                     <button class="social-btn google" onclick="handleGoogleLogin()">
                         <svg width="18" height="18" viewBox="0 0 24 24"><path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="white" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="white" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
@@ -328,19 +1307,25 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.629h6.724c2.838 0 5.098.835 5.93 2.42.447.838.582 1.703.404 2.574-.25 1.27-1.023 2.35-2.178 3.044-.375.226-.784.416-1.224.573.355.207.64.472.867.796.433.622.588 1.407.462 2.333-.18 1.32-.84 2.44-1.917 3.253-.994.753-2.302 1.128-3.81 1.128H7.076z"/></svg>
                         Connect PayPal
                     </button>
+                    
                     <div class="divider"><span>or</span></div>
+                    
                     <div class="input-group">
                         <input type="email" class="input-field" id="login-email" placeholder="Email address">
                     </div>
                     <div class="input-group">
                         <input type="password" class="input-field" id="login-password" placeholder="Password">
                     </div>
+                    
                     <button class="submit-btn" onclick="handleEmailLogin()">Log In</button>
+                    
                     <div class="auth-switch">
                         Don't have an account? <a onclick="showSignup()">Sign up</a>
                     </div>
                 </div>
-                <div id="signup-form" style="display:none;">
+                
+                <!-- Signup Form -->
+                <div id="signup-form" style="display: none;">
                     <div class="input-row">
                         <div class="input-group">
                             <input type="text" class="input-field" id="signup-firstname" placeholder="First name">
@@ -364,7 +1349,9 @@
                         <span id="req-special" class="requirement-unmet">1 special char</span>
                         <span id="req-upper" class="requirement-unmet">1 uppercase</span>
                     </div>
-                    <button class="submit-btn" onclick="handleSignup()">Create Account</button>
+                    
+                    <button class="submit-btn" onclick="handleSignup()" style="margin-top: 1rem;">Create Account</button>
+                    
                     <div class="auth-switch">
                         Already have an account? <a onclick="showLogin()">Log in</a>
                     </div>
@@ -372,23 +1359,24 @@
             </div>
         </div>
     </div>
-
-    <!-- ==================== MAIN APP ==================== -->
-    <div id="main-app" style="display:none;">
-
-        <!-- Desktop Navbar -->
+    
+    <!-- MAIN APP -->
+    <div id="main-app" style="display: none;">
+        <!-- Navbar -->
         <nav class="navbar">
             <div class="navbar-content">
-                <div class="logo" onclick="navigateTo('feed')">CHAIN&#x26D3;&#xFE0F;Link</div>
+                <div class="logo" onclick="navigateTo('feed')">
+                    CHAIN<span class="chain-emoji">⛓️</span>Link
+                </div>
                 <div class="nav-links">
                     <button class="nav-btn" onclick="navigateTo('feed')" title="Home">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                     </button>
                     <button class="nav-btn" onclick="navigateTo('explore')" title="Explore">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
                     </button>
                     <button class="nav-btn" onclick="navigateTo('notifications')" title="Notifications">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
                     </button>
                     <button class="nav-btn profile-btn" onclick="navigateTo('profile')" title="Profile">
                         <div class="profile-ring-container">
@@ -398,41 +1386,54 @@
                 </div>
             </div>
         </nav>
-
+        
+        <!-- App Container -->
         <div class="app-container">
-
             <!-- FEED PAGE -->
             <div id="feed-page" class="page active">
+                <!-- Spotify Widget -->
                 <div class="spotify-widget" onclick="openSpotify()">
                     <div class="spotify-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.2.6-1.381C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.2.6-1.381C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
                     </div>
                     <div class="spotify-info">
-                        <div class="spotify-title">Spotify</div>
-                        <div class="spotify-artist" id="spotify-track">Tap to connect</div>
+                        <div class="spotify-title">Now Playing</div>
+                        <div class="spotify-artist" id="spotify-track">Click to connect Spotify</div>
                     </div>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white" opacity="0.8"><path d="M8 5v14l11-7z"/></svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
                 </div>
-
+                
+                <!-- Create Post -->
                 <div class="create-post">
                     <div class="create-post-header">
                         <div class="profile-ring-container">
                             <div class="profile-circle" id="create-post-initial">U</div>
                         </div>
-                        <textarea class="post-input" id="post-content" placeholder="Let's get connected" maxlength="500"></textarea>
+                        <textarea class="post-input" id="post-content" placeholder="Let's connect today" maxlength="500"></textarea>
                     </div>
+                    
                     <div class="font-selector">
-                        <button class="font-btn active" onclick="setFontStyle('normal',this)">Normal</button>
-                        <button class="font-btn display" onclick="setFontStyle('display',this)">DISPLAY</button>
-                        <button class="font-btn mono" onclick="setFontStyle('mono',this)">mono</button>
-                        <button class="font-btn cursive" onclick="setFontStyle('cursive',this)">Cursive</button>
-                        <button class="font-btn bold" onclick="setFontStyle('bold',this)">BOLD</button>
+                        <button class="font-btn active" onclick="setFontStyle('normal')">Normal</button>
+                        <button class="font-btn display" onclick="setFontStyle('display')">DISPLAY</button>
+                        <button class="font-btn mono" onclick="setFontStyle('mono')">mono</button>
+                        <button class="font-btn cursive" onclick="setFontStyle('cursive')">Cursive</button>
+                        <button class="font-btn bold" onclick="setFontStyle('bold')">BOLD</button>
                     </div>
+                    
                     <div class="post-actions-bar">
                         <div class="post-actions-left">
                             <button class="action-btn" onclick="openCamera()" title="Camera">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
                             </button>
+                            
+                            <div class="toggle-container">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="comments-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span>Comments</span>
+                            </div>
+                            
                             <div class="toggle-container">
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="schedule-toggle">
@@ -444,38 +1445,39 @@
                         <button class="post-btn" onclick="createPost()">Post</button>
                     </div>
                 </div>
-
+                
+                <!-- Posts Feed -->
                 <div id="posts-feed"></div>
-                <div class="loading-spinner" id="feed-loader" style="display:none;"></div>
+                <div class="loading-spinner" id="feed-loader" style="display: none;"></div>
             </div>
-
+            
             <!-- EXPLORE PAGE -->
             <div id="explore-page" class="page">
                 <div class="explore-header">
                     <div class="search-bar">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                        <input type="text" placeholder="Search CHAIN&#x26D3;&#xFE0F;Link" id="search-input" oninput="handleSearch(event)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted);"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                        <input type="text" placeholder="Search CHAIN⛓️Link" id="search-input" oninput="handleSearch(event)">
                     </div>
                 </div>
                 <div class="trending-section">
                     <div class="section-title">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                        Trending
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                        Trending for you
                     </div>
                     <div id="trending-list"></div>
                 </div>
                 <div class="explore-grid" id="explore-grid"></div>
             </div>
-
+            
             <!-- NOTIFICATIONS PAGE -->
             <div id="notifications-page" class="page">
                 <div class="notifications-header">
                     <div class="notifications-title">Notifications</div>
-                    <button class="mark-all-read" onclick="markAllRead()">Mark all read</button>
+                    <button class="mark-all-read" onclick="markAllRead()">Mark all as read</button>
                 </div>
                 <div id="notifications-list"></div>
             </div>
-
+            
             <!-- PROFILE PAGE -->
             <div id="profile-page" class="page">
                 <div class="profile-header">
@@ -483,415 +1485,723 @@
                     <div class="profile-info">
                         <div class="profile-avatar-large" id="profile-avatar">U</div>
                         <div class="profile-actions">
-                            <button class="profile-btn" onclick="editProfile()">Edit profile</button>
-                            <button class="profile-btn" onclick="openPaypalModal()">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.629h6.724c2.838 0 5.098.835 5.93 2.42.447.838.582 1.703.404 2.574-.25 1.27-1.023 2.35-2.178 3.044-.375.226-.784.416-1.224.573.355.207.64.472.867.796.433.622.588 1.407.462 2.333-.18 1.32-.84 2.44-1.917 3.253-.994.753-2.302 1.128-3.81 1.128H7.076z"/></svg>
+                            <button class="profile-btn secondary" onclick="editProfile()">Edit profile</button>
+                            <button class="profile-btn secondary" onclick="openPaypalModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.629h6.724c2.838 0 5.098.835 5.93 2.42.447.838.582 1.703.404 2.574-.25 1.27-1.023 2.35-2.178 3.044-.375.226-.784.416-1.224.573.355.207.64.472.867.796.433.622.588 1.407.462 2.333-.18 1.32-.84 2.44-1.917 3.253-.994.753-2.302 1.128-3.81 1.128H7.076z"/></svg>
                             </button>
                             <button class="profile-btn primary" onclick="logout()">Log out</button>
                         </div>
                     </div>
                 </div>
                 <div class="profile-details">
-                    <div class="profile-name" id="profile-name">User Name<span class="verified-badge">&#x2713;</span></div>
+                    <div class="profile-name" id="profile-name">User Name <span class="verified-badge">✓</span></div>
                     <div class="profile-handle" id="profile-handle">@username</div>
-                    <div class="profile-bio" id="profile-bio">Link up with your friends today and stay connected &#x2728;</div>
+                    <div class="profile-bio" id="profile-bio">Link up with your friends today and stay connected ✨</div>
                     <div class="profile-stats">
-                        <div class="stat-item" onclick="openFollowModal('following')">
-                            <span class="stat-value" id="stat-following">0</span>
-                            <span class="stat-label">Following</span>
-                        </div>
-                        <div class="stat-item" onclick="openFollowModal('followers')">
-                            <span class="stat-value" id="stat-followers">0</span>
-                            <span class="stat-label">Followers</span>
-                        </div>
-                        <div class="stat-item" onclick="openFollowModal('subscribers')">
-                            <span class="stat-value" id="stat-subscribers">0</span>
-                            <span class="stat-label">Subscribers</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value" id="stat-posts">0</span>
-                            <span class="stat-label">Posts</span>
-                        </div>
+                        <div class="stat-item" onclick="openFollowModal('following')"><span class="stat-value" id="stat-following">0</span><span class="stat-label">Following</span></div>
+                        <div class="stat-item" onclick="openFollowModal('followers')"><span class="stat-value" id="stat-followers">0</span><span class="stat-label">Followers</span></div>
+                        <div class="stat-item" onclick="openFollowModal('subscribers')"><span class="stat-value" id="stat-subscribers">0</span><span class="stat-label">Subscribers</span></div>
+                        <div class="stat-item"><span class="stat-value" id="stat-posts">0</span><span class="stat-label">Posts</span></div>
                     </div>
                 </div>
                 <div class="profile-tabs">
-                    <div class="profile-tab active" onclick="switchProfileTab('posts',this)">Posts</div>
-                    <div class="profile-tab" onclick="switchProfileTab('replies',this)">Replies</div>
-                    <div class="profile-tab" onclick="switchProfileTab('media',this)">Media</div>
-                    <div class="profile-tab" onclick="switchProfileTab('likes',this)">Likes</div>
+                    <div class="profile-tab active" onclick="switchProfileTab('posts')">Posts</div>
+                    <div class="profile-tab" onclick="switchProfileTab('replies')">Replies</div>
+                    <div class="profile-tab" onclick="switchProfileTab('media')">Media</div>
+                    <div class="profile-tab" onclick="switchProfileTab('likes')">Likes</div>
                 </div>
                 <div id="profile-posts"></div>
             </div>
-
         </div>
-
-        <!-- Mobile Bottom Nav -->
+        
+        <!-- Mobile Navigation -->
         <nav class="mobile-nav">
             <div class="mobile-nav-items">
                 <div class="mobile-nav-item active" onclick="navigateTo('feed')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    Home
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>Home
                 </div>
                 <div class="mobile-nav-item" onclick="navigateTo('explore')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                    Explore
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>Explore
                 </div>
                 <div class="mobile-nav-item" onclick="openCamera()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                    Camera
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>Camera
                 </div>
                 <div class="mobile-nav-item" onclick="navigateTo('notifications')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-                    Alerts
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>Alerts
                 </div>
                 <div class="mobile-nav-item" onclick="navigateTo('profile')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    Profile
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Profile
                 </div>
             </div>
         </nav>
     </div>
-
-    <!-- ==================== CAMERA MODAL (CAMERA ONLY) ==================== -->
+    
+    <!-- CAMERA MODAL -->
     <div class="camera-modal" id="camera-modal">
         <div class="camera-header">
-            <div class="camera-title">Camera</div>
+            <div class="camera-title">Take Photo</div>
             <button class="camera-close" onclick="closeCamera()">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
         </div>
         <div class="camera-preview">
             <video class="camera-video" id="camera-video" autoplay playsinline></video>
             <canvas class="camera-canvas" id="camera-canvas"></canvas>
             <div class="camera-placeholder" id="camera-placeholder">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
                 <p>Camera access required</p>
-                <p style="font-size:0.8rem;margin-top:0.5rem;opacity:0.6;">Allow camera when prompted</p>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem;">Click allow when prompted</p>
             </div>
         </div>
         <div class="camera-controls">
             <button class="camera-switch" onclick="switchCamera()">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/><path d="M13 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"/><circle cx="12" cy="12" r="3"/><path d="m18 22-3-3 3-3"/><path d="m6 2 3 3-3 3"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"></path><path d="M13 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"></path><circle cx="12" cy="12" r="3"></circle><path d="m18 22-3-3 3-3"></path><path d="m6 2 3 3-3 3"></path></svg>
             </button>
-            <button class="camera-btn" onclick="takePhoto()">
-                <div class="camera-btn-inner"></div>
-            </button>
-            <div style="width:44px;"></div>
+            <button class="camera-btn" onclick="takePhoto()"><div class="camera-btn-inner"></div></button>
+            <div style="width: 50px;"></div>
         </div>
     </div>
-
-    <!-- ==================== PAYPAL MODAL ==================== -->
-    <div class="modal-overlay" id="paypal-modal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3>Connect PayPal</h3>
-                <button class="modal-close" onclick="closeModal('paypal-modal')">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div style="text-align:center;padding:1.5rem 0;">
-                    <svg width="56" height="56" viewBox="0 0 24 24" fill="#0070ba" style="margin-bottom:1rem;"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.629h6.724c2.838 0 5.098.835 5.93 2.42.447.838.582 1.703.404 2.574-.25 1.27-1.023 2.35-2.178 3.044-.375.226-.784.416-1.224.573.355.207.64.472.867.796.433.622.588 1.407.462 2.333-.18 1.32-.84 2.44-1.917 3.253-.994.753-2.302 1.128-3.81 1.128H7.076z"/></svg>
-                    <p style="color:var(--text-secondary);margin-bottom:1.25rem;font-size:0.9rem;">Link your PayPal for tips, subscriptions, and payments.</p>
-                    <input type="email" class="input-field" id="paypal-email" placeholder="PayPal email" style="margin-bottom:0.75rem;">
-                    <button class="submit-btn" onclick="connectPaypal()" style="width:100%;">Connect</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== EDIT PROFILE MODAL ==================== -->
-    <div class="modal-overlay" id="edit-profile-modal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3>Edit Profile</h3>
-                <button class="modal-close" onclick="closeModal('edit-profile-modal')">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div style="text-align:center;margin-bottom:1.25rem;">
-                    <div class="profile-avatar-large" id="edit-avatar" style="margin:0 auto 0.75rem;cursor:pointer;" onclick="document.getElementById('avatar-upload').click()">U</div>
-                    <input type="file" id="avatar-upload" class="file-input" accept="image/*" onchange="handleAvatarUpload(event)">
-                    <a style="color:var(--primary);cursor:pointer;font-size:0.85rem;font-weight:600;" onclick="document.getElementById('avatar-upload').click()">Change photo</a>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="input-field" id="edit-name" placeholder="Display name">
-                </div>
-                <div class="input-group">
-                    <textarea class="input-field" id="edit-bio" placeholder="Bio" style="resize:vertical;min-height:70px;"></textarea>
-                </div>
-                <button class="submit-btn" onclick="saveProfile()" style="width:100%;">Save</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== FOLLOW MODAL ==================== -->
-    <div class="modal-overlay" id="follow-modal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 id="follow-modal-title">Following</h3>
-                <button class="modal-close" onclick="closeModal('follow-modal')">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="search-bar" style="margin-bottom:0.75rem;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                    <input type="text" placeholder="Search" id="follow-search" oninput="filterFollowList(event)">
-                </div>
-                <div id="follow-list"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== IMAGE VIEWER ==================== -->
-    <div class="modal-overlay" id="image-modal" style="background:rgba(0,0,0,0.92);" onclick="if(event.target===this)closeModal('image-modal')">
-        <img id="viewer-image" style="max-width:92%;max-height:92%;object-fit:contain;border-radius:8px;" onclick="event.stopPropagation()">
-    </div>
-
-    <!-- ==================== POST DETAIL MODAL ==================== -->
-    <div class="modal-overlay" id="post-modal">
-        <div class="modal-card modal-card-lg">
-            <div class="modal-header">
-                <h3>Post</h3>
-                <button class="modal-close" onclick="closeModal('post-modal')">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-            </div>
-            <div class="modal-body" id="post-modal-content"></div>
-        </div>
-    </div>
-
-    <!-- ==================== TOAST ==================== -->
-    <div class="toast" id="toast"></div>
-
-    <!-- ==================== JAVASCRIPT ==================== -->
-    <script>
-    (function(){
-        'use strict';
-
-        // ===== STATE =====
-        var currentUser = null;
-        var posts = JSON.parse(localStorage.getItem('cl_posts')||'[]');
-        var notifications = JSON.parse(localStorage.getItem('cl_notifs')||'[]');
-        var currentFontStyle = 'normal';
-        var cameraStream = null;
-        var currentCamera = 'user';
-        var currentPostImage = null;
-
-        var quotes = [
-            {t:"Be yourself; everyone else is already taken.",a:"Oscar Wilde"},
-            {t:"The only way to do great work is to love what you do.",a:"Steve Jobs"},
-            {t:"Stay hungry, stay foolish.",a:"Steve Jobs"},
-            {t:"The future belongs to those who believe in the beauty of their dreams.",a:"Eleanor Roosevelt"},
-            {t:"The only impossible journey is the one you never begin.",a:"Tony Robbins"},
-            {t:"It always seems impossible until it is done.",a:"Nelson Mandela"},
-            {t:"Don't watch the clock; do what it does. Keep going.",a:"Sam Levenson"},
-            {t:"Everything you can imagine is real.",a:"Pablo Picasso"}
-        ];
-        var trendingTopics = [
-            {c:"Technology",t:"#AIRevolution",n:"125K"},
-            {c:"Music",t:"#NewMusicFriday",n:"89K"},
-            {c:"Sports",t:"NBA Playoffs",n:"234K"},
-            {c:"Gaming",t:"GTA 6",n:"445K"},
-            {c:"Trending",t:"#MondayMotivation",n:"67K"},
-            {c:"News",t:"SpaceX Launch",n:"198K"},
-            {c:"Entertainment",t:"Marvel Studios",n:"156K"},
-            {c:"Lifestyle",t:"#SelfCare",n:"34K"}
-        ];
-        var mockUsers = [
-            {n:"Sarah Chen",h:"@sarahchen",i:"S"},
-            {n:"Marcus Johnson",h:"@mjohnson",i:"M"},
-            {n:"Aisha Patel",h:"@aishap",i:"A"},
-            {n:"David Kim",h:"@dkim",i:"D"},
-            {n:"Elena Rodriguez",h:"@elenar",i:"E"},
-            {n:"James Wilson",h:"@jwilson",i:"J"},
-            {n:"Priya Sharma",h:"@priyas",i:"P"},
-            {n:"Tom Anderson",h:"@tommya",i:"T"}
-        ];
-
-        // ===== UTILS =====
-        function $(id){return document.getElementById(id);}
-        function save(){localStorage.setItem('cl_posts',JSON.stringify(posts));localStorage.setItem('cl_notifs',JSON.stringify(notifications));}
-        var toastTimer;
-        function showToast(msg){
-            var t=$('toast');t.textContent=msg;t.classList.add('show');
-            clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove('show');},2800);
-        }
-        function openModal(id){$(id).classList.add('active');document.body.style.overflow='hidden';}
-        function closeModal(id){$(id).classList.remove('active');document.body.style.overflow='';}
-
-        // ===== AUTH =====
-        function initAuth(){
-            var q=quotes[Math.floor(Math.random()*quotes.length)];
-            $('quote-text').textContent='"'+q.t+'"';$('quote-author').textContent='- '+q.a;
-        }
-        function showSignup(){$('login-form').style.display='none';$('signup-form').style.display='block';}
-        function showLogin(){$('signup-form').style.display='none';$('login-form').style.display='block';}
-        function checkPasswordStrength(){
-            var v=$('signup-password').value;
-            $('req-length').className=v.length>=8?'requirement-met':'requirement-unmet';
-            $('req-number').className=/\d/.test(v)?'requirement-met':'requirement-unmet';
-            $('req-special').className=/[!@#$%^&*(),.?":{}|<>]/.test(v)?'requirement-met':'requirement-unmet';
-            $('req-upper').className=/[A-Z]/.test(v)?'requirement-met':'requirement-unmet';
-        }
-        function makeUser(name,handle,email,initial,avatar){
-            return {name:name,handle:handle,email:email,initial:initial,avatar:avatar||null,bio:'Link up with your friends today and stay connected \u2728',following:Math.floor(Math.random()*150)+50,followers:Math.floor(Math.random()*400)+80,subscribers:Math.floor(Math.random()*40)};
-        }
-        function loginSuccess(){
-            $('auth-page').classList.remove('active');$('auth-page').style.display='none';
-            $('main-app').style.display='block';updateProfileUI();renderFeed();renderTrending();renderNotifications();showToast('Welcome, '+currentUser.name+'!');
-        }
-        function handleSignup(){
-            var fn=$('signup-firstname').value.trim(),ln=$('signup-lastname').value.trim(),un=$('signup-username').value.trim(),em=$('signup-email').value.trim(),pw=$('signup-password').value;
-            if(!fn||!ln||!un||!em||!pw){showToast('Fill all fields');return;}if(pw.length<8){showToast('Password 8+ chars');return;}
-            currentUser=makeUser(fn+' '+ln,'@'+un,em,(fn[0]+ln[0]).toUpperCase());loginSuccess();
-        }
-        function handleEmailLogin(){
-            var em=$('login-email').value.trim();if(!em){showToast('Enter email');return;}
-            var p=em.split('@')[0];currentUser=makeUser(p,'@'+p,em,p[0].toUpperCase());loginSuccess();
-        }
-        function handleGoogleLogin(){currentUser=makeUser('Alex Rivera','@arivera','alex@gmail.com','AR');loginSuccess();}
-        function handleFacebookLogin(){currentUser=makeUser('Jordan Lee','@jlee','jordan@fb.com','JL');loginSuccess();}
-        function logout(){currentUser=null;$('main-app').style.display='none';$('auth-page').style.display='flex';$('auth-page').classList.add('active');localStorage.removeItem('cl_currentUser');location.reload();}
-
-        // ===== NAVIGATION =====
-        var navMap=['feed','explore',null,'notifications','profile'];
-        function navigateTo(page){
-            document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
-            document.querySelectorAll('.mobile-nav-item').forEach(function(el,i){el.classList.toggle('active',navMap[i]===page);});
-            var el=$(page+'-page');if(el)el.classList.add('active');
-            if(page==='profile')renderProfilePosts();if(page==='explore')renderExploreGrid();if(page==='notifications')markNotificationsRead();
-        }
-
-        // ===== PROFILE =====
-        function updateProfileUI(){
-            if(!currentUser)return;
-            var img=currentUser.avatar?'<img src="'+currentUser.avatar+'">':currentUser.initial;
-            $('nav-profile-initial').innerHTML=img;$('create-post-initial').innerHTML=img;$('profile-avatar').innerHTML=img;
-            $('profile-name').innerHTML=currentUser.name+'<span class="verified-badge">\u2713</span>';
-            $('profile-handle').textContent=currentUser.handle;$('profile-bio').textContent=currentUser.bio;
-            $('stat-following').textContent=currentUser.following;$('stat-followers').textContent=currentUser.followers;
-            $('stat-subscribers').textContent=currentUser.subscribers;$('stat-posts').textContent=posts.filter(function(p){return p.author===currentUser.name;}).length;
-        }
-        function editProfile(){$('edit-name').value=currentUser.name;$('edit-bio').value=currentUser.bio;$('edit-avatar').innerHTML=currentUser.avatar?'<img src="'+currentUser.avatar+'">':currentUser.initial;openModal('edit-profile-modal');}
-        function saveProfile(){
-            var n=$('edit-name').value.trim(),b=$('edit-bio').value.trim();
-            if(n){currentUser.name=n;currentUser.initial=n.split(' ').map(function(x){return x[0];}).join('').toUpperCase();}
-            if(b)currentUser.bio=b;
-            if(currentUser.avatar){var h='<img src="'+currentUser.avatar+'">';$('nav-profile-initial').innerHTML=h;$('create-post-initial').innerHTML=h;$('profile-avatar').innerHTML=h;}
-            updateProfileUI();closeModal('edit-profile-modal');showToast('Profile updated!');
-        }
-        function handleAvatarUpload(e){
-            var f=e.target.files[0];if(!f)return;var r=new FileReader();
-            r.onload=function(ev){currentUser.avatar=ev.target.result;$('edit-avatar').innerHTML='<img src="'+ev.target.result+'">';};
-            r.readAsDataURL(f);
-        }
-        function switchProfileTab(tab,el){
-            document.querySelectorAll('.profile-tab').forEach(function(t){t.classList.remove('active');});
-            if(el)el.classList.add('active');
-            if(tab==='posts')renderProfilePosts();else $('profile-posts').innerHTML='<div style="text-align:center;color:var(--text-muted);padding:3rem 1rem;">No '+tab+' yet</div>';
-        }
-        function renderProfilePosts(){
-            var c=$('profile-posts'),mp=posts.filter(function(p){return p.author===currentUser.name;});
-            c.innerHTML=mp.length?mp.map(function(p){return postHTML(p);}).join(''):'<div style="text-align:center;color:var(--text-muted);padding:3rem 1rem;">No posts yet</div>';
-        }
-
-        // ===== POSTS =====
-        function setFontStyle(s,btn){currentFontStyle=s;document.querySelectorAll('.font-btn').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');}
-        function createPost(){
-            var c=$('post-content').value.trim();if(!c&&!currentPostImage){showToast('Write something!');return;}
-            posts.unshift({id:Date.now(),author:currentUser.name,handle:currentUser.handle,initial:currentUser.initial,avatar:currentUser.avatar,content:c,image:currentPostImage,fontStyle:currentFontStyle,likes:0,reposts:0,comments:[],liked:false,reposted:false,time:'Just now',ts:Date.now()});
-            save();$('post-content').value='';currentPostImage=null;currentFontStyle='normal';
-            document.querySelectorAll('.font-btn').forEach(function(b,i){b.classList.toggle('active',i===0);});
-            renderFeed();updateProfileUI();showToast('Posted!');
-        }
-        function postHTML(p,detail){
-            var fc=p.fontStyle&&p.fontStyle!=='normal'?'font-'+p.fontStyle:'';
-            var av=p.avatar?'<img src="'+p.avatar+'">':p.initial;
-            var del=p.author===currentUser.name?'<button class="post-menu-btn" onclick="event.stopPropagation();deletePost('+p.id+')">\uD83D\uDDD1\uFE0F</button>':'';
-            var comments='';
-            if(detail){
-                comments='<div class="comment-input-row"><div class="comment-avatar"><div class="comment-avatar-inner">'+currentUser.initial+'</div></div><input type="text" class="comment-input" id="ci-'+p.id+'" placeholder="Write a comment..." onkeypress="if(event.key===\'Enter\')addComment('+p.id+')"/><button class="comment-submit" onclick="addComment('+p.id+')">\u25B6</button></div>';
-                if(p.comments.length)comments+='<div class="comment-section">'+p.comments.map(function(c){return '<div class="comment"><div class="comment-avatar"><div class="comment-avatar-inner">'+c.i+'</div></div><div class="comment-content"><div class="comment-author">'+c.a+'</div><div class="comment-text">'+c.t+'</div><div class="comment-time">'+c.tm+'</div></div></div>';}).join('')+'</div>';
+    
+    <!-- IMAGE PREVIEW MODAL -->
+    <div class="image-preview-modal" id="image-preview-modal">
+        <div class="image-preview-head
+              <script>
+        // ==================== SUPABASE CONFIGURATION ====================
+        const SUPABASE_URL = 'https://vjaevzohcnejkaduvtno.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWV2em9oY25lamthZHV2dG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDQwMDAwMDAsImV4cCI6MjAxOTU3NjAwMH0.DUMMY_KEY_FOR_DEMO';
+        
+        let supabase = null;
+        
+        function initSupabase() {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('Supabase initialized');
+                return true;
+            } catch (error) {
+                console.error('Supabase init error:', error);
+                return false;
             }
-            return '<div class="post" data-id="'+p.id+'"><div class="post-header"><div class="post-avatar"><div class="post-avatar-inner">'+av+'</div></div><div class="post-meta"><div class="post-author-name">'+p.author+(p.author===currentUser.name?' <span class="verified-small">\u2713</span>':'')+'</div><div class="post-time">'+p.handle+' &middot; '+p.time+'</div></div>'+del+'</div><div class="post-content '+fc+'" onclick="openPostDetail('+p.id+')">'+(p.content||'')+'</div>'+(p.image?'<img src="'+p.image+'" class="post-image" onclick="event.stopPropagation();openImageModal(\''+p.image+'\')">':'')+'<div class="post-stats">'+p.likes+' likes &middot; '+p.reposts+' reposts &middot; '+p.comments.length+' comments</div><div class="post-actions"><button class="post-action-btn '+(p.liked?'liked':'')+'" onclick="event.stopPropagation();like('+p.id+')">\u2661 '+(p.likes||'Like')+'</button><button class="post-action-btn '+(p.reposted?'reposted':'')+'" onclick="event.stopPropagation();repost('+p.id+')">\u21C4 '+(p.reposts||'Repost')+'</button><button class="post-action-btn" onclick="event.stopPropagation();openPostDetail('+p.id+')">\u270E '+(p.comments.length||'Comment')+'</button><button class="post-action-btn" onclick="event.stopPropagation();share('+p.id+')">\u2197 Share</button></div>'+(detail?comments:'')+'</div>';
         }
-        function renderFeed(){var c=$('posts-feed');c.innerHTML=posts.length?posts.map(function(p){return postHTML(p);}).join(''):'<div style="text-align:center;color:var(--text-muted);padding:3rem 1rem;"><p style="font-weight:700;margin-bottom:0.5rem;">Welcome to CHAIN\u26D3\uFE0FLink!</p><p>Your feed is empty. Create your first post above.</p></div>';}
-        function like(id){var p=posts.find(function(x){return x.id===id;});if(!p)return;p.liked=!p.liked;p.likes+=p.liked?1:-1;save();renderFeed();}
-        function repost(id){var p=posts.find(function(x){return x.id===id;});if(!p)return;p.reposted=!p.reposted;p.reposts+=p.reposted?1:-1;save();renderFeed();showToast(p.reposted?'Reposted!':'Removed');}
-        function addComment(id){var inp=$('ci-'+id);if(!inp)return;var t=inp.value.trim();if(!t)return;var p=posts.find(function(x){return x.id===id;});if(!p)return;p.comments.push({a:currentUser.name,i:currentUser.initial,t:t,tm:'Just now'});save();openPostDetail(id);}
-        function deletePost(id){if(!confirm('Delete this post?'))return;posts=posts.filter(function(x){return x.id!==id;});save();renderFeed();updateProfileUI();showToast('Deleted');}
-        function share(id){var p=posts.find(function(x){return x.id===id;});if(!p)return;var s=p.content+'\n\n- '+p.author+' on CHAIN\u26D3\uFE0FLink';if(navigator.share){navigator.share({text:s});}else{navigator.clipboard.writeText(s);showToast('Copied!');}}
-        function openPostDetail(id){var p=posts.find(function(x){return x.id===id;});if(!p)return;$('post-modal-content').innerHTML=postHTML(p,true);openModal('post-modal');}
-        function openImageModal(src){$('viewer-image').src=src;openModal('image-modal');}
+        
+        // ==================== STATE MANAGEMENT ====================
+        const state = {
+            currentUser: null,
+            currentPage: 'feed',
+            posts: [],
+            notifications: [],
+            fontStyle: 'normal',
+            capturedImage: null,
+            cameraStream: null,
+            facingMode: 'environment',
+            scheduledTime: null,
+            paypalConnected: false,
+            followers: [],
+            following: [],
+            subscribers: [],
+            trending: [
+                { rank: 1, topic: '#BeYourself', posts: '12.5K posts' },
+                { rank: 2, topic: '#ChainLinkCommunity', posts: '8.2K posts' },
+                { rank: 3, topic: '#CreateDaily', posts: '6.7K posts' },
+                { rank: 4, topic: '#Authenticity', posts: '4.3K posts' },
+                { rank: 5, topic: '#Connect', posts: '3.1K posts' }
+            ],
+            quotes: [
+                { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+                { text: "Creativity is intelligence having fun.", author: "Albert Einstein" },
+                { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+                { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+                { text: "Everything you can imagine is real.", author: "Pablo Picasso" }
+            ]
+        };
 
-        // ===== CAMERA ONLY =====
-        function openCamera(){
-            $('camera-modal').classList.add('active');
-            navigator.mediaDevices.getUserMedia({video:{facingMode:currentCamera}})
-                .then(function(s){cameraStream=s;$('camera-video').srcObject=s;$('camera-placeholder').style.display='none';})
-                .catch(function(){showToast('Camera denied');});
+        // ==================== AUTHENTICATION ====================
+        function showSignup() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'block';
         }
-        function closeCamera(){
-            $('camera-modal').classList.remove('active');if(cameraStream){cameraStream.getTracks().forEach(function(t){t.stop();});cameraStream=null;}
-            $('camera-canvas').style.display='none';$('camera-video').style.display='block';$('camera-placeholder').style.display='flex';
-        }
-        function switchCamera(){
-            currentCamera=currentCamera==='user'?'environment':'user';
-            if(cameraStream){cameraStream.getTracks().forEach(function(t){t.stop();});navigator.mediaDevices.getUserMedia({video:{facingMode:currentCamera}}).then(function(s){cameraStream=s;$('camera-video').srcObject=s;}).catch(function(){showToast('Switch failed');});}
-        }
-        function takePhoto(){
-            var v=$('camera-video'),cv=$('camera-canvas');cv.width=v.videoWidth;cv.height=v.videoHeight;cv.getContext('2d').drawImage(v,0,0);
-            currentPostImage=cv.toDataURL('image/png');cv.style.display='block';v.style.display='none';showToast('Captured!');setTimeout(closeCamera,400);
+
+        function showLogin() {
+            document.getElementById('signup-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
         }
 
-        // ===== EXPLORE =====
-        function renderTrending(){$('trending-list').innerHTML=trendingTopics.map(function(t){return '<div class="trending-item"><div class="trending-category">'+t.c+' &middot; Trending</div><div class="trending-topic">'+t.t+'</div><div class="trending-count">'+t.n+' posts</div></div>';}).join('');}
-        function renderExploreGrid(){var c=$('explore-grid'),imgs=posts.filter(function(p){return p.image;});c.innerHTML=imgs.length?imgs.map(function(p){return '<div class="explore-grid-item" onclick="openImageModal(\''+p.image+'\')"><img src="'+p.image+'"></div>';}).join(''):'<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:3rem;">No photos yet</div>';}
-        function handleSearch(e){var q=e.target.value.toLowerCase(),c=$('explore-grid');if(!q){renderExploreGrid();return;}var f=posts.filter(function(p){return(p.content||'').toLowerCase().includes(q)||p.author.toLowerCase().includes(q);});c.innerHTML=f.length?f.map(function(p){return '<div class="explore-grid-item" onclick="openPostDetail('+p.id+')" style="padding:1rem;aspect-ratio:auto;"><div style="font-weight:700;font-size:0.8rem;margin-bottom:0.4rem;">'+p.author+'</div><div style="font-size:0.78rem;color:var(--text-secondary);overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">'+p.content+'</div></div>';}).join(''):'<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:3rem;">No results</div>';}
+        function checkPasswordStrength() {
+            const password = document.getElementById('signup-password').value;
+            document.getElementById('req-length').className = password.length >= 8 ? 'requirement-met' : 'requirement-unmet';
+            document.getElementById('req-number').className = /\d/.test(password) ? 'requirement-met' : 'requirement-unmet';
+            document.getElementById('req-special').className = /[!@#$%^&*(),.?":{}|<>]/.test(password) ? 'requirement-met' : 'requirement-unmet';
+            document.getElementById('req-upper').className = /[A-Z]/.test(password) ? 'requirement-met' : 'requirement-unmet';
+        }
 
-        // ===== NOTIFICATIONS =====
-        function renderNotifications(){var c=$('notifications-list');c.innerHTML=notifications.length?notifications.map(function(n){return '<div class="notification-item '+(n.read?'':'unread')+'" onclick="this.classList.remove(\'unread\')"><div class="notification-icon">\u2661</div><div class="notification-content"><div class="notification-text">'+n.text+'</div><div class="notification-time">'+n.time+'</div></div></div>';}).join(''):'<div style="text-align:center;color:var(--text-muted);padding:3rem;">No notifications</div>';}
-        function markAllRead(){notifications.forEach(function(n){n.read=true;});save();renderNotifications();}
-        function markNotificationsRead(){notifications.forEach(function(n){n.read=true;});save();renderNotifications();}
+        async function handleGoogleLogin() {
+            const user = {
+                id: 'google_' + Date.now(),
+                name: 'Alex Johnson',
+                email: 'alex@example.com',
+                username: 'alexj',
+                avatar: null,
+                followers: 1240,
+                following: 342,
+                subscribers: 89
+            };
+            await login(user);
+        }
 
-        // ===== PAYPAL =====
-        function openPaypalModal(){openModal('paypal-modal');}
-        function closePaypalModal(){closeModal('paypal-modal');}
-        function connectPaypal(){var e=$('paypal-email').value.trim();if(!e){showToast('Enter PayPal email');return;}closeModal('paypal-modal');showToast('PayPal connected!');}
+        async function handleFacebookLogin() {
+            const user = {
+                id: 'fb_' + Date.now(),
+                name: 'Sam Smith',
+                email: 'sam@example.com',
+                username: 'samsmith',
+                avatar: null,
+                followers: 892,
+                following: 156,
+                subscribers: 45
+            };
+            await login(user);
+        }
 
-        // ===== FOLLOW =====
-        function openFollowModal(type){var titles={following:'Following',followers:'Followers',subscribers:'Subscribers'};$('follow-modal-title').textContent=titles[type]||type;var sh=mockUsers.slice().sort(function(){return 0.5-Math.random();}).slice(0,5);$('follow-list').innerHTML=sh.map(function(u){return '<div class="follow-list-item"><div class="follow-avatar"><div class="follow-avatar-inner">'+u.i+'</div></div><div class="follow-info"><div class="follow-name">'+u.n+'</div><div class="follow-handle">'+u.h+'</div></div><button class="follow-btn" onclick="toggleFollow(this)">Follow</button></div>';}).join('');openModal('follow-modal');}
-        function toggleFollow(btn){btn.classList.toggle('following');btn.textContent=btn.classList.contains('following')?'Following':'Follow';}
-        function filterFollowList(e){var q=e.target.value.toLowerCase();document.querySelectorAll('.follow-list-item').forEach(function(item){item.style.display=item.textContent.toLowerCase().includes(q)?'flex':'none';});}
-
-        // ===== SPOTIFY =====
-        function openSpotify(){window.open('https://open.spotify.com','_blank');}
-
-        // ===== KEYBOARD =====
-        document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.modal-overlay.active,.camera-modal.active').forEach(function(m){m.classList.remove('active');});document.body.style.overflow='';}});
-
-        // ===== INIT =====
-        window.addEventListener('load',function(){
-            initAuth();
-            if(!posts.length){
-                posts=[
-                    {id:1,author:'Sarah Chen',handle:'@sarahchen',initial:'S',content:'Just launched my new design portfolio! Let me know what you think \uD83C\uDFA8\u2728',image:null,fontStyle:'normal',likes:24,reposts:5,comments:[{a:'Marcus Johnson',i:'M',t:'Looks amazing!',tm:'2m'}],liked:false,reposted:false,time:'2h',ts:Date.now()-7200000},
-                    {id:2,author:'Marcus Johnson',handle:'@mjohnson',initial:'M',content:'The new GTA 6 trailer is insane. Rockstar never misses \uD83C\uDFAE',image:null,fontStyle:'normal',likes:156,reposts:42,comments:[],liked:false,reposted:false,time:'4h',ts:Date.now()-14400000},
-                    {id:3,author:'Aisha Patel',handle:'@aishap',initial:'A',content:'Morning workout complete! Nothing beats that post-run endorphin rush \uD83C\uDFC3\u200D\u2640\uFE0F\uD83D\uDCAA',image:null,fontStyle:'normal',likes:89,reposts:12,comments:[],liked:false,reposted:false,time:'6h',ts:Date.now()-21600000}
-                ];save();
+        async function handleEmailLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            if (!email || !password) {
+                showToast('Please enter email and password', 'error');
+                return;
             }
-            if(!notifications.length){
-                notifications=[
-                    {text:'<strong>Sarah Chen</strong> liked your post',time:'5m ago',read:false},
-                    {text:'<strong>Marcus Johnson</strong> started following you',time:'1h ago',read:false},
-                    {text:'<strong>Aisha Patel</strong> reposted your post',time:'3h ago',read:true}
-                ];save();
+            const user = {
+                id: 'email_' + Date.now(),
+                name: email.split('@')[0],
+                email: email,
+                username: email.split('@')[0],
+                avatar: null,
+                followers: 0,
+                following: 0,
+                subscribers: 0
+            };
+            await login(user);
+        }
+
+        async function handleSignup() {
+            const firstName = document.getElementById('signup-firstname').value;
+            const lastName = document.getElementById('signup-lastname').value;
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            if (!firstName || !lastName || !username || !email || !password) {
+                showToast('Please fill in all fields', 'error');
+                return;
             }
-        });
-    })();
-    </script>
-</body>
-</html
+            if (password.length < 8) {
+                showToast('Password must be at least 8 characters', 'error');
+                return;
+            }
+            const user = {
+                id: 'user_' + Date.now(),
+                name: firstName + ' ' + lastName,
+                email: email,
+                username: username,
+                avatar: null,
+                followers: 0,
+                following: 0,
+                subscribers: 0
+            };
+            await login(user);
+        }
+
+        async function login(user) {
+            state.currentUser = user;
+            localStorage.setItem('chainlink_user', JSON.stringify(user));
+            generateSampleFollowData();
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            updateProfileUI();
+            loadPosts();
+            loadNotifications();
+            loadTrending();
+            loadExploreGrid();
+            showToast('Welcome to CHAIN⛓️Link!', 'success');
+        }
+
+        function logout() {
+            state.currentUser = null;
+            state.followers = [];
+            state.following = [];
+            state.subscribers = [];
+            localStorage.removeItem('chainlink_user');
+            localStorage.removeItem('chainlink_paypal');
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('auth-page').style.display = 'block';
+            showToast('Logged out successfully', 'info');
+        }
+
+        // ==================== FOLLOWERS/FOLLOWING/SUBSCRIBERS ====================
+        function generateSampleFollowData() {
+            state.followers = [
+                { id: 'f1', name: 'Creative Soul', username: 'creativesoul', avatar: 'C', isFollowing: false },
+                { id: 'f2', name: 'Art Visionary', username: 'artvision', avatar: 'A', isFollowing: true },
+                { id: 'f3', name: 'Code Poet', username: 'codepoet', avatar: 'P', isFollowing: false },
+                { id: 'f4', name: 'Design Guru', username: 'designguru', avatar: 'D', isFollowing: true },
+                { id: 'f5', name: 'Music Maker', username: 'musicmaker', avatar: 'M', isFollowing: false },
+                { id: 'f6', name: 'Photo Master', username: 'photomaster', avatar: 'P', isFollowing: true }
+            ];
+            state.following = [
+                { id: 'fo1', name: 'Tech Enthusiast', username: 'techenthusiast', avatar: 'T', isFollowing: true },
+                { id: 'fo2', name: 'Travel Blogger', username: 'travelblogger', avatar: 'T', isFollowing: true },
+                { id: 'fo3', name: 'Foodie Life', username: 'foodielife', avatar: 'F', isFollowing: true },
+                { id: 'fo4', name: 'Fitness Pro', username: 'fitnesspro', avatar: 'F', isFollowing: true }
+            ];
+            state.subscribers = [
+                { id: 's1', name: 'Premium User 1', username: 'premium1', avatar: 'P', tier: '$5/month' },
+                { id: 's2', name: 'Premium User 2', username: 'premium2', avatar: 'P', tier: '$10/month' },
+                { id: 's3', name: 'VIP Member', username: 'vipmember', avatar: 'V', tier: '$25/month' }
+            ];
+        }
+
+        function openFollowModal(type) {
+            const modal = document.getElementById('follow-modal');
+            modal.classList.add('active');
+            switchFollowTab(type);
+        }
+
+        function closeFollowModal() {
+            document.getElementById('follow-modal').classList.remove('active');
+        }
+
+        function switchFollowTab(type) {
+            document.querySelectorAll('.follow-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            const titles = { following: 'Following', followers: 'Followers', subscribers: 'Subscribers' };
+            document.getElementById('follow-title').textContent = titles[type];
+            renderFollowList(type);
+        }
+
+        function renderFollowList(type) {
+            const container = document.getElementById('follow-list');
+            let items = [];
+            switch(type) {
+                case 'following': items = state.following; break;
+                case 'followers': items = state.followers; break;
+                case 'subscribers': items = state.subscribers; break;
+            }
+            if (items.length === 0) {
+                container.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><h3>No ${type} yet</h3><p>Your ${type} will appear here.</p></div>`;
+                return;
+            }
+            container.innerHTML = items.map(item => `
+                <div class="follow-item">
+                    <div class="profile-ring-container"><div class="profile-circle">${item.avatar}</div></div>
+                    <div class="follow-item-info">
+                        <div class="follow-item-name">${item.name}</div>
+                        <div class="follow-item-handle">@${item.username} ${item.tier ? '· ' + item.tier : ''}</div>
+                    </div>
+                    ${type !== 'subscribers' ? `<button class="follow-btn ${item.isFollowing ? 'following' : 'follow'}" onclick="toggleFollow('${item.id}', '${type}')">${item.isFollowing ? 'Following' : 'Follow'}</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function toggleFollow(userId, type) {
+            const list = type === 'following' ? state.following : state.followers;
+            const user = list.find(u => u.id === userId);
+            if (user) {
+                user.isFollowing = !user.isFollowing;
+                renderFollowList(type);
+                showToast(user.isFollowing ? 'Now following!' : 'Unfollowed', 'success');
+            }
+        }
+
+        // ==================== PAYPAL ====================
+        function openPaypalModal() {
+            const modal = document.getElementById('paypal-modal');
+            modal.classList.add('active');
+            const paypalConnected = localStorage.getItem('chainlink_paypal');
+            if (paypalConnected) {
+                document.getElementById('paypal-button-container').style.display = 'none';
+                document.getElementById('paypal-connected').style.display = 'block';
+            } else {
+                document.getElementById('paypal-button-container').style.display = 'block';
+                document.getElementById('paypal-connected').style.display = 'none';
+                renderPayPalButton();
+            }
+        }
+
+        function closePaypalModal() {
+            document.getElementById('paypal-modal').classList.remove('active');
+        }
+
+        function renderPayPalButton() {
+            const container = document.getElementById('paypal-button-container');
+            container.innerHTML = '';
+            if (typeof PayPalSDK !== 'undefined') {
+                try {
+                    PayPalSDK.Buttons({
+                        createOrder: function(data, actions) {
+                            return actions.order.create({ purchase_units: [{ amount: { value: '0.01' } }] });
+                        },
+                        onApprove: function(data, actions) {
+                            return actions.order.capture().then(function(details) {
+                                localStorage.setItem('chainlink_paypal', JSON.stringify({ email: details.payer.email_address, name: details.payer.name.given_name }));
+                                state.paypalConnected = true;
+                                document.getElementById('paypal-button-container').style.display = 'none';
+                                document.getElementById('paypal-connected').style.display = 'block';
+                                showToast('PayPal connected successfully!', 'success');
+                            });
+                        },
+                        onError: function(err) {
+                            console.error('PayPal error:', err);
+                            showToast('PayPal connection failed. Please try again.', 'error');
+                        }
+                    }).render('#paypal-button-container');
+                } catch (error) {
+                    container.innerHTML = `<button class="social-btn paypal" onclick="simulatePayPalConnect()" style="margin: 0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.629h6.724c2.838 0 5.098.835 5.93 2.42.447.838.582 1.703.404 2.574-.25 1.27-1.023 2.35-2.178 3.044-.375.226-.784.416-1.224.573.355.207.64.472.867.796.433.622.588 1.407.462 2.333-.18 1.32-.84 2.44-1.917 3.253-.994.753-2.302 1.128-3.81 1.128H7.076z"/></svg>Connect PayPal Account (Demo)</button>`;
+                }
+            } else {
+                container.innerHTML = `<button class="social-btn paypal" onclick="simulatePayPalConnect()" style="margin: 0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.629h6.724c2.838 0 5.098.835 5.93 2.42.447.838.582 1.703.404 2.574-.25 1.27-1.023 2.35-2.178 3.044-.375.226-.784.416-1.224.573.355.207.64.472.867.796.433.622.588 1.407.462 2.333-.18 1.32-.84 2.44-1.917 3.253-.994.753-2.302 1.128-3.81 1.128H7.076z"/></svg>Connect PayPal Account (Demo)</button>`;
+            }
+        }
+
+        function simulatePayPalConnect() {
+            localStorage.setItem('chainlink_paypal', JSON.stringify({ email: 'user@example.com', name: 'Demo User' }));
+            state.paypalConnected = true;
+            document.getElementById('paypal-button-container').style.display = 'none';
+            document.getElementById('paypal-connected').style.display = 'block';
+            showToast('PayPal connected successfully!', 'success');
+        }
+                   // ==================== NAVIGATION ====================
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page + '-page').classList.add('active');
+            document.querySelectorAll('.mobile-nav-item').forEach((item, index) => {
+                item.classList.remove('active');
+                const pages = ['feed', 'explore', null, 'notifications', 'profile'];
+                if (pages[index] === page) item.classList.add('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            if (page === 'profile') loadUserPosts();
+            if (page === 'notifications') markNotificationsSeen();
+            window.scrollTo(0, 0);
+        }
+
+        // ==================== POST CREATION ====================
+        function setFontStyle(style) {
+            state.fontStyle = style;
+            document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function createPost() {
+            const content = document.getElementById('post-content').value.trim();
+            const scheduleToggle = document.getElementById('schedule-toggle').checked;
+            if (!content && !state.capturedImage) {
+                showToast('Please write something or add a photo', 'error');
+                return;
+            }
+            if (scheduleToggle) {
+                document.getElementById('schedule-modal').classList.add('active');
+                return;
+            }
+            submitPost(content);
+        }
+
+        function submitPost(content, scheduled = false) {
+            const post = {
+                id: 'post_' + Date.now(),
+                author: state.currentUser,
+                content: content,
+                fontStyle: state.fontStyle,
+                image: state.capturedImage,
+                timestamp: new Date(),
+                scheduled: scheduled,
+                scheduledTime: state.scheduledTime,
+                reactions: { love: 0, like: 0, dislike: 0, repeat: 0 },
+                userReaction: null
+            };
+            state.posts.unshift(post);
+            document.getElementById('post-content').value = '';
+            state.capturedImage = null;
+            state.scheduledTime = null;
+            document.getElementById('schedule-toggle').checked = false;
+            if (scheduled) {
+                showToast('Post scheduled successfully!', 'success');
+            } else {
+                showToast('Posted successfully!', 'success');
+                renderPost(post, true);
+            }
+            updateProfileStats();
+        }
+
+        function confirmSchedule() {
+            const scheduleTime = document.getElementById('schedule-time').value;
+            if (!scheduleTime) {
+                showToast('Please select a time', 'error');
+                return;
+            }
+            state.scheduledTime = new Date(scheduleTime);
+            document.getElementById('schedule-modal').classList.remove('active');
+            const content = document.getElementById('post-content').value.trim();
+            submitPost(content, true);
+        }
+
+        function closeScheduleModal() {
+            document.getElementById('schedule-modal').classList.remove('active');
+        }
+
+        // ==================== POST RENDERING ====================
+        function renderPost(post, prepend = false) {
+            const feed = document.getElementById('posts-feed');
+            const postEl = document.createElement('div');
+            postEl.className = 'post-card';
+            postEl.id = 'post-' + post.id;
+            const timeAgo = getTimeAgo(post.timestamp);
+            const fontClass = post.fontStyle !== 'normal' ? 'post-content ' + post.fontStyle : 'post-content';
+            postEl.innerHTML = `
+                <div class="post-header">
+                    <div class="profile-ring-container"><div class="profile-circle">${post.author.name.charAt(0).toUpperCase()}</div></div>
+                    <div class="post-author-info">
+                        <div class="post-author-name">${post.author.name} <span class="verified-badge">✓</span></div>
+                        <div class="post-meta">@${post.author.username} · ${timeAgo}${post.scheduled ? '<span class="scheduled-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Scheduled</span>' : ''}</div>
+                    </div>
+                    <div class="post-menu">
+                        <button class="post-menu-btn" onclick="togglePostMenu('${post.id}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+                        <div class="post-menu-dropdown" id="menu-${post.id}">
+                            ${post.author.id === state.currentUser?.id ? `<div class="post-menu-item delete" onclick="deletePost('${post.id}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Delete</div>` : ''}
+                            <div class="post-menu-item" onclick="copyPostLink('${post.id}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> Copy link</div>
+                        </div>
+                    </div>
+                </div>
+                ${post.content ? `<div class="${fontClass}">${escapeHtml(post.content)}</div>` : ''}
+                ${post.image ? `<img class="post-media" src="${post.image}" onclick="viewImage('${post.image}')" alt="Post image">` : ''}
+                <div class="post-reactions">
+                    <button class="reaction-btn love ${post.userReaction === 'love' ? 'active' : ''}" onclick="reactToPost('${post.id}', 'love')"><svg width="18" height="18" viewBox="0 0 24 24" fill="${post.userReaction === 'love' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>${post.reactions.love || ''}</button>
+                    <button class="reaction-btn like ${post.userReaction === 'like' ? 'active' : ''}" onclick="reactToPost('${post.id}', 'like')"><svg width="18" height="18" viewBox="0 0 24 24" fill="${post.userReaction === 'like' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>${post.reactions.like || ''}</button>
+                    <button class="reaction-btn dislike ${post.userReaction === 'dislike' ? 'active' : ''}" onclick="reactToPost('${post.id}', 'dislike')"><svg width="18" height="18" viewBox="0 0 24 24" fill="${post.userReaction === 'dislike' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>${post.reactions.dislike || ''}</button>
+                    <button class="reaction-btn repeat ${post.userReaction === 'repeat' ? 'active' : ''}" onclick="reactToPost('${post.id}', 'repeat')"><svg width="18" height="18" viewBox="0 0 24 24" fill="${post.userReaction === 'repeat' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>${post.reactions.repeat || ''}</button>
+                </div>
+            `;
+            if (prepend) {
+                feed.insertBefore(postEl, feed.firstChild);
+            } else {
+                feed.appendChild(postEl);
+            }
+        }
+
+        function loadPosts() {
+            const feed = document.getElementById('posts-feed');
+            feed.innerHTML = '';
+            if (state.posts.length === 0) {
+                const samplePosts = [
+                    { id: 'sample_1', author: { id: 'user1', name: 'Creative Soul', username: 'creativesoul', avatar: null }, content: 'Just joined CHAIN⛓️Link! Excited to connect with amazing creators. #BeYourself #ChainLinkCommunity', fontStyle: 'normal', image: null, timestamp: new Date(Date.now() - 3600000), scheduled: false, reactions: { love: 24, like: 18, dislike: 0, repeat: 5 }, userReaction: null },
+                    { id: 'sample_2', author: { id: 'user2', name: 'Art Visionary', username: 'artvision', avatar: null }, content: 'CREATIVITY TAKES COURAGE', fontStyle: 'display', image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop', timestamp: new Date(Date.now() - 7200000), scheduled: false, reactions: { love: 156, like: 89, dislike: 2, repeat: 34 }, userReaction: null },
+                    { id: 'sample_3', author: { id: 'user3', name: 'Code Poet', username: 'codepoet', avatar: null }, content: 'function beYourself() {\n  return authenticity;\n}', fontStyle: 'mono', image: null, timestamp: new Date(Date.now() - 10800000), scheduled: false, reactions: { love: 67, like: 45, dislike: 1, repeat: 23 }, userReaction: null }
+                ];
+                state.posts = samplePosts;
+            }
+            state.posts.forEach(post => renderPost(post));
+        }
+
+        function reactToPost(postId, reaction) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            if (post.userReaction === reaction) {
+                post.reactions[reaction]--;
+                post.userReaction = null;
+            } else {
+                if (post.userReaction) {
+                    post.reactions[post.userReaction]--;
+                }
+                post.reactions[reaction]++;
+                post.userReaction = reaction;
+            }
+            const postEl = document.getElementById('post-' + postId);
+            if (postEl) {
+                postEl.remove();
+                renderPost(post, true);
+            }
+        }
+
+        function deletePost(postId) {
+            state.posts = state.posts.filter(p => p.id !== postId);
+            const postEl = document.getElementById('post-' + postId);
+            if (postEl) postEl.remove();
+            showToast('Post deleted', 'info');
+            updateProfileStats();
+        }
+
+        function togglePostMenu(postId) {
+            const menu = document.getElementById('menu-' + postId);
+            menu.classList.toggle('active');
+            setTimeout(() => {
+                document.addEventListener('click', function closeMenu(e) {
+                    if (!e.target.closest('.post-menu')) {
+                        menu.classList.remove('active');
+                        document.removeEventListener('click', closeMenu);
+                    }
+                });
+            }, 10);
+        }
+
+        function copyPostLink(postId) {
+            const url = window.location.origin + '/post/' + postId;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied to clipboard', 'success');
+            });
+        }
+
+        // ==================== CAMERA ====================
+        async function openCamera() {
+            document.getElementById('camera-modal').classList.add('active');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: state.facingMode } });
+                state.cameraStream = stream;
+                const video = document.getElementById('camera-video');
+                video.srcObject = stream;
+                document.getElementById('camera-placeholder').style.display = 'none';
+            } catch (err) {
+                console.error('Camera error:', err);
+                document.getElementById('camera-placeholder').style.display = 'block';
+            }
+        }
+
+        function closeCamera() {
+            document.getElementById('camera-modal').classList.remove('active');
+            if (state.cameraStream) {
+                state.cameraStream.getTracks().forEach(track => track.stop());
+                state.cameraStream = null;
+            }
+        }
+
+        function switchCamera() {
+            state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
+            closeCamera();
+            openCamera();
+        }
+
+        function takePhoto() {
+            const video = document.getElementById('camera-video');
+            const canvas = document.getElementById('camera-canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            state.capturedImage = canvas.toDataURL('image/jpeg');
+            closeCamera();
+            showImagePreview(state.capturedImage);
+        }
+
+        function showImagePreview(imageSrc) {
+            document.getElementById('preview-image').src = imageSrc;
+            document.getElementById('image-preview-modal').classList.add('active');
+        }
+
+        function closeImagePreview() {
+            document.getElementById('image-preview-modal').classList.remove('active');
+        }
+
+        function retakePhoto() {
+            closeImagePreview();
+            state.capturedImage = null;
+            openCamera();
+        }
+
+        function usePhoto() {
+            closeImagePreview();
+            showToast('Photo added to post', 'success');
+        }
+
+        function viewImage(src) {
+            showImagePreview(src);
+        }
+
+        // ==================== PROFILE ====================
+        function updateProfileUI() {
+            if (!state.currentUser) return;
+            const initial = state.currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('nav-profile-initial').textContent = initial;
+            document.getElementById('create-post-initial').textContent = initial;
+            document.getElementById('profile-avatar').textContent = initial;
+            document.getElementById('profile-name').innerHTML = `${state.currentUser.name} <span class="verified-badge">✓</span>`;
+            document.getElementById('profile-handle').textContent = '@' + state.currentUser.username;
+            document.getElementById('stat-followers').textContent = formatNumber(state.currentUser.followers || 0);
+            document.getElementById('stat-following').textContent = formatNumber(state.currentUser.following || 0);
+            document.getElementById('stat-subscribers').textContent = formatNumber(state.currentUser.subscribers || 0);
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function updateProfileStats() {
+            const userPosts = state.posts.filter(p => p.author.id === state.currentUser?.id);
+            document.getElementById('stat-posts').textContent = userPosts.length;
+        }
+
+        function loadUserPosts() {
+            const container = document.getElementById('profile-posts');
+            container.innerHTML = '';
+            const userPosts = state.posts.filter(p => p.author.id === state.currentUser?.id);
+            if (userPosts.length === 0) {
+                container.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"></path></svg><h3>No posts yet</h3><p>Share your first post with the community!</p></div>`;
+                return;
+            }
+            userPosts.forEach(post => {
+                const postEl = document.createElement('div');
+                postEl.className = 'post-card';
+                postEl.innerHTML = `<div class="post-content">${escapeHtml(post.content)}</div>${post.image ? `<img class="post-media" src="${post.image}" style="max-height: 300px;">` : ''}<div class="post-meta">${getTimeAgo(post.timestamp)}</div>`;
+                container.appendChild(postEl);
+            });
+        }
+
+        function switchProfileTab(tab) {
+            document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            if (tab === 'posts') loadUserPosts();
+            else {
+                document.getElementById('profile-posts').innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><h3>Coming soon</h3><p>This feature is under development.</p></div>`;
+            }
+        }
+
+        function editProfile() {
+            showToast('Profile editing coming soon!', 'info');
+        }
+
+        // ==================== EXPLORE ====================
+        function loadTrending() {
+            const container = document.getElementById('trending-list');
+            container.innerHTML = state.trending.map(t => `
+                <div class="trending-item" onclick="searchTopic('${t.topic}')">
+                    <span class="trending-rank">${t.rank}</span>
+                    <span style="flex: 1;"><div class="trending-topic">${t.topic}</div><div class="trending-posts">${t.posts}</div></span>
+                </div>
+            `).join('');
+        }
+
+        function loadExploreGrid() {
+            const container = document.getElementById('explore-grid');
+            const images = [
+                'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=300&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=300&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop'
+            ];
+            container.innerHTML = images.map(img => `<div class="explore-grid-item" onclick="viewImage('${img}')"><img src="${img}" alt="Explore"></div>`).join('');
+        }
+
+        function handleSearch(event) {
+            const query = event.target.value.toLowerCase();
+        }
+
+        function searchTopic(topic) {
+            document.getElementById('search-input').value = topic;
+            showToast(`Searching ${topic}...`, 'info');
+        }
+
+        // ==================== NOTIFICATIONS ====================
+        function loadNotifications() {
+            const container = document.getElementById('notifications-list');
+            state.notifications = [
+                { id: 1, type: 'love', text: '<strong>Creative Soul</strong> loved your post', time: '2m ago', unread: true },
+                { id: 2, type: 'follow', text: '<strong>Art Visionary</strong> started following you', time: '15m ago', unread: true },
+                { id: 3, type: 'repeat', text: '<strong>Code Poet</strong> repeated your post', time: '1h a   
