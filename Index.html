@@ -1,0 +1,1838 @@
+       
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAIN⛓️Link - Be You. Connect. Create.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Bebas+Neue&family=Dancing+Script:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD&vault=true" data-namespace="PayPalSDK" async defer></script>
+    <style>
+        :root {
+            --chain-dark: #0D0D0D;
+            --chain-yellow: #F4D03F;
+            --chain-gray: #1A1A1A;
+            --primary: #F4D03F;
+            --primary-dark: #D4AC0D;
+            --bg-dark: #0D0D0D;
+            --bg-card: #141414;
+            --bg-input: #1A1A1A;
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --text-muted: #737373;
+            --border: #262626;
+            --success: #22c55e;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --love: #ef4444;
+            --like: #3b82f6;
+            --dislike: #6b7280;
+            --repeat: #22c55e;
+            --paypal-blue: #0070BA;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(244, 208, 63, 0.3); } 50% { box-shadow: 0 0 40px rgba(244, 208, 63, 0.6); } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .page { display: none; min-height: 100vh; animation: fadeIn 0.3s ease-out; }
+        .page.active { display: block; }
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--chain-gray) 100%);
+        }
+        .quote-section { 
+            text-align:
+.reaction-btn:hover { background: var(--bg-input); transform: scale(1.05); }
+        .reaction-btn.love:hover, .reaction-btn.love.active { color: var(--love); background: rgba(239, 68, 68, 0.1); }
+        .reaction-btn.like:hover, .reaction-btn.like.active { color: var(--like); background: rgba(59, 130, 246, 0.1); }
+        .reaction-btn.dislike:hover, .reaction-btn.dislike.active { color: var(--dislike); background: rgba(107, 114, 128, 0.1); }
+        .reaction-btn.repeat:hover, .reaction-btn.repeat.active { color: var(--repeat); background: rgba(34, 197, 94, 0.1); }
+        
+        /* CAMERA MODAL */
+        .camera-modal { 
+            position: fixed; inset: 0; 
+            background: rgba(13, 13, 13, 0.98); 
+            z-index: 2000; 
+            display: none; flex-direction: column; 
+        }
+        .camera-modal.active { display: flex; }
+        .camera-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 1rem; 
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+        }
+        .camera-title { font-weight: 700; font-size: 1.1rem; }
+        .camera-close { 
+            background: rgba(255,255,255,0.1); 
+            border: none; 
+            color: white; 
+            width: 40px; height: 40px; 
+            border-radius: 50%; 
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .camera-close:hover { background: rgba(255,255,255,0.2); }
+        
+        .camera-preview { 
+            flex: 1; 
+            display: flex; align-items: center; justify-content: center; 
+            position: relative;
+            background: #000;
+        }
+        .camera-video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+        .camera-canvas { display: none; }
+        .camera-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem;
+        }
+        .camera-placeholder svg { 
+            width: 80px; height: 80px; 
+            margin-bottom: 1rem; 
+            opacity: 0.5;
+        }
+        
+        .camera-controls { 
+            padding: 1.5rem; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 2rem;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+        }
+        .camera-btn {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            border: 4px solid white;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .camera-btn:hover { transform: scale(1.05); }
+        .camera-btn-inner {
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            background: white;
+            transition: all 0.2s;
+        }
+        .camera-btn:hover .camera-btn-inner { background: var(--primary); }
+        
+        .camera-switch {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .camera-switch:hover { background: rgba(255,255,255,0.2); }
+        
+        /* IMAGE PREVIEW MODAL */
+        .image-preview-modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 2001;
+            display: none;
+            flex-direction: column;
+        }
+        .image-preview-modal.active { display: flex; }
+        .image-preview-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem;
+        }
+        .image-preview-content {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center;
+            padding: 1rem;
+        }
+        .image-preview-content img {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 0.75rem;
+            object-fit: contain;
+        }
+        .image-preview-actions {
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .preview-btn {
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .preview-btn.retake {
+            background: var(--bg-input);
+            color: white;
+            border: 1px solid var(--border);
+        }
+        .preview-btn.retake:hover { background: var(--border); }
+        .preview-btn.use {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+        .preview-btn.use:hover { filter: brightness(1.1); }
+        
+        /* PROFILE PAGE */
+        .profile-header {
+            padding: 1rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+        .profile-cover {
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 1rem;
+            margin-bottom: -40px;
+        }
+        .profile-info {
+            display: flex;
+            align-items: flex-end;
+            padding: 0 1rem;
+            gap: 1rem;
+        }
+        .profile-avatar-large {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            border: 4px solid var(--bg-card);
+            color: var(--primary);
+        }
+        .profile-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+            margin-bottom: 0.5rem;
+        }
+        .profile-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .profile-btn.primary {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+        .profile-btn.primary:hover { filter: brightness(1.1); }
+        .profile-btn.secondary {
+            background: var(--bg-input);
+            color: white;
+            border: 1px solid var(--border);
+        }
+        .profile-btn.secondary:hover { background: var(--border); }
+        
+        .profile-details {
+            padding: 1rem;
+        }
+        .profile-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .profile-handle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .profile-bio {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        .profile-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .stat-item {
+            display: flex; align-items: center; gap: 0.25rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .stat-item:hover { color: var(--primary); }
+        .stat-value { font-weight: 700; color: white; }
+        .stat-label { color: var(--text-muted); }
+        
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+        .profile-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .profile-tab:hover { color: var(--text-primary); }
+        .profile-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        /* FOLLOWERS/FOLLOWING MODAL */
+        .follow-modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2002;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .follow-modal.active { display: flex; }
+        .follow-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 400px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .follow-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .follow-title { font-weight: 700; font-size: 1.1rem; }
+        .follow-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+        .follow-close:hover { color: white; background: var(--bg-input); }
+        .follow-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+        .follow-tab {
+            flex: 1;
+            padding: 0.875rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .follow-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .follow-list {
+            overflow-y: auto;
+            max-height: 50vh;
+        }
+        .follow-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .follow-item-info { flex: 1; }
+        .follow-item-name { font-weight: 600; }
+        .follow-item-handle { color: var(--text-muted); font-size: 0.85rem; }
+        .follow-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .follow-btn.follow {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+        .follow-btn.following {
+            background: var(--bg-input);
+            color: white;
+            border: 1px solid var(--border);
+        }
+        
+        /* PAYPAL MODAL */
+        .paypal-modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2003;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .paypal-modal.active { display: flex; }
+        .paypal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 450px;
+            padding: 1.5rem;
+        }
+        .paypal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .paypal-title { 
+            font-weight: 700; 
+            font-size: 1.2rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+        }
+        .paypal-logo {
+            color: var(--paypal-blue);
+            font-weight: 800;
+            font-style: italic;
+        }
+        .paypal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+        .paypal-close:hover { color: white; background: var(--bg-input); }
+        .paypal-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        #paypal-button-container {
+            min-height: 150px;
+        }
+        .paypal-connected {
+            text-align: center;
+            padding: 2rem;
+        }
+        .paypal-connected svg {
+            width: 64px; height: 64px;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+        .paypal-connected h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        .paypal-connected p {
+            color: var(--text-secondary);
+        }
+        
+        /* EXPLORE PAGE */
+        .explore-header {
+            padding: 1rem;
+            position: sticky;
+            top: 60px;
+            background: var(--bg-dark);
+            z-index: 100;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            padding: 0.75rem 1rem;
+        }
+        .search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.95rem;
+        }
+        .search-bar input:focus { outline: none; }
+        .search-bar input::placeholder { color: var(--text-muted); }
+        
+        .trending-section {
+            padding: 1rem;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .trending-item {
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .trending-item:hover { border-color: var(--primary); }
+        .trending-rank {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
+        }
+        .trending-topic { font-weight: 600; margin-bottom: 0.25rem; }
+        .trending-posts { color: var(--text-muted); font-size: 0.85rem; }
+        
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            padding: 2px;
+        }
+        .explore-grid-item {
+            aspect-ratio: 1;
+            background: var(--bg-card);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .explore-grid-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .explore-grid-item:hover img { transform: scale(1.05); }
+        
+        /* NOTIFICATIONS PAGE */
+        .notifications-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .notifications-title { font-size: 1.25rem; font-weight: 700; }
+        .mark-all-read {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .notification-item:hover { background: var(--bg-card); }
+        .notification-item.unread { background: rgba(244, 208, 63, 0.05); }
+        
+        .notification-icon {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .notification-icon.love { background: rgba(239, 68, 68, 0.1); color: var(--love); }
+        .notification-icon.follow { background: rgba(59, 130, 246, 0.1); color: var(--like); }
+        .notification-icon.repeat { background: rgba(34, 197, 94, 0.1); color: var(--repeat); }
+        .notification-icon.mention { background: rgba(244, 208, 63, 0.1); color: var(--primary); }
+        
+        .notification-content { flex: 1; }
+        .notification-text { font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.25rem; }
+        .notification-text strong { color: white; }
+        .notification-time { color: var(--text-muted); font-size: 0.8rem; }
+        
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+        .empty-state svg {
+            width: 64px; height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        .empty-state h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* LOADING */
+        .loading-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 2rem auto;
+        }
+        
+        /* TOAST */
+        .toast-container {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.875rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--error); }
+        .toast.info { border-color: var(--info); }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .brand-title { font-size: 3rem; }
+            .mobile-nav { display: block; }
+            .app-container { padding-bottom: 80px; }
+            .nav-links .nav-btn:not(.profile-btn) { display: none; }
+            .input-row { grid-template-columns: 1fr; }
+            .explore-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (min-width: 769px) {
+            .mobile-nav { display: none !important; }
+            .app-container { padding-bottom: 20px; }
+        }
+        
+        /* HIDDEN FILE INPUT */
+        .file-input { display: none; }
+        
+        /* POST OPTIONS MENU */
+        .post-menu {
+            position: relative;
+        }
+        .post-menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .post-menu-btn:hover { color: var(--text-prima    <!-- AUTH PAGE -->
+    <div id="auth-page" class="page active">
+        <div class="auth-container">
+            <div class="quote-section">
+                <div class="quote-label">Daily Inspiration</div>
+                <div class="quote-text" id="quote-text">"Be yourself; everyone else is already taken."</div>
+                <div class="quote-author" id="quote-author">— Oscar Wilde</div>
+            </div>
+            
+            <h1 class="brand-title">CHAIN<span class="chain-emoji">⛓️</span>Link</h1>
+            <p class="brand-subtitle">Be You. Connect. Create.</p>
+            <p class="brand-tagline">Link up with your friends today and stay connected</p>
+            <p class="brand-cta">Join for free today</p>
+            
+            <div class="auth-card">
+                <!-- Login Form -->
+                <div id="login-form">
+                    <button class="social-btn google" onclick="handleGoogleLogin()">
+                        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="white" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="white" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                        Continue with Google
+                    </button>
+                    <button class="social-btn facebook" onclick="handleFacebookLogin()">
+                        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="white" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Continue with Facebook
+                    </button>
+                    <button class="social-btn paypal" onclick="openPaypalModal()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.629h6.724c2.838 0 5.098.835 5.93 2.42.447.838.582 1.703.404 2.574-.25 1.27-1.023 2.35-2.178 3.044-.375.226-.784.416-1.224.573.355.207.64.472.867.796.433.622.588 1.407.462 2.333-.18 1.32-.84 2.44-1.917 3.253-.994.753-2.302 1.128-3.81 1.128H7.076z"/></svg>
+                        Connect PayPal
+                    </button>
+                    
+                    <div class="divider"><span>or</span></div>
+                    
+                    <div class="input-group">
+                        <input type="email" class="input-field" id="login-email" placeholder="Email address">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" class="input-field" id="login-password" placeholder="Password">
+                    </div>
+                    
+                    <button class="submit-btn" onclick="handleEmailLogin()">Log In</button>
+                    
+                    <div class="auth-switch">
+                        Don't have an account? <a onclick="showSignup()">Sign up</a>
+                    </div>
+                </div>
+                
+                <!-- Signup Form -->
+                <div id="signup-form" style="display: none;">
+                    <div class="input-row">
+                        <div class="input-group">
+                            <input type="text" class="input-field" id="signup-firstname" placeholder="First name">
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="input-field" id="signup-lastname" placeholder="Last name">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="input-field" id="signup-username" placeholder="Username">
+                    </div>
+                    <div class="input-group">
+                        <input type="email" class="input-field" id="signup-email" placeholder="Email address">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" class="input-field" id="signup-password" placeholder="Password" oninput="checkPasswordStrength()">
+                    </div>
+                    <div class="password-requirements" id="password-requirements">
+                        <span id="req-length" class="requirement-unmet">8+ characters</span>
+                        <span id="req-number" class="requirement-unmet">1 number</span>
+                        <span id="req-special" class="requirement-unmet">1 special char</span>
+                        <span id="req-upper" class="requirement-unmet">1 uppercase</span>
+                    </div>
+                    
+                    <button class="submit-btn" onclick="handleSignup()" style="margin-top: 1rem;">Create Account</button>
+                    
+                    <div class="auth-switch">
+                        Already have an account? <a onclick="showLogin()">Log in</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MAIN APP -->
+    <div id="main-app" style="display: none;">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-content">
+                <div class="logo" onclick="navigateTo('feed')">
+                    CHAIN<span class="chain-emoji">⛓️</span>Link
+                </div>
+                <div class="nav-links">
+                    <button class="nav-btn" onclick="navigateTo('feed')" title="Home">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    </button>
+                    <button class="nav-btn" onclick="navigateTo('explore')" title="Explore">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                    </button>
+                    <button class="nav-btn" onclick="navigateTo('notifications')" title="Notifications">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                    </button>
+                    <button class="nav-btn profile-btn" onclick="navigateTo('profile')" title="Profile">
+                        <div class="profile-ring-container">
+                            <div class="profile-circle" id="nav-profile-initial">U</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- App Container -->
+        <div class="app-container">
+            <!-- FEED PAGE -->
+            <div id="feed-page" class="page active">
+                <!-- Spotify Widget -->
+                <div class="spotify-widget" onclick="openSpotify()">
+                    <div class="spotify-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.2.6-1.381C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                    </div>
+                    <div class="spotify-info">
+                        <div class="spotify-title">Now Playing</div>
+                        <div class="spotify-artist" id="spotify-track">Click to connect Spotify</div>
+                    </div>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                
+                <!-- Create Post -->
+                <div class="create-post">
+                    <div class="create-post-header">
+                        <div class="profile-ring-container">
+                            <div class="profile-circle" id="create-post-initial">U</div>
+                        </div>
+                        <textarea class="post-input" id="post-content" placeholder="Let's connect today" maxlength="500"></textarea>
+                    </div>
+                    
+                    <div class="font-selector">
+                        <button class="font-btn active" onclick="setFontStyle('normal')">Normal</button>
+                        <button class="font-btn display" onclick="setFontStyle('display')">DISPLAY</button>
+                        <button class="font-btn mono" onclick="setFontStyle('mono')">mono</button>
+                        <button class="font-btn cursive" onclick="setFontStyle('cursive')">Cursive</button>
+                        <button class="font-btn bold" onclick="setFontStyle('bold')">BOLD</button>
+                    </div>
+                    
+                    <div class="post-actions-bar">
+                        <div class="post-actions-left">
+                            <button class="action-btn" onclick="openCamera()" title="Camera">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                            </button>
+                            
+                            <div class="toggle-container">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="comments-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span>Comments</span>
+                            </div>
+                            
+                            <div class="toggle-container">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="schedule-toggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span>Schedule</span>
+                            </div>
+                        </div>
+                        <button class="post-btn" onclick="createPost()">Post</button>
+                    </div>
+                </div>
+                
+                <!-- Posts Feed -->
+                <div id="posts-feed"></div>
+                <div class="loading-spinner" id="feed-loader" style="display: none;"></div>
+            </div>
+            
+            <!-- EXPLORE PAGE -->
+            <div id="explore-page" class="page">
+                <div class="explore-header">
+                    <div class="search-bar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted);"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                        <input type="text" placeholder="Search CHAIN⛓️Link" id="search-input" oninput="handleSearch(event)">
+                    </div>
+                </div>
+                <div class="trending-section">
+                    <div class="section-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                        Trending for you
+                    </div>
+                    <div id="trending-list"></div>
+                </div>
+                <div class="explore-grid" id="explore-grid"></div>
+            </div>
+            
+            <!-- NOTIFICATIONS PAGE -->
+            <div id="notifications-page" class="page">
+                <div class="notifications-header">
+                    <div class="notifications-title">Notifications</div>
+                    <button class="mark-all-read" onclick="markAllRead()">Mark all as read</button>
+                </div>
+                <div id="notifications-list"></div>
+            </div>
+            
+            <!-- PROFILE PAGE -->
+            <div id="profile-page" class="page">
+                <div class="profile-header">
+                    <div class="profile-cover"></div>
+                    <div class="profile-info">
+                        <div class="profile-avatar-large" id="profile-avatar">U</div>
+                        <div class="profile-actions">
+                            <button class="profile-btn secondary" onclick="editProfile()">Edit profile</button>
+                            <button class="profile-btn secondary" onclick="openPaypalModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.629h6.724c2.838 0 5.098.835 5.93 2.42.447.838.582 1.703.404 2.574-.25 1.27-1.023 2.35-2.178 3.044-.375.226-.784.416-1.224.573.355.207.64.472.867.796.433.622.588 1.407.462 2.333-.18 1.32-.84 2.44-1.917 3.253-.994.753-2.302 1.128-3.81 1.128H7.076z"/></svg>
+                            </button>
+                            <button class="profile-btn primary" onclick="logout()">Log out</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="profile-name" id="profile-name">User Name <span class="verified-badge">✓</span></div>
+                    <div class="profile-handle" id="profile-handle">@username</div>
+                    <div class="profile-bio" id="profile-bio">Link up with your friends today and stay connected ✨</div>
+                    <div class="profile-stats">
+                        <div class="stat-item" onclick="openFollowModal('following')"><span class="stat-value" id="stat-following">0</span><span class="stat-label">Following</span></div>
+                        <div class="stat-item" onclick="openFollowModal('followers')"><span class="stat-value" id="stat-followers">0</span><span class="stat-label">Followers</span></div>
+                        <div class="stat-item" onclick="openFollowModal('subscribers')"><span class="stat-value" id="stat-subscribers">0</span><span class="stat-label">Subscribers</span></div>
+                        <div class="stat-item"><span class="stat-value" id="stat-posts">0</span><span class="stat-label">Posts</span></div>
+                    </div>
+                </div>
+                <div class="profile-tabs">
+                    <div class="profile-tab active" onclick="switchProfileTab('posts')">Posts</div>
+                    <div class="profile-tab" onclick="switchProfileTab('replies')">Replies</div>
+                    <div class="profile-tab" onclick="switchProfileTab('media')">Media</div>
+                    <div class="profile-tab" onclick="switchProfileTab('likes')">Likes</div>
+                </div>
+                <div id="profile-posts"></div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <div class="mobile-nav-items">
+                <div class="mobile-nav-item active" onclick="navigateTo('feed')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>Home
+                </div>
+                <div class="mobile-nav-item" onclick="navigateTo('explore')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>Explore
+                </div>
+                <div class="mobile-nav-item" onclick="openCamera()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>Camera
+                </div>
+                <div class="mobile-nav-item" onclick="navigateTo('notifications')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>Alerts
+                </div>
+                <div class="mobile-nav-item" onclick="navigateTo('profile')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Profile
+                </div>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- CAMERA MODAL -->
+    <div class="camera-modal" id="camera-modal">
+        <div class="camera-header">
+            <div class="camera-title">Take Photo</div>
+            <button class="camera-close" onclick="closeCamera()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="camera-preview">
+            <video class="camera-video" id="camera-video" autoplay playsinline></video>
+            <canvas class="camera-canvas" id="camera-canvas"></canvas>
+            <div class="camera-placeholder" id="camera-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                <p>Camera access required</p>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem;">Click allow when prompted</p>
+            </div>
+        </div>
+        <div class="camera-controls">
+            <button class="camera-switch" onclick="switchCamera()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"></path><path d="M13 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"></path><circle cx="12" cy="12" r="3"></circle><path d="m18 22-3-3 3-3"></path><path d="m6 2 3 3-3 3"></path></svg>
+            </button>
+            <button class="camera-btn" onclick="takePhoto()"><div class="camera-btn-inner"></div></button>
+            <div style="width: 50px;"></div>
+        </div>
+    </div>
+    
+    <!-- IMAGE PREVIEW MODAL -->
+    <div class="image-preview-modal" id="image-preview-modal">
+        <div class="image-preview-header">
+            <div style="font-weight: 700;">Preview</div>
+            <button class="camera-close" onclick="closeImagePreview()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="image-preview-content"><img id="preview-image" src="" alt="Preview"></div>
+        <div class="image-preview-actions">
+            <button class="preview-btn retake" onclick="retakePhoto()">Retake</button>
+            <button class="preview-btn use" onclick="usePhoto()">Use Photo</button>
+        </div>
+    </div>
+    
+    <!-- SCHEDULE MODAL -->
+    <div class="schedule-modal" id="schedule-modal">
+        <div class="schedule-content">
+            <div class="schedule-title">Schedule Post</div>
+            <input type="datetime-local" class="schedule-input" id="schedule-time">
+            <div class="schedule-actions">
+                <button class="schedule-cancel" onclick="closeScheduleModal()">Cancel</button>
+                <button class="schedule-confirm" onclick="confirmSchedule()">Schedule</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FOLLOW MODAL -->
+    <div class="follow-modal" id="follow-modal">
+        <div class="follow-content">
+            <div class="follow-header">
+                <div class="follow-title" id="follow-title">Following</div>
+                <button class="follow-close" onclick="closeFollowModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="follow-tabs">
+                <div class="follow-tab active" onclick="switchFollowTab('following')">Following</div>
+                <div class="follow-tab" onclick="switchFollowTab('followers')">Followers</div>
+                <div class="follow-tab" onclick="switchFollowTab('subscribers')">Subscribers</div>
+            </div>
+            <div class="follow-list" id="follow-list"></div>
+        </div>
+    </div>
+    
+    <!-- PAYPAL MODAL -->
+    <div class="paypal-modal" id="paypal-modal">
+        <div class="paypal-content">
+            <div class="paypal-header">
+                <div class="paypal-title"><span class="paypal-logo">Pay</span>Pal</div>
+                <button class="paypal-close" onclick="closePaypalModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="paypal-description">Connect your PayPal account to receive tips and payments from your followers. Secure, fast, and easy.</div>
+            <div id="paypal-button-container"></div>
+            <div class="paypal-connected" id="paypal-connected" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <h3>PayPal Connected!</h3>
+                <p>Your PayPal account is now linked to CHAIN⛓️Link.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toast-container"></div>   <script>
+        // ==================== SUPABASE CONFIGURATION ====================
+        const SUPABASE_URL = 'https://vjaevzohcnejkaduvtno.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWV2em9oY25lamthZHV2dG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDQwMDAwMDAsImV4cCI6MjAxOTU3NjAwMH0.DUMMY_KEY_FOR_DEMO';
+        
+        let supabase = null;
+        
+        function initSupabase() {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('Supabase initialized');
+                return true;
+            } catch (error) {
+                console.error('Supabase init error:', error);
+                return false;
+            }
+        }
+        
+        // ==================== STATE MANAGEMENT ====================
+        const state = {
+            currentUser: null,
+            currentPage: 'feed',
+            posts: [],
+            notifications: [],
+            fontStyle: 'normal',
+            capturedImage: null,
+            cameraStream: null,
+            facingMode: 'environment',
+            scheduledTime: null,
+            paypalConnected: false,
+            followers: [],
+            following: [],
+            subscribers: [],
+            trending: [
+                { rank: 1, topic: '#BeYourself', posts: '12.5K posts' },
+                { rank: 2, topic: '#ChainLinkCommunity', posts: '8.2K posts' },
+                { rank: 3, topic: '#CreateDaily', posts: '6.7K posts' },
+                { rank: 4, topic: '#Authenticity', posts: '4.3K posts' },
+                { rank: 5, topic: '#Connect', posts: '3.1K posts' }
+            ],
+            quotes: [
+                { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+                { text: "Creativity is intelligence having fun.", author: "Albert Einstein" },
+                { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+                { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+                { text: "Everything you can imagine is real.", author: "Pablo Picasso" }
+            ]
+        };
+
+        // ==================== AUTHENTICATION ====================
+        function showSignup() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('signup-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('signup-password').value;
+            document.getElementById('req-length').className = password.length >= 8 ? 'requirement-met' : 'requirement-unmet';
+            document.getElementById('req-number').className = /\d/.test(password) ? 'requirement-met' : 'requirement-unmet';
+            document.getElementById('req-special').className = /[!@#$%^&*(),.?":{}|<>]/.test(password) ? 'requirement-met' : 'requirement-unmet';
+            document.getElementById('req-upper').className = /[A-Z]/.test(password) ? 'requirement-met' : 'requirement-unmet';
+        }
+
+        async function handleGoogleLogin() {
+            const user = {
+                id: 'google_' + Date.now(),
+                name: 'Alex Johnson',
+                email: 'alex@example.com',
+                username: 'alexj',
+                avatar: null,
+                followers: 1240,
+                following: 342,
+                subscribers: 89
+            };
+            await login(user);
+        }
+
+        async function handleFacebookLogin() {
+            const user = {
+                id: 'fb_' + Date.now(),
+                name: 'Sam Smith',
+                email: 'sam@example.com',
+                username: 'samsmith',
+                avatar: null,
+                followers: 892,
+                following: 156,
+                subscribers: 45
+            };
+            await login(user);
+        }
+
+        async function handleEmailLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            if (!email || !password) {
+                showToast('Please enter email and password', 'error');
+                return;
+            }
+            const user = {
+                id: 'email_' + Date.now(),
+                name: email.split('@')[0],
+                email: email,
+                username: email.split('@')[0],
+                avatar: null,
+                followers: 0,
+                following: 0,
+                subscribers: 0
+            };
+            await login(user);
+        }
+
+        async function handleSignup() {
+            const firstName = document.getElementById('signup-firstname').value;
+            const lastName = document.getElementById('signup-lastname').value;
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            if (!firstName || !lastName || !username || !email || !password) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+            if (password.length < 8) {
+                showToast('Password must be at least 8 characters', 'error');
+                return;
+            }
+            const user = {
+                id: 'user_' + Date.now(),
+                name: firstName + ' ' + lastName,
+                email: email,
+                username: username,
+                avatar: null,
+                followers: 0,
+                following: 0,
+                subscribers: 0
+            };
+            await login(user);
+        }
+
+        async function login(user) {
+            state.currentUser = user;
+            localStorage.setItem('chainlink_user', JSON.stringify(user));
+            generateSampleFollowData();
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            updateProfileUI();
+            loadPosts();
+            loadNotifications();
+            loadTrending();
+            loadExploreGrid();
+            showToast('Welcome to CHAIN⛓️Link!', 'success');
+        }
+
+        function logout() {
+            state.currentUser = null;
+            state.followers = [];
+            state.following = [];
+            state.subscribers = [];
+            localStorage.removeItem('chainlink_user');
+            localStorage.removeItem('chainlink_paypal');
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('auth-page').style.display = 'block';
+            showToast('Logged out successfully', 'info');
+        }
+
+        // ==================== FOLLOWERS/FOLLOWING/SUBSCRIBERS ====================
+        function generateSampleFollowData() {
+            state.followers = [
+                { id: 'f1', name: 'Creative Soul', username: 'creativesoul', avatar: 'C', isFollowing: false },
+                { id: 'f2', name: 'Art Visionary', username: 'artvision', avatar: 'A', isFollowing: true },
+                { id: 'f3', name: 'Code Poet', username: 'codepoet', avatar: 'P', isFollowing: false },
+                { id: 'f4', name: 'Design Guru', username: 'designguru', avatar: 'D', isFollowing: true },
+                { id: 'f5', name: 'Music Maker', username: 'musicmaker', avatar: 'M', isFollowing: false },
+                { id: 'f6', name: 'Photo Master', username: 'photomaster', avatar: 'P', isFollowing: true }
+            ];
+            state.following = [
+                { id: 'fo1', name: 'Tech Enthusiast', username: 'techenthusiast', avatar: 'T', isFollowing: true },
+                { id: 'fo2', name: 'Travel Blogger', username: 'travelblogger', avatar: 'T', isFollowing: true },
+                { id: 'fo3', name: 'Foodie Life', username: 'foodielife', avatar: 'F', isFollowing: true },
+                { id: 'fo4', name: 'Fitness Pro', username: 'fitnesspro', avatar: 'F', isFollowing: true }
+            ];
+            state.subscribers = [
+                { id: 's1', name: 'Premium User 1', username: 'premium1', avatar: 'P', tier: '$5/month' },
+                { id: 's2', name: 'Premium User 2', username: 'premium2', avatar: 'P', tier: '$10/month' },
+                { id: 's3', name: 'VIP Member', username: 'vipmember', avatar: 'V', tier: '$25/month' }
+            ];
+        }
+
+        function openFollowModal(type) {
+            const modal = document.getElementById('follow-modal');
+            modal.classList.add('active');
+            switchFollowTab(type);
+        }
+
+        function closeFollowModal() {
+            document.getElementById('follow-modal').classList.remove('active');
+        }
+
+        function switchFollowTab(type) {
+            document.querySelectorAll('.follow-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            const titles = { following: 'Following', followers: 'Followers', subscribers: 'Subscribers' };
+            document.getElementById('follow-title').textContent = titles[type];
+            renderFollowList(type);
+        }
+
+        function renderFollowList(type) {
+            const container = document.getElementById('follow-list');
+            let items = [];
+            switch(type) {
+                case 'following': items = state.following; break;
+                case 'followers': items = state.followers; break;
+                case 'subscribers': items = state.subscribers; break;
+            }
+            if (items.length === 0) {
+                container.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><h3>No ${type} yet</h3><p>Your ${type} will appear here.</p></div>`;
+                return;
+            }
+            container.innerHTML = items.map(item => `
+                <div class="follow-item">
+                    <div class="profile-ring-container"><div class="profile-circle">${item.avatar}</div></div>
+                    <div class="follow-item-info">
+                        <div class="follow-item-name">${item.name}</div>
+                        <div class="follow-item-handle">@${item.username} ${item.tier ? '· ' + item.tier : ''}</div>
+                    </div>
+                    ${type !== 'subscribers' ? `<button class="follow-btn ${item.isFollowing ? 'following' : 'follow'}" onclick="toggleFollow('${item.id}', '${type}')">${item.isFollowing ? 'Following' : 'Follow'}</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function toggleFollow(userId, type) {
+            const list = type === 'following' ? state.following : state.followers;
+            const user = list.find(u => u.id === userId);
+            if (user) {
+                user.isFollowing = !user.isFollowing;
+                renderFollowList(type);
+                showToast(user.isFollowing ? 'Now following!' : 'Unfollowed', 'success');
+            }
+        }
+
+        // ==================== PAYPAL ====================
+        function openPaypalModal() {
+            const modal = document.getElementById('paypal-modal');
+            modal.classList.add('active');
+            const paypalConnected = localStorage.getItem('chainlink_paypal');
+            if (paypalConnected) {
+                document.getElementById('paypal-button-container').style.display = 'none';
+                document.getElementById('paypal-connected').style.display = 'block';
+            } else {
+                document.getElementById('paypal-button-container').style.display = 'block';
+                document.getElementById('paypal-connected').style.display = 'none';
+                renderPayPalButton();
+            }
+        }
+
+        function closePaypalModal() {
+            document.getElementById('paypal-modal').classList.remove('active');
+        }
+
+        function renderPayPalButton() {
+            const container = document.getElementById('paypal-button-container');
+            container.innerHTML = '';
+            if (typeof PayPalSDK !== 'undefined') {
+                try {
+                    PayPalSDK.Buttons({
+                        createOrder: function(data, actions) {
+                            return actions.order.create({ purchase_units: [{ amount: { value: '0.01' } }] });
+                        },
+                        onApprove: function(data, actions) {
+                            return actions.order.capture().then(function(details) {
+                                localStorage.setItem('chainlink_paypal', JSON.stringify({ email: details.payer.email_address, name: details.payer.name.given_name }));
+                                state.paypalConnected = true;
+                                document.getElementById('paypal-button-container').style.display = 'none';
+                                document.getElementById('paypal-connected').style.display = 'block';
+                                showToast('PayPal connected successfully!', 'success');        // ==================== NAVIGATION ====================
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page + '-page').classList.add('active');
+            document.querySelectorAll('.mobile-nav-item').forEach((item, index) => {
+                item.classList.remove('active');
+                const pages = ['feed', 'explore', null, 'notifications', 'profile'];
+                if (pages[index] === page) item.classList.add('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            if (page === 'profile') loadUserPosts();
+            if (page === 'notifications') markNotificationsSeen();
+            window.scrollTo(0, 0);
+        }
+
+        // ==================== POST CREATION ====================
+        function setFontStyle(style) {
+            state.fontStyle = style;
+            document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function createPost() {
+            const content = document.getElementById('post-content').value.trim();
+            const scheduleToggle = document.getElementById('schedule-toggle').checked;
+            if (!content && !state.capturedImage) {
+                showToast('Please write something or add a photo', 'error');
+                return;
+            }
+            if (scheduleToggle) {
+                document.getElementById('schedule-modal').classList.add('active');
+                return;
+            }
+            submitPost(content);
+        }
+
+        function submitPost(content, scheduled = false) {
+            const post = {
+                id: 'post_' + Date.now(),
+                author: state.currentUser,
+                content: content,
+                fontStyle: state.fontStyle,
+                image: state.capturedImage,
+                timestamp: new Date(),
+                scheduled: scheduled,
+                scheduledTime: state.scheduledTime,
+                reactions: { love: 0, like: 0, dislike: 0, repeat: 0 },
+                userReaction: null
+            };
+            state.posts.unshift(post);
+            document.getElementById('post-content').value = '';
+            state.capturedImage = null;
+            state.scheduledTime = null;
+            document.getElementById('schedule-toggle').checked = false;
+            if (scheduled) {
+                showToast('Post scheduled successfully!', 'success');
+            } else {
+                showToast('Posted successfully!', 'success');
+                renderPost(post, true);
+            }
+            updateProfileStats();
+        }
+
+        function confirmSchedule() {
+            const scheduleTime = document.getElementById('schedule-time').value;
+            if (!scheduleTime) {
+                showToast('Please select a time', 'error');
+                return;
+            }
+            state.scheduledTime = new Date(scheduleTime);
+            document.getElementById('schedule-modal').classList.remove('active');
+            const content = document.getElementById('post-content').value.trim();
+            submitPost(content, true);
+        }
+
+        function closeScheduleModal() {
+            document.getElement         function closeScheduleModal() {
+            document.getElementById('schedule-modal').classList.remove('active');
+        }
+
+        // ==================== POST RENDERING ====================
+        function renderPost(post, prepend = false) {
+            const feed = document.getElementById('posts-feed');
+            const postEl = document.createElement('div');
+            postEl.className = 'post-card';
+            postEl.id = 'post-' + post.id;
+            const timeAgo = getTimeAgo(post.timestamp);
+            const fontClass = post.fontStyle !== 'normal' ? 'post-content ' + post.fontStyle : 'post-content';
+            
+            postEl.innerHTML = `
+                <div class="post-header">
+                    <div class="profile-ring-container">
+                        <div class="profile-circle">${post.author.name.charAt(0).toUpperCase()}</div>
+                    </div>
+                    <div class="post-author-info">
+                        <div class="post-author-name">${post.author.name} <span class="verified-badge">✓</span></div>
+                        <div class="post-meta">
+                            @${post.author.username} · ${timeAgo}
+                            ${post.scheduled ? '<span class="scheduled-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Scheduled</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="post-menu">
+                        <button class="post-menu-btn" onclick="togglePostMenu('${post.id}')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="1"></circle>
+                                <circle cx="19" cy="12" r="1"></circle>
+                                <circle cx="5" cy="12" r="1"></circle>
+                            </svg>
+                        </button>
+                        <div class="post-menu-dropdown" id="menu-${post.id}">
+                            ${post.author.id === state.currentUser?.id ? `<div class="post-menu-item delete" onclick="deletePost('${post.id}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Delete</div>` : ''}
+                            <div class="post-menu-item" onclick="copyPostLink('${post.id}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> Copy link</div>
+                        </div>
+                    </div>
+                </div>
+                ${post.content ? `<div class="${fontClass}">${escapeHtml(post.content)}</div>` : ''}
+                ${post.image ? `<img class="post-media" src="${post.image}" onclick="viewImage('${post.image}')" alt="Post image">` : ''}
+                <div class="post-reactions">
+                    <button class="reaction-btn love ${post.userReaction === 'love' ? 'active' : ''}" onclick="reactToPost('${post.id}', 'love')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="${post.userReaction === 'love' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        ${post.reactions.love || ''}
+                    </button>
+                    <button class="reaction-btn like ${post.userReaction === 'like' ? 'active' : ''}" onclick="reactToPost('${post.id}', 'like')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="${post.userReaction === 'like' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                        ${post.reactions.like || ''}
+                    </button>
+                    <button class="reaction-btn dislike ${post.userReaction === 'dislike' ? 'active' : ''}" onclick="reactToPost('${post.id}', 'dislike')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="${post.userReaction === 'dislike' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>
+                        ${post.reactions.dislike || ''}
+                    </button>
+                    <button class="reaction-btn repeat ${post.userReaction === 'repeat' ? 'active' : ''}" onclick="reactToPost('${post.id}', 'repeat')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="${post.userReaction === 'repeat' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                        ${post.reactions.repeat || ''}
+                    </button>
+                </div>
+            `;
+            
+            if (prepend) {
+                feed.insertBefore(postEl, feed.firstChild);
+            } else {
+                feed.appendChild(postEl);
+            }
+        }
+
+        function loadPosts() {
+            const feed = document.getElementById('posts-feed');
+            feed.innerHTML = '';
+            if (state.posts.length === 0) {
+                const samplePosts = [
+                    { id: 'sample_1', author: { id: 'user1', name: 'Creative Soul', username: 'creativesoul', avatar: null }, content: 'Just joined CHAIN⛓️Link! Excited to connect with amazing creators. #BeYourself #ChainLinkCommunity', fontStyle: 'normal', image: null, timestamp: new Date(Date.now() - 3600000), scheduled: false, reactions: { love: 24, like: 18, dislike: 0, repeat: 5 }, userReaction: null },
+                    { id: 'sample_2', author: { id: 'user2', name: 'Art Visionary', username: 'artvision', avatar: null }, content: 'CREATIVITY TAKES COURAGE', fontStyle: 'display', image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop', timestamp: new Date(Date.now() - 7200000), scheduled: false, reactions: { love: 156, like: 89, dislike: 2, repeat: 34 }, userReaction: null },
+                    { id: 'sample_3', author: { id: 'user3', name: 'Code Poet', username: 'codepoet', avatar: null }, content: 'function beYourself() {\n  return authenticity;\n}', fontStyle: 'mono', image: null, timestamp: new Date(Date.now() - 10800000), scheduled: false, reactions: { love: 67, like: 45, dislike: 1, repeat: 23 }, userReaction: null }
+                ];
+                state.posts = samplePosts;
+            }
+            state.posts.forEach(post => renderPost(post));
+        }
+
+        function reactToPost(postId, reaction) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            if (post.userReaction === reaction) {
+                post.reactions[reaction]--;
+                post.userReaction = null;
+            } else {
+                if (post.userReaction) {
+                    post.reactions[post.userReaction]--;
+                }
+                post.reactions[reaction]++;
+                post.userReaction = reaction;
+            }
+            const postEl = document.getElementById('post-' + postId);
+            if (postEl) {
+                postEl.remove();
+                renderPost(post, true);
+            }
+        }
+
+        function deletePost(postId) {
+            state.posts = state.posts.filter(p => p.id !== postId);
+            const postEl = document.getElementById('post-' + postId);
+            if (postEl) postEl.remove();
+            showToast('Post deleted', 'info');
+            updateProfileStats();
+        }
+
+        function togglePostMenu(postId) {
+            const menu = document.getElementById('menu-' + postId);
+            menu.classList.toggle('active');
+            setTimeout(() => {
+                document.addEventListener('click', function closeMenu(e) {
+                    if (!e.target.closest('.post-menu')) {
+                        menu.classList.remove('active');
+                        document.removeEventListener('click', closeMenu);
+                    }
+                });
+            }, 10);
+        }
+
+        function copyPostLink(postId) {
+            const url = window.location.origin + '/post/' + postId;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied to clipboard', 'success');
+            });
+        }
+
+        // ==================== CAMERA ====================
+        async function openCamera() {
+            document.getElementById('camera-modal').classList.add('active');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: state.facingMode } });
+                state.cameraStream = stream;
+                const video = document.getElementById('camera-video');
+                video.srcObject = stream;
+                document.getElementById('camera-placeholder').style.display = 'none';
+            } catch (err) {
+                console.error('Camera error:', err);
+                document.getElementById('camera-placeholder').style.display = 'block';
+            }
+        }
+
+        function closeCamera() {
+            document.getElementById('camera-modal').classList.remove('active');
+            if (state.cameraStream) {
+                state.cameraStream.getTracks().forEach(track => track.stop());
+                state.cameraStream = null;
+            }
+        }
+
+        function switchCamera() {
+            state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
+            closeCamera();
+            openCamera();
+        }
+
+        function takePhoto() {
+            const video = document.getElementById('camera-video');
+            const canvas = document.getElementById('camera-canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            state.capturedImage = canvas.toDataURL('image/jpeg');
+            closeCamera();
+            showImagePreview(state.capturedImage);
+        }
+
+        function showImagePreview(imageSrc) {
+            document.getElementById('preview-image').src = imageSrc;
+            document.getElementById('image-preview-modal').classList.add('active');
+        }
+
+        function closeImagePreview() {
+            document.getElementById('image-preview-modal').classList.remove('active');
+        }
+
+        function retakePhoto() {
+            closeImagePreview();
+            state.capturedImage = null;
+            openCamera();
+        }
+
+        function usePhoto() {
+            closeImagePreview();
+            showToast('Photo added to post', 'success');
+        }
+
+        function viewImage(src) {
+            showImagePreview(src);
+        }
+
+        // ==================== PROFILE ====================
+        function updateProfileUI() {
+            if (!state.currentUser) return;
+            const initial = state.currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('nav-profile-initial').textContent = initial;
+            document.getElementById('create-post-initial').textContent = initial;
+            document.getElementById('profile-avatar').textContent = initial;
+            document.getElementById('profile-name').innerHTML = `${state.currentUser.name} <span class="verified-badge">✓</span>`;
+            document.getElementById('profile-handle').textContent = '@' + state.currentUser.username;
+            document.getElementById('stat-followers').textContent = formatNumber(state.currentUser.followers || 0);
+            document.getElementById('stat-following').textContent = formatNumber(state.currentUser.following || 0);
+            document.getElementById('stat-subscribers').textContent = formatNumber(state.currentUser.subscribers || 0);
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function updateProfileStats() {
+            const userPosts = state.posts.filter(p => p.author.id === state.currentUser?.id);
+            document.getElementById('stat-posts').textContent = userPosts.length;
+        }
+
+        function loadUserPosts() {
+            const container = document.getElementById('profile-posts');
+            container.innerHTML = '';
+            const userPosts = state.posts.filter(p => p.author.id === state.currentUser?.id);
+            if (userPosts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg>
+                        <h3>No posts yet</h3>
+                        <p>Share your first post with the community!</p>
+                    </div>
+                `;
+                return;
+            }
+            userPosts.forEach(post => {
+                const postEl = document.createElement('div');
+                postEl.className = 'post-card';
+                postEl.innerHTML = `
+                    <div class="post-content">${escapeHtml(post.content)}</div>
+                    ${post.image ? `<img class="post-media" src="${post.image}" style="max-height: 300px;">` : ''}
+                    <div class="post-meta">${getTimeAgo(post.timestamp)}</div>
+                `;
+                container.appendChild(postEl);
+            });
+        }
+
+        function switchProfileTab(tab) {
+            document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            if (tab === 'posts') loadUserPosts();
+            else {
+                document.getElementById('profile-posts').innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <h3>Coming soon</h3>
+                        <p>This feature is under development.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function editProfile() {
+            showToast('Profile editing coming soon!', 'info');
+        }
+
+        // ==================== EXPLORE ====================
+        function loadTrending() {
+            const container = document.getElementById('trending-list');
+            container.innerHTML = state.trending.map(t => `
+                <div class="trending-item" onclick="searchTopic('${t.topic}')">
+                    <span class="trending-rank">${t.rank}</span>
+                    <span style="flex: 1;">
+                        <div class="trending-topic">${t.topic}</div>
+                        <div class="trending-posts">${t.posts}</div>
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function loadExploreGrid() {
+            const container = document.getElementById('explore-grid');
+            const images = [
+                'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=300&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=300&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop'
+            ];
+            container.innerHTML = images.map(img => `
+                <div class="explore-grid-item" onclick="viewImage('${img}')">
+                    <img src="${img}" alt="Explore">
+                </div>
+            `).join('');
+        }
+
+        function handleSearch(event) {
+            const query = event.target.value.toLowerCase();
+        }
+
+        function searchTopic(topic) {
+            document.getElementById('search-input').value = topic;
+            showToast(`Searching ${topic}...`, 'info');
+        }
+
+        // ==================== NOTIFICATIONS ====================
+        function loadNotifications() {
+            const container = document.getElementById('notifications-list');
+            state.notifications = [
+                { id: 1, type: 'love', text: '<strong>Creative Soul</strong> loved your post', time: '2m ago', unread: true },
+                { id: 2, type: 'follow', text: '<strong>Art Visionary</strong> started following you', time: '15m ago', unread: true },
+                { id: 3, type: 'repeat', text: '<strong>Code Poet</strong> repeated your post', time: '1h ago', unread: false },
+                { id: 4, type: 'mention', text: '<strong>Design Guru</strong> mentioned you in a post', time: '3h ago', unread: false }
+            ];
+            renderNotifications();
+        }
+
+        function renderNotifications() {
+            const container = document.getElementById('notifications-list');
+            if (state.notifications.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+                        </svg>
+                        <h3>No notifications yet</h3>
+                        <p>When you get notifications, they'll appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+            container.innerHTML = state.notifications.map(n => `
+                <div class="notification-item ${n.unread ? 'unread' : ''}" onclick="readNotification(${n.id})">
+                    <div class="notification-icon ${n.type}">
+                        ${getNotificationIcon(n.type)}
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-text">${n.text}</div>
+                        <div class="notification-time">${n.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                love: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>',
+                follow: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20                 follow: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+                repeat: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>',
+                mention: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path></svg>'
+            };
+            return icons[type] || icons.love;
+        }
+
+        function readNotification(id) {
+            const notif = state.notifications.find(n => n.id === id);
+            if (notif) notif.unread = false;
+            renderNotifications();
+        }
+
+        function markAllRead() {
+            state.notifications.forEach(n => n.unread = false);
+            renderNotifications();
+            showToast('All notifications marked as read', 'success');
+        }
+
+        function markNotificationsSeen() {}
+
+        function openSpotify() {
+            const tracks = ['Blinding Lights - The Weeknd','As It Was - Harry Styles','Heat Waves - Glass Animals','Stay - The Kid LAROI & Justin Bieber'];
+            const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
+            document.getElementById('spotify-track').textContent = randomTrack;
+            showToast('Connected to Spotify!', 'success');
+        }
+
+        function rotateQuote() {
+            const quote = state.quotes[Math.floor(Math.random() * state.quotes.length)];
+            document.getElementById('quote-text').style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById('quote-text').textContent = '"' + quote.text + '"';
+                document.getElementById('quote-author').textContent = '— ' + quote.author;
+                document.getElementById('quote-text').style.opacity = 1;
+            }, 500);
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return 'just now';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return minutes + 'm ago';
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return hours + 'h ago';
+            return Math.floor(hours / 24) + 'd ago';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            const icons = {
+                success: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+                error: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
+                info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>'
+            };
+            toast.innerHTML = icons[type] + '<span>' + message + '</span>';
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSupabase();
+            const savedUser = localStorage.getItem('chainlink_user');
+            if (savedUser) {
+                state.currentUser = JSON.parse(savedUser);
+                generateSampleFollowData();
+                document.getElementById('auth-page').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+                updateProfileUI();
+                loadPosts();
+                loadNotifications();
+                loadTrending();
+                loadExploreGrid();
+            }
+            setInterval(rotateQuote, 10000);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeCamera();
+                closeImagePreview();
+                closeScheduleModal();
+                closeFollowModal();
+                closePaypalModal();
+            }
+        });
+    </script>
+</body>
+</html>
