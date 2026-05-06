@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.spotify.com https://accounts.google.com https://api.microlink.io; frame-src 'self' https://accounts.google.com https://open.spotify.com;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>CHAIN⛓️Link - Link up with your friends</title>
+    <meta name="description" content="Join for free today. The next generation social platform.">
+    <meta name="theme-color" content="#0D0D0D">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@400;500&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        chain: { dark: '#0D0D0D', yellow: '#F4D03F', charcoal: '#1A1A1A', gray: '#2D2D2D' },
+                        pastel: { pink: '#FFB3BA', blue: '#BAE1FF', green: '#BAFFC9', purple: '#E6BAFF', orange: '#FFDFBA', yellow: '#FFFFBA' },
+                        demo: { purple: '#8B5CF6', pink: '#EC4899' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Playfair Display', 'serif'],
+                        mono: ['Roboto Mono', 'monospace'],
+                        cursive: ['Dancing Script', 'cursive']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-in-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'gradient': 'gradient 3s ease infinite'
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                        gradient: { '0%, 100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0D0D0D; }
+        ::-webkit-scrollbar-thumb { background: #2D2D2D; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F4D03F; }
+        .post-card { contain: content; content-visibility: auto; contain-intrinsic-height: auto 300px; }
+        .glass { background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(244, 208, 63, 0.1); }
+        .font-default { font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Playfair Display', 'serif'; }
+        .font-mono { font-family: 'Roboto Mono', 'monospace'; }
+        .font-cursive { font-family: 'Dancing Script', 'cursive'; }
+        input[type="file"] { display: none; }
+        .live-pulse { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); animation: livePulse 2s infinite; }
+        @keyframes livePulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        .hidden-until-load { visibility: hidden; }
+        .demo-banner { background: linear-gradient(90deg, #8B5CF6, #EC4899, #8B5CF6); background-size: 200% 200%; animation: gradient 3s ease infinite; }
+        .demo-active #app { padding-top: 40px; }
+        @media (min-width: 768px) { .demo-active #app { padding-top: 0; } .demo-active main { padding-top: 40px; } }
+        .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .youtube-preview { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 12px; overflow: hidden; margin-top: 8px; cursor: pointer; }
+        .youtube-preview img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .youtube-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 40px; background: rgba(255,0,0,0.9); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+        .link-preview { margin-top: 8px; border: 1px solid #2D2D2D; border-radius: 12px; overflow: hidden; background: #0D0D0D; max-width: 300px; cursor: pointer; transition: all 0.2s; }
+        .link-preview:hover { border-color: #F4D03F; transform: translateY(-2px); }
+        .link-preview-image { width: 100%; height: 140px; object-fit: cover; background: #1A1A1A; }
+        .link-preview-content { padding: 12px; }
+        .link-preview-domain { font-size: 11px; color: #F4D03F; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+        .link-preview-title { font-size: 14px; font-weight: 600; color: white; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .message-link { color: #F4D03F; text-decoration: underline; text-underline-offset: 2px; }
+        .story-ring { background: linear-gradient(45deg, #F4D03F, #FF6B6B, #F4D03F); padding: 2px; border-radius: 50%; }
+        .story-ring:hover { transform: scale(1.05); transition: transform 0.2s; }
+        .subscription-badge { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; font-weight: bold; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+        .tier-1 { background: linear-gradient(135deg, #C0C0C0, #808080); }
+        .tier-2 { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .tier-3 { background: linear-gradient(135deg, #B9F2FF, #00CED1); }
+        .admin-secret { opacity: 0; transition: opacity 0.3s; }
+        .admin-secret:hover { opacity: 1; }
+    </style>
+</head>
+<body class="bg-chain-dark text-gray-100 font-sans antialiased overflow-x-hidden">
+    <noscript>
+        <div class="fixed inset-0 bg-chain-dark z-50 flex items-center justify-center p-4">
+            <div class="text-center">
+                <i class="fas fa-exclamation-triangle text-chain-yellow text-5xl mb-4"></i>
+                <h1 class="text-2xl font-bold mb-2">JavaScript Required</h1>
+                <p class="text-gray-400">CHAIN⛓️Link requires JavaScript to function securely.</p>
+            </div>
+        </div>
+    </noscript>
+
+    <div id="demo-banner" class="hidden fixed top-0 left-0 right-0 demo-banner text-white text-center py-2 z-50 shadow-lg">
+        <div class="flex items-center justify-center space-x-2 text-sm font-medium px-4">
+            <i class="fas fa-flask animate-pulse"></i>
+            <span class="uppercase tracking-wider font-bold">Demo Mode Active</span>
+            <span class="hidden md:inline opacity-80">• Sample data loaded</span>
+            <button onclick="window.App.demoMode.toggle()" class="ml-4 px-3 py-1 bg-white/20 hover:bg-white/30 rounded-full transition text-xs backdrop-blur-sm border border-white/20">Exit Demo</button>
+        </div>
+    </div>
+
+    <div id="app" class="hidden-until-load min-h-screen flex flex-col">
+        <nav id="main-nav" class="hidden fixed bottom-0 left-0 right-0 md:top-0 md:bottom-auto bg-chain-charcoal border-t md:border-b border-chain-gray md:border-t-0 z-40 glass">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-around md:justify-between items-center h-16">
+                    <div class="hidden md:flex items-center space-x-2 cursor-pointer" onclick="window.App.router.navigate('feed')">
+                        <span class="text-2xl font-bold text-chain-yellow">CHAIN⛓️Link</span>
+                        <span id="nav-demo-badge" class="hidden ml-2 px-2 py-0.5 bg-demo-purple/20 text-demo-purple text-[10px] rounded-full border border-demo-purple/30 uppercase font-bold">Demo</span>
+                    </div>
+                    <div class="flex justify-around w-full md:w-auto md:space-x-8">
+                        <button onclick="window.App.router.navigate('feed')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2" data-view="feed"><i class="fas fa-home text-xl"></i><span class="text-xs md:text-sm font-medium">Feed</span></button>
+                        <button onclick="window.App.router.navigate('live')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2 relative" data-view="live"><div class="relative"><i class="fas fa-video text-xl"></i><span id="live-badge" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full live-pulse"></span></div><span class="text-xs md:text-sm font-medium">Live</span></button>
+                        <button onclick="window.App.router.navigate('messages')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2 relative" data-view="messages"><div class="relative"><i class="fas fa-envelope text-xl"></i><span id="msg-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-chain-yellow text-chain-dark text-xs rounded-full flex items-center justify-center font-bold">3</span></div><span class="text-xs md:text-sm font-medium">Messages</span></button>
+                        <button onclick="window.App.router.navigate('profile')" class="nav-btn flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 text-gray-400 hover:text-chain-yellow transition p-2" data-view="profile"><i class="fas fa-user text-xl"></i><span class="text-xs md:text-sm font-medium">Profile</span></button>
+                    </div>
+                    <div class="hidden md:flex items-center space-x-4">
+                        <button id="demo-toggle-btn" onclick="window.App.demoMode.toggle()" class="text-gray-400 hover:text-demo-purple transition px-3 py-1.5 rounded-full border border-transparent hover:border-demo-purple/30 text-sm flex items-center space-x-1 bg-demo-purple/5"><i class="fas fa-flask"></i><span>Demo Mode</span></button>
+                        <button onclick="window.App.auth.logout()" class="text-gray-400 hover:text-red-400 transition p-2" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main id="content" class="flex-1 pb-20 md:pt-20 md:pb-0 overflow-y-auto">
+            <!-- Auth View -->
+            <section id="auth-view" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+                <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div class="absolute top-0 left-1/4 w-96 h-96 bg-chain-yellow opacity-5 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-demo-purple opacity-5 rounded-full blur-3xl"></div>
+                </div>
+                <div class="w-full max-w-md relative z-10">
+                    <div class="bg-chain-charcoal border border-chain-gray rounded-2xl p-8 shadow-2xl relative">
+                        <!-- Admin Secret Login (Shift+Click logo to access) -->
+                        <div class="absolute top-4 left-4 admin-secret cursor-pointer" onclick="window.App.auth.showRealLogin()" title="Admin Access">
+                            <i class="fas fa-lock text-gray-600 text-xs"></i>
+                        </div>
+                        
+                        <div class="text-center mb-8">
+                            <h1 class="text-4xl font-bold text-chain-yellow mb-2" onclick="if(event.shiftKey) window.App.auth.showRealLogin()">CHAIN⛓️Link</h1>
+                            <p class="text-gray-400 text-sm" id="auth-subtitle">Link up with your friends</p>
+                        </div>
+                        <div id="daily-quote" class="mb-6 p-4 bg-chain-dark rounded-lg border-l-4 border-chain-yellow italic text-gray-300 text-sm">"The future belongs to those who believe in the beauty of their dreams."</div>
+                        
+                        <!-- Real Login Form (Hidden by default) -->
+                        <div id="real-auth-container" class="hidden mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+                            <p class="text-xs text-red-400 mb-2 font-bold uppercase tracking-wider">Admin Access</p>
+                            <input type="email" id="admin-email" placeholder="Admin Email" class="w-full bg-chain-dark border border-chain-gray rounded px-3 py-2 text-white mb-2 text-sm">
+                            <input type="password" id="admin-password" placeholder="Password" class="w-full bg-chain-dark border border-chain-gray rounded px-3 py-2 text-white mb-2 text-sm">
+                            <button onclick="window.App.auth.adminLogin()" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded text-sm font-bold">Access Real Auth</button>
+                        </div>
+
+                        <div id="auth-forms">
+                            <form id="login-form" class="space-y-4 hidden" onsubmit="window.App.auth.handleLogin(event)">
+                                <div><label class="block text-sm font-medium text-gray-400 mb-1">Email</label><input type="email" id="login-email" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="you@example.com"></div>
+                                <div><label class="block text-sm font-medium text-gray-400 mb-1">Password</label><div class="relative"><input type="password" id="login-password" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="••••••••"><button type="button" onclick="window.App.auth.togglePassword('login-password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-white"><i class="fas fa-eye"></i></button></div></div>
+                                <button type="submit" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition transform hover:scale-[1.02]">Sign In</button>
+                            </form>
+                            
+                            <div id="demo-signup-prompt" class="text-center space-y-4">
+                                <p class="text-gray-400 mb-4">Experience the full app with demo data</p>
+                                <button onclick="window.App.demoMode.activate()" class="w-full bg-gradient-to-r from-demo-purple to-demo-pink text-white font-bold py-3 rounded-lg hover:opacity-90 transition transform hover:scale-[1.02] flex items-center justify-center space-x-2">
+                                    <i class="fas fa-flask"></i>
+                                    <span>Enter Demo Mode</span>
+                                </button>
+                                <p class="text-xs text-gray-500 mt-4">No signup required • Instant access</p>
+                            </div>
+
+                            <form id="signup-form" class="hidden space-y-4" onsubmit="window.App.auth.handleSignup(event)">
+                                <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-medium text-gray-400 mb-1">First Name</label><input type="text" id="signup-firstname" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition"></div><div><label class="block text-xs font-medium text-gray-400 mb-1">Last Name</label><input type="text" id="signup-lastname" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition"></div></div>
+                                <div><label class="block text-xs font-medium text-gray-400 mb-1">Username</label><div class="relative"><span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">@</span><input type="text" id="signup-username" required class="w-full bg-chain-dark border border-chain-gray rounded-lg pl-8 pr-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="username"></div></div>
+                                <div><label class="block text-xs font-medium text-gray-400 mb-1">Email</label><input type="email" id="signup-email" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition"></div>
+                                <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-medium text-gray-400 mb-1">Birthday</label><input type="date" id="signup-birthday" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition"></div><div><label class="block text-xs font-medium text-gray-400 mb-1">Gender</label><select id="signup-gender" required class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition"><option value="">Select</option><option value="male">Male</option><option value="female">Female</option><option value="non-binary">Non-binary</option><option value="prefer-not">Prefer not to say</option></select></div></div>
+                                <div><label class="block text-xs font-medium text-gray-400 mb-1">Password</label><input type="password" id="signup-password" required minlength="8" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-3 py-2 text-white focus:outline-none focus:border-chain-yellow transition" placeholder="8+ characters"></div>
+                                <button type="submit" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition">Create Account</button>
+                            </form>
+                            <div id="tfa-section" class="hidden text-center space-y-4"><div class="bg-white p-4 rounded-lg inline-block"><canvas id="qr-canvas"></canvas></div><p class="text-sm text-gray-400">Scan with your authenticator app</p><input type="text" id="tfa-code" placeholder="Enter 6-digit code" maxlength="6" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-3 text-center text-white tracking-widest font-mono text-lg focus:border-chain-yellow focus:outline-none"><button onclick="window.App.auth.verify2FA()" class="w-full bg-chain-yellow text-chain-dark font-bold py-3 rounded-lg hover:bg-yellow-400 transition">Verify</button></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feed View -->
+            <section id="feed-view" class="hidden max-w-2xl mx-auto px-4 py-4 space-y-6">
+                <!-- Stories -->
+                <div class="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
+                    <div class="flex flex-col items-center space-y-1 cursor-pointer" onclick="window.App.stories.create()">
+                        <div class="w-16 h-16 rounded-full bg-chain-dark border-2 border-dashed border-chain-yellow flex items-center justify-center hover:bg-chain-gray transition">
+                            <i class="fas fa-plus text-chain-yellow"></i>
+                        </div>
+                        <span class="text-xs text-gray-400">Add Story</span>
+                    </div>
+                    <div id="stories-container" class="flex space-x-4">
+                        <!-- Stories injected here -->
+                    </div>
+                </div>
+
+                <!-- Create Post -->
+                <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-4">
+                    <div class="flex space-x-3">
+                        <img id="current-user-avatar" src="https://i.pravatar.cc/150?img=12" class="w-10 h-10 rounded-full bg-chain-gray">
+                        <div class="flex-1">
+                            <textarea id="post-content" rows="2" class="w-full bg-chain-dark border border-chain-gray rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-chain-yellow resize-none" placeholder="What's happening?"></textarea>
+                            <div class="mt-3 flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <select id="post-font" class="bg-chain-dark border border-chain-gray rounded-lg px-3 py-1 text-xs text-gray-300 focus:outline-none focus:border-chain-yellow">
+                                        <option value="font-default">Default</option>
+                                        <option value="font-display">Display</option>
+                                        <option value="font-mono">Mono</option>
+                                        <option value="font-cursive">Cursive</option>
+                                        <option value="font-bold">Bold</option>
+                                    </select>
+                                    <button onclick="document.getElementById('post-media').click()" class="text-gray-400 hover:text-chain-yellow transition p-2"><i class="fas fa-image"></i></button>
+                                    <button onclick="window.App.posts.toggleSchedule()" class="text-gray-400 hover:text-chain-yellow transition p-2" title="Schedule"><i class="fas fa-clock"></i></button>
+                                    <input type="file" id="post-media" accept="image/*,video/*" onchange="window.App.posts.handleMediaSelect(event)">
+                                </div>
+                                <button onclick="window.App.posts.create()" class="bg-chain-yellow text-chain-dark px-6 py-2 rounded-lg font-bold hover:bg-yellow-400 transition disabled:opacity-50 disabled:cursor-not-allowed" id="post-btn">Post</button>
+                            </div>
+                            <div id="schedule-picker" class="hidden mt-3 p-3 bg-chain-dark rounded-lg border border-chain-gray">
+                                <label class="text-xs text-gray-400 block mb-1">Schedule for later:</label>
+                                <input type="datetime-local" id="post-schedule" class="bg-chain-charcoal border border-chain-gray rounded px-3 py-1 text-sm text-white">
+                            </div>
+                            <div id="media-preview" class="hidden mt-3 grid grid-cols-2 gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feed Posts -->
+                <div id="feed-posts" class="space-y-4"></div>
+            </section>
+
+            <!-- Live View -->
+            <section id="live-view" class="hidden max-w-4xl mx-auto px-4 py-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">Live Streams</h2>
+                    <button onclick="window.App.live.startStream()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition"><i class="fas fa-video"></i><span>Go Live</span></button>
+                </div>
+                
+                <!-- Subscription Tiers Info -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-4 text-center">
+                        <div class="tier-1 text-chain-dark text-xs font-bold px-2 py-1 rounded inline-block mb-2">BASIC</div>
+                        <div class="text-2xl font-bold text-white">$4.99<span class="text-sm font-normal text-gray-400">/mo</span></div>
+                        <p class="text-xs text-gray-400 mt-2">Access to standard live streams</p>
+                    </div>
+                    <div class="bg-chain-charcoal border border-chain-yellow rounded-xl p-4 text-center relative transform scale-105">
+                        <div class="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-chain-yellow text-chain-dark text-xs font-bold px-3 py-1 rounded-full">POPULAR</div>
+                        <div class="tier-2 text-chain-dark text-xs font-bold px-2 py-1 rounded inline-block mb-2">PRO</div>
+                        <div class="text-2xl font-bold text-white">$9.99<span class="text-sm font-normal text-gray-400">/mo</span></div>
+                        <p class="text-xs text-gray-400 mt-2">HD streams + Exclusive content</p>
+                    </div>
+                    <div class="bg-chain-charcoal border border-chain-gray rounded-xl p-4 text-center">
+                        <div class="tier-3 text-chain-dark text-xs font-bold px-2 py-1 rounded inline-block mb-2">VIP</div>
+                        <div class="text-2xl font-bold text-white">$19.99<span class="text-sm font-normal text-gray-400">/mo</span></div>
+                        <p class="text-xs text-gray-400 mt-2">4K streams + 1-on-1 sessions</p>
+                    </div>
+                </div>
+
+                <div id="live-streams" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </section>
+
+            <!-- Messages View -->
+            <section id="messages-view" class="hidden max-w-4xl mx-auto h-[calc(100vh-80px)]">
+                <div class="flex h-full border border-chain-gray rounded-xl overflow-hidden bg-chain-charcoal">
+                    <!-- Conversations List -->
+                    <div class="w-full md:w-1/3 border-r border-chain-gray flex flex-col">
+                        <div class="p-4 border-b border-chain-gray">
+                            <h3 class="font-bold text-lg">Messages</h3>
+                        </div>
+                        <div id="conversations-list" class="flex-1 overflow-y-auto"></div>
+                    </div>
+                    <!-- Chat Area -->
+                    <div id="chat-area" class="hidden md:flex md:w-2/3 flex-col">
+                        <div id="chat-header" class="p-4 border-b border-chain-gray flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <img id="chat-avatar" src="" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <div id="chat-name" class="font-bold"></div>
+                                    <div id="chat-status" class="text-xs text-green-400">Online</div>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-white"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                        <div id="messages-list" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+                        <div class="p-4 border-t border-chain-gray">
+                            <div class="flex space-x-2">
+                                <input type="text" id="message-input" class="flex-1 bg-chain-dark border border-chain-gray rounded-full px-4 py-2 text-white focus:outline-none focus:border-chain-yellow" placeholder="Type a message..." onkeypress="if(event.key==='Enter') window.App.messages.send()">
+                                <button onclick="window.App.messages.send()" class="bg-chain-yellow text-chain-dark w-10 h-10 rounded-full flex items-center justify-center hover:bg-yellow-400 transition"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="no-chat-selected" class="hidden md:flex md:w-2/3 items-center justify-center text-gray-500">
+                        <div class="text-center"><i class="fas fa-comments text-4xl mb-2"></i><p>Select a conversation</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile View -->
+            <section id="profile-view" class="hidden max-w-4xl mx-auto px-4 py-6">
+                <div class="bg-chain-charcoal border border-chain-gray rounded-xl overflow-hidden">
+                    <!-- Cover Image -->
+                    <div class="h-48 bg-gradient-to-r from-chain-dark to-chain-gray relative">
+                        <img id="profile-cover" src="" class="w-full h-full object-cover opacity-50">
+                        <button onclick="document.getElementById('cover-input').click()" class="absolute bottom-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition"><i class="fas fa-camera"></i></button>
+                        <input type="file" id="cover-input" class="hidden" accept="image/*">
+                    </div>
+                    
+                    <div class="px-6 pb-6 relative">
+                        <!-- Avatar -->
+                        <div class="relative -mt-16 mb-4 inline-block">
+                            <div class="story-ring p-1 rounded-full">
+                                <img id="profile-avatar" src="" class="w-32 h-32 rounded-full border-4 bordd
+ . 
+er-chain-charcoal bg-chain-gray">
+                            </div>
+                            <button onclick="document.getElementById('avatar-input').click()" class="absolute bottom-0 right-0 bg-chain-yellow text-chain-dark p-2 rounded-full hover:bg-yellow-400 transition"><i class="fas fa-camera"></i></button>
+                            <input type="file" id="avatar-input" class="hidden" accept="image/*">
+                        </div>
+
+                        <!-- Profile Info -->
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
+                            <div>
+                                <h2 id="profile-name" class="text-2xl font-bold text-white"></h2>
+                                <p id="profile-username" class="text-gray-400"></p>
+                                <p id="profile-bio" class="mt-2 text-gray-300 max-w-lg"></p>
+                                
+                                <!-- Spotify Widget -->
+                                <div id="spotify-widget" class="mt-3 flex items-center space-x-2 text-sm text-green-400 hidden">
+                                    <i class="fab fa-spotify"></i>
+                                    <span id="spotify-track">Listening to...</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 md:mt-0 flex space-x-2">
+                                <button onclick="window.App.profile.toggleEdit()" class="px-4 py-2 border border-chain-gray rounded-lg hover:bg-chain-gray transition text-sm font-medium">Edit Profile</button>
+                                <button onclick="window.App.profile.toggleSpotify()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition text-sm font-medium flex items-center space-x-1"><i class="fab fa-spotify"></i><span>Connect Spotify</span></button>
+                            </div>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="grid grid-cols-4 gap-4 py-4 border-y border-chain-gray mb-6">
+                            <div class="text-center"><div id="profile-posts" class="text-xl font-bold text-white">0</div><div class="text-xs text-gray-400">Posts</div></div>
+                            <div class="text-center"><div id="profile-followers" class="text-xl font-bold text-white">0</div><div class="text-xs text-gray-400">Followers</div></div>
+                            <div class="text-center"><div id="profile-following" class="text-xl font-bold text-white">0</div><div class="text-xs text-gray-400">Following</div></div>
+                            <div class="text-center"><div id="profile-subscribers" class="text-xl font-bold text-white">0</div><div class="text-xs text-gray-400">Subscribers</div></div>
+                        </div>
+
+                        <!-- Tabs -->
+                        <div class="flex space-x-6 border-b border-chain-gray mb-6">
+                            <button class="pb-2 border-b-2 border-chain-yellow text-white font-medium">Posts</button>
+                            <button class="pb-2 border-b-2 border-transparent text-gray-400 hover:text-white">Media</button>
+                            <button class="pb-2 border-b-2 border-transparent text-gray-400 hover:text-white">Likes</button>
+                        </div>
+
+                        <div id="profile-posts-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Story Viewer Modal -->
+    <div id="story-modal" class="hidden fixed inset-0 bg-black z-50 flex items-center justify-center">
+        <button onclick="window.App.stories.close()" class="absolute top-4 right-4 text-white text-2xl z-10"><i class="fas fa-times"></i></button>
+        <div class="max-w-md w-full h-full md:h-auto md:aspect-[9/16] bg-chain-charcoal relative">
+            <img id="story-image" src="" class="w-full h-full object-cover">
+            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                <p id="story-caption" class="text-white text-lg"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Modal -->
+    <div id="comments-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="bg-chain-charcoal w-full max-w-lg rounded-t-xl md:rounded-xl max-h-[80vh] flex flex-col">
+            <div class="p-4 border-b border-chain-gray flex justify-between items-center">
+                <h3 class="font-bold">Comments</h3>
+                <button onclick="window.App.comments.close()" class="text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="comments-list" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+            <div class="p-4 border-t border-chain-gray">
+                <div class="flex space-x-2">
+                    <input type="text" id="comment-input" class="flex-1 bg-chain-dark border border-chain-gray rounded-full px-4 py-2 text-white focus:outline-none focus:border-chain-yellow" placeholder="Add a comment..." onkeypress="if(event.key==='Enter') window.App.comments.add()">
+                    <button onclick="window.App.comments.add()" class="text-chain-yellow font-medium px-4">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo Data
+        const demoUsers = [
+            { id: 1, username: 'alex_design', first_name: 'Alex', last_name: 'Chen', avatar: 'https://i.pravatar.cc/150?img=11', bio: 'Digital artist & creator 🎨', theme: 'pastel-blue', followers: 1234, following: 567, subscribers: 89 },
+            { id: 2, username: 'sarah_music', first_name: 'Sarah', last_name: 'Johnson', avatar: 'https://i.pravatar.cc/150?img=5', bio: 'Musician | Producer 🎵', theme: 'pastel-pink', followers: 3456, following: 234, subscribers: 234 },
+            { id: 3, username: 'tech_mike', first_name: 'Mike', last_name: 'Ross', avatar: 'https://i.pravatar.cc/150?img=3', bio: 'Tech reviewer 📱', theme: 'pastel-green', followers: 890, following: 123, subscribers: 45 },
+            { id: 4, username: 'emma_travels', first_name: 'Emma', last_name: 'Wilson', avatar: 'https://i.pravatar.cc/150?img=9', bio: 'Travel blogger ✈️', theme: 'pastel-purple', followers: 5678, following: 890, subscribers: 567 }
+        ];
+
+        const demoPosts = [
+            { id: 1, user_id: 1, content: 'Just finished this new design! What do you think? 🎨', font_style: 'font-default', created_at: new Date(Date.now() - 3600000).toISOString(), media: ['https://picsum.photos/seed/art1/600/400'], reactions: { love: 12, like: 34, dislike: 2, repeat: 8 }, comments: [{ user: demoUsers[1], text: 'Amazing work! 🔥', time: '30m ago' }] },
+            { id: 2, user_id: 2, content: 'New track dropping tonight! Stay tuned 🎵', font_style: 'font-cursive', created_at: new Date(Date.now() - 7200000).toISOString(), media: [], reactions: { love: 45, like: 67, dislike: 0, repeat: 23 }, comments: [] },
+            { id: 3, user_id: 3, content: 'Reviewing the latest gadget... spoiler: it\'s fast! ⚡', font_style: 'font-mono', created_at: new Date(Date.now() - 10800000).toISOString(), media: ['https://picsum.photos/seed/tech1/600/400'], reactions: { love: 8, like: 45, dislike: 3, repeat: 12 }, comments: [{ user: demoUsers[0], text: 'Can\'t wait for the full review!', time: '1h ago' }] },
+            { id: 4, user_id: 4, content: 'Sunset in Bali 🌅 https://youtube.com/watch?v=demo', font_style: 'font-display', created_at: new Date(Date.now() - 14400000).toISOString(), media: [], link_preview: { type: 'youtube', url: 'https://youtube.com/watch?v=demo', title: 'Bali Travel Guide 2024', image: 'https://picsum.photos/seed/bali/400/300' }, reactions: { love: 89, like: 123, dislike: 1, repeat: 45 }, comments: [] }
+        ];
+
+        const demoStories = [
+            { id: 1, user: demoUsers[0], image: 'https://picsum.photos/seed/story1/400/800', caption: 'Studio vibes 🎨' },
+            { id: 2, user: demoUsers[1], image: 'https://picsum.photos/seed/story2/400/800', caption: 'Behind the scenes 🎵' },
+            { id: 3, user: demoUsers[3], image: 'https://picsum.photos/seed/story3/400/800', caption: 'Paradise found 🌴' }
+        ];
+
+        const demoStreams = [
+            { id: 1, user: demoUsers[1], title: 'Live Music Production', viewers: 234, tier: 'pro', thumbnail: 'https://picsum.photos/seed/live1/600/400' },
+            { id: 2, user: demoUsers[3], title: 'Q&A from Bali', viewers: 567, tier: 'basic', thumbnail: 'https://picsum.photos/seed/live2/600/400' },
+            { id: 3, user: demoUsers[2], title: 'Tech Review Live', viewers: 123, tier: 'vip', thumbnail: 'https://picsum.photos/seed/live3/600/400' }
+        ];
+
+        const demoConversations = [
+            { id: 1, user: demoUsers[0], last_message: 'Hey! Love your latest post 🔥', unread: 2, time: '2m ago' },
+            { id: 2, user: demoUsers[1], last_message: 'Thanks for the support!', unread: 0, time: '1h ago' },
+            { id: 3, user: demoUsers[2], last_message: 'Check out this new tech', unread: 1, time: '3h ago' }
+        ];
+
+        // App State
+        const App = {
+            isDemo: false,
+            currentUser: null,
+            currentView: 'auth',
+            selectedPost: null,
+            activeChat: null,
+            
+            init() {
+                this.updateDailyQuote();
+                document.body.classList.remove('hidden-until-load');
+                
+                // AUTO-ACTIVATE DEMO MODE for mychainlink.ca visitors
+                // Comment out the next line if you want to require manual activation
+                setTimeout(() => this.demoMode.activate(), 500);
+                
+                // Check for saved session (real auth)
+                const saved = localStorage.getItem('chainlink_user');
+                if (saved && !this.isDemo) {
+                    this.currentUser = JSON.parse(saved);
+                    this.showMainApp();
+                }
+            },
+
+            updateDailyQuote() {
+                const quotes = [
+                    "The future belongs to those who believe in the beauty of their dreams.",
+                    "Create your own sunshine.",
+                    "Every moment is a fresh beginning.",
+                    "Simplicity is the ultimate sophistication.",
+                    "Everything you can imagine is real."
+                ];
+                document.getElementById('daily-quote').textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+            },
+
+            demoMode: {
+                activate() {
+                    if (App.isDemo) return;
+                    App.isDemo = true;
+                    App.currentUser = { ...demoUsers[0], email: 'demo@chainlink.app' };
+                    document.body.classList.add('demo-active');
+                    document.getElementById('demo-banner').classList.remove('hidden');
+                    document.getElementById('nav-demo-badge').classList.remove('hidden');
+                    App.showMainApp();
+                    App.feed.load();
+                },
+                
+                toggle() {
+                    if (App.isDemo) {
+                        App.isDemo = false;
+                        App.currentUser = null;
+                        document.body.classList.remove('demo-active');
+                        document.getElementById('demo-banner').classList.add('hidden');
+                        document.getElementById('nav-demo-badge').classList.add('hidden');
+                        localStorage.removeItem('chainlink_user');
+                        App.router.navigate('auth');
+                        // Show demo signup prompt again
+                        document.getElementById('demo-signup-prompt').classList.remove('hidden');
+                        document.getElementById('login-form').classList.add('hidden');
+                    } else {
+                        this.activate();
+                    }
+                }
+            },
+
+            auth: {
+                showRealLogin() {
+                    document.getElementById('real-auth-container').classList.remove('hidden');
+                    document.getElementById('demo-signup-prompt').classList.add('hidden');
+                },
+
+                adminLogin() {
+                    // Secret admin access - replace with real validation later
+                    const email = document.getElementById('admin-email').value;
+                    const pass = document.getElementById('admin-password').value;
+                    
+                    if (email && pass) {
+                        App.currentUser = {
+                            id: 999,
+                            email: email,
+                            username: 'admin',
+                            first_name: 'Admin',
+                            last_name: 'User',
+                            avatar: 'https://i.pravatar.cc/150?img=12',
+                            bio: 'System Administrator',
+                            followers: 0,
+                            following: 0,
+                            subscribers: 0
+                        };
+                        localStorage.setItem('chainlink_user', JSON.stringify(App.currentUser));
+                        App.isDemo = false;
+                        document.body.classList.remove('demo-active');
+                        document.getElementById('demo-banner').classList.add('hidden');
+                        App.showMainApp();
+                    }
+                },
+
+                toggleAuthMode() {
+                    const loginForm = document.getElementById('login-form');
+                    const signupForm = document.getElementById('signup-form');
+                    const toggle = document.getElementById('auth-toggle');
+                    
+                    if (loginForm.classList.contains('hidden')) {
+                        loginForm.classList.remove('hidden');
+                        signupForm.classList.add('hidden');
+                        toggle.textContent = "Don't have an account? Sign up";
+                        document.getElementById('auth-subtitle').textContent = "Link up with your friends";
+                    } else {
+                        loginForm.classList.add('hidden');
+                        signupForm.classList.remove('hidden');
+                        toggle.textContent = "Already have an account? Sign in";
+                        document.getElementById('auth-subtitle').textContent = "Join for free today";
+                    }
+                },
+
+                togglePassword(id) {
+                    const input = document.getElementById(id);
+                    input.type = input.type === 'password' ? 'text' : 'password';
+                },
+
+                handleLogin(e) {
+                    e.preventDefault();
+                    App.currentUser = {
+                        id: 999,
+                        email: document.getElementById('login-email').value,
+                        username: 'current_user',
+                        first_name: 'Current',
+                        last_name: 'User',
+                        avatar: 'https://i.pravatar.cc/150?img=12',
+                        bio: 'New to CHAIN⛓️Link',
+                        followers: 0,
+                        following: 0,
+                        subscribers: 0
+                    };
+                    localStorage.setItem('chainlink_user', JSON.stringify(App.currentUser));
+                    App.showMainApp();
+                },
+
+                handleSignup(e) {
+                    e.preventDefault();
+                    document.getElementById('signup-form').classList.add('hidden');
+                    document.getElementById('social-auth')?.classList.add('hidden');
+                    document.getElementById('auth-toggle')?.classList.add('hidden');
+                    document.getElementById('tfa-section').classList.remove('hidden');
+                    
+                    const canvas = document.getElementById('qr-canvas');
+                    QRCode.toCanvas(canvas, 'otpauth://totp/CHAINLink:demo?secret=DEMO123456&issuer=CHAINLink', { width: 150 });
+                },
+
+                verify2FA() {
+                    const code = document.getElementById('tfa-code').value;
+                    if (code.length === 6) {
+                        App.currentUser = {
+                            id: 999,
+                            email: document.getElementById('signup-email').value,
+                            username: document.getElementById('signup-username').value,
+                            first_name: document.getElementById('signup-firstname').value,
+                            last_name: document.getElementById('signup-lastname').value,
+                            avatar: 'https://i.pravatar.cc/150?img=12',
+                            bio: '',
+                            followers: 0,
+                            following: 0,
+                            subscribers: 0
+                        };
+                        localStorage.setItem('chainlink_user', JSON.stringify(App.currentUser));
+                        App.showMainApp();
+                    }
+                },
+
+                socialLogin(provider) {
+                    App.currentUser = {
+                        id: 998,
+                        email: `demo@${provider}.com`,
+                        username: `${provider}_user`,
+                        first_name: provider.charAt(0).toUpperCase() + provider.slice(1),
+                        last_name: 'User',
+                        avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 20)}`,
+                        bio: `Logged in with ${provider}`,
+                        followers: 100,
+                        following: 50,
+                        subscribers: 10
+                    };
+                    localStorage.setItem('chainlink_user', JSON.stringify(App.currentUser));
+                    App.showMainApp();
+                },
+
+                logout() {
+                    App.currentUser = null;
+                    App.isDemo = false;
+                    localStorage.removeItem('chainlink_user');
+                    document.body.classList.remove('demo-active');
+                    document.getElementById('demo-banner').classList.add('hidden');
+                    App.router.navigate('auth');
+                }
+            },
+
+            showMainApp() {
+                document.getElementById('auth-view').classList.add('hidden');
+                document.getElementById('main-nav').classList.remove('hidden');
+                App.router.navigate('feed');
+                App.profile.load();
+            },
+
+            router: {
+                navigate(view) {
+                    ['auth', 'feed', 'live', 'messages', 'profile'].forEach(v => {
+                        document.getElementById(`${v}-view`).classList.add('hidden');
+                    });
+                    
+                    document.getElementById(`${view}-view`).classList.remove('hidden');
+                    App.currentView = view;
+                    
+                    document.querySelectorAll('.nav-btn').forEach(btn => {
+                        if (btn.dataset.view === view) {
+                            btn.classList.add('text-chain-yellow');
+                            btn.classList.remove('text-gray-400');
+                        } else {
+                            btn.classList.remove('text-chain-yellow');
+                            btn.classList.add('text-gray-400');
+                        }
+                    });
+
+                    if (view === 'feed') App.feed.load();
+                    if (view === 'live') App.live.load();
+                    if (view === 'messages') App.messages.load();
+                    if (view === 'profile') App.profile.load();
+                }
+            },
+
+            feed: {
+                load() {
+                    const container = document.getElementById('feed-posts');
+                    container.innerHTML = '';
+                    
+                    const posts = App.isDemo ? demoPosts : [];
+                    posts.forEach(post => {
+                        const user = demoUsers.find(u => u.id === post.user_id) || App.currentUser;
+                        const postEl = App.feed.createPostElement(post, user);
+                        container.appendChild(postEl);
+                    });
+
+                    App.stories.load();
+                    if (App.currentUser) {
+                        document.getElementById('current-user-avatar').src = App.currentUser.avatar;
+                    }
+                },
+
+                createPostElement(post, user) {
+                    const div = document.createElement('div');
+                    div.className = 'bg-chain-charcoal border border-chain-gray rounded-xl p-4 post-card animate-fade-in';
+                    
+                    const timeAgo = App.utils.timeAgo(post.created_at);
+                    const fontClass = post.font_style || 'font-default';
+                    
+                    let mediaHtml = '';
+                    if (post.media && post.media.length > 0) {
+                        mediaHtml = `<div class="mt-3 grid grid-cols-1 gap-2 rounded-xl overflow-hidden">
+                            ${post.media.map(m => `<img src="${m}" class="w-full h-64 object-cover hover:opacity-95 transition cursor-pointer" onclick="window.open('${m}')">`).join('')}
+                        </div>`;
+                    }
+                    
+                    let linkPreviewHtml = '';
+                    if (post.link_preview) {
+                        if (post.link_preview.type === 'youtube') {
+                            linkPreviewHtml = `
+                                <div class="youtube-preview" onclick="window.open('${post.link_preview.url}')">
+                                    <img src="${post.link_preview.image}" alt="YouTube">
+                                    <div class="youtube-play"><i class="fas fa-play"></i></div>
+                                </div>`;
+                        } else {
+                            linkPreviewHtml = `
+                                <div class="link-preview" onclick="window.open('${post.link_preview.url}')">
+                                    <img src="${post.link_preview.image}" class="link-preview-image" alt="Link">
+                                    <div class="link-preview-content">
+                                        <div class="link-preview-domain"><i class="fas fa-link"></i> ${new URL(post.link_preview.url).hostname}</div>
+                                        <div class="link-preview-title">${post.link_preview.title}</div>
+                                    </div>
+                                </div>`;
+                        }
+                    }
+
+                    div.innerHTML = `
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.App.router.navigate('profile')">
+                                <img src="${user.avatar}" class="w-10 h-10 rounded-full bg-chain-gray">
+                                <div>
+                                    <div class="font-bold text-white">${user.first_name} ${user.last_name}</div>
+                                    <div class="text-xs text-gray-400">@${user.username} · ${timeAgo}</div>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-white"><i class="fas fa-ellipsis-h"></i></button>
+                        </div>
+                        <div class="${fontClass} text-white text-lg mb-2">${App.utils.formatLinks(post.content)}</div>
+                        ${mediaHtml}
+                        ${linkPreviewHtml}
+                        <div class="flex items-center justify-between mt-4 pt-3 border-t border-chain-gray">
+                            <div class="flex space-x-4">
+                                <button onclick="window.App.reactions.toggle(${post.id}, 'love')" class="flex items-center space-x-1 text-gray-400 hover:text-red-400 transition group">
+                                    <i class="fas fa-heart group-hover:scale-110 transition"></i>
+                                    <span class="text-sm">${post.reactions.love || 0}</span>
+                                </button>
+                                <button onclick="window.App.reactions.toggle(${post.id}, 'like')" class="flex items-center space-x-1 text-gray-400 hover:text-chain-yellow transition group">
+                                    <i class="fas fa-thumbs-up group-hover:scale-110 transition"></i>
+                                    <span class="text-sm">${post.reactions.like || 0}</span>
+                                </button>
+                                <button onclick="window.App.reactions.toggle(${post.id}, 'dislike')" class="flex items-center space-x-1 text-gray-400 hover:text-blue-400 transition group">
+                                    <i class="fas fa-thumbs-down group-hover:scale-110 transition"></i>
+                                    <span class="text-sm">${post.reactions.dislike || 0}</span>
+                                </button>
+                                <button onclick="window.App.reactions.toggle(${post.id}, 'repeat')" class="flex items-center space-x-1 text-gray-400 hover:text-green-400 transition group">
+                                    <i class="fas fa-retweet group-hover:scale-110 transition"></i>
+                                    <span class="text-sm">${post.reactions.repeat || 0}</span>
+                                </button>
+                            </div>
+                            <button onclick="window.App.comments.open(${post.id})" class="flex items-center space-x-1 text-gray-400 hover:text-chain-yellow transition">
+                                <i class="fas fa-comment"></i>
+                                <span class="text-sm">${post.comments.length || 0}</span>
+                            </button>
+                        </div>
+                    `;
+                    return div;
+                }
+            },
+
+            posts: {
+                toggleSchedule() {
+                    document.getElementById('schedule-picker').classList.toggle('hidden');
+                },
+
+                handleMediaSelect(e) {
+                    const files = e.target.files;
+                    const preview = document.getElementById('media-preview');
+                    preview.innerHTML = '';
+                    preview.classList.remove('hidden');
+                    
+                    Array.from(files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const div = document.createElement('div');
+                            div.className = 'relative aspect-square rounded-lg overflow-hidden bg-chain-dark';
+                            div.innerHTML = `
+                                <img src="${e.target.result}" class="w-full h-full object-cover">
+                                <button onclick="this.parentElement.remove()" class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-times"></i></button>
+                            `;
+                            preview.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                },
+
+                create() {
+                    const content = document.getElementById('post-content').value;
+                    if (!content.trim()) return;
+                    
+                    const fontStyle = document.getElementById('post-font').value;
+                    const schedule = document.getElementById('post-schedule').value;
+                    
+                    if (schedule && new Date(schedule) > new Date()) {
+                        alert(`Post scheduled for ${new Date(schedule).toLocaleString()}`);
+                    } else {
+                        const newPost = {
+                            id: Date.now(),
+                            user_id: App.currentUser.id,
+                            content: content,
+                            font_style: fontStyle,
+                            created_at: new Date().toISOString(),
+                            media: [],
+                            reactions: { love: 0, like: 0, dislike: 0, repeat: 0 },
+                            comments: []
+                        };
+                        
+                        if (App.isDemo) {
+                            demoPosts.unshift(newPost);
+                            App.feed.load();
+                        }
+                    }
+                    
+                    document.getElementById('post-content').value = '';
+                    document.getElementById('media-preview').innerHTML = '';
+                    document.getElementById('media-preview').classList.add('hidden');
+                    document.getElementById('schedule-picker').classList.add('hidden');
+                }
+            },
+
+            stories: {
+                load() {
+                    const container = document.getElementById('stories-container');
+                    container.innerHTML = '';
+                    
+                    const stories = App.isDemo ? demoStories : [];
+                    stories.forEach(story => {
+                        const div = document.createElement('div');
+                        div.className = 'flex flex-col items-center space-y-1 cursor-pointer flex-shrink-0';
+                        div.onclick = () => App.stories.view(story);
+                        div.innerHTML = `
+                            <div class="story-ring rounded-full p-[2px]">
+                                <img src="${story.user.avatar}" class="w-14 h-14 rounded-full border-2 border-chain-charcoal">
+                            </div>
+                            <span class="text-xs text-gray-400 truncate w-16 text-center">${story.user.first_name}</span>
+                        `;
+                        container.appendChild(div);
+                    });
+                },
+
+                view(story) {
+                    document.getElementById('story-image').src = story.image;
+                    document.getElementById('story-caption').textContent = story.caption;
+                    document.getElementById('story-modal').classList.remove('hidden');
+                    setTimeout(() => App.stories.close(), 5000);
+                },
+
+                close() {
+                    document.getElementById('story-modal').classList.add('hidden');
+                },
+
+                create() {
+                    alert('Story creation would open camera/file picker');
+                }
+            },
+
+            reactions: {
+                toggle(postId, type) {
+                    if (!App.isDemo) return;
+                    const post = demoPosts.find(p => p.id === postId);
+                    if (post) {
+                        post.reactions[type]++;
+                        App.feed.load();
+                    }
+                }
+            },
+
+            comments: {
+                open(postId) {
+                    App.selectedPost = postId;
+                    const post = demoPosts.find(p => p.id === postId);
+                    const list = document.getElementById('comments-list');
+                    list.innerHTML = '';
+                    
+                    if (post && post.comments) {
+                        post.comments.forEach(comment => {
+                            const div = document.createElement('div');
+                            div.className = 'flex space-x-3';
+                            div.innerHTML = `
+                                <img src="${comment.user.avatar}" class="w-8 h-8 rounded-full">
+                                <div class="flex-1 bg-chain-dark rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-bold text-sm">${comment.user.first_name} ${comment.user.last_name}</span>
+                                        <span class="text-xs text-gray-500">${comment.time}</span>
+                                    </div>
+                                    <p class="text-sm text-gray-300">${comment.text}</p>
+                                </div>
+                            `;
+                            list.appendChild(div);
+                        });
+                    }
+                    
+                    document.getElementById('comments-modal').classList.remove('hidden');
+                },
+
+                close() {
+                    document.getElementById('comments-modal').classList.add('hidden');
+                    App.selectedPost = null;
+                },
+
+                add() {
+                    const input = document.getElementById('comment-input');
+                    const text = input.value.trim();
+                    if (!text || !App.selectedPost) return;
+                    
+                    const post = demoPosts.find(p => p.id === App.selectedPost);
+                    if (post) {
+                        post.comments.push({
+                            user: App.currentUser,
+                            text: text,
+                            time: 'Just now'
+                        });
+                        input.value = '';
+                        this.open(App.selectedPost);
+                        App.feed.load();
+                    }
+                }
+            },
+
+            live: {
+                load() {
+                    const container = document.getElementById('live-streams');
+                    container.innerHTML = '';
+                    
+                    const streams = App.isDemo ? demoStreams : [];
+                    streams.forEach(stream => {
+                        const div = document.createElement('div');
+                        div.className = 'relative rounded-xl overflow-hidden cursor-pointer group';
+                        div.onclick = () => App.live.join(stream);
+                        div.innerHTML = `
+                            <img src="${stream.thumbnail}" class="w-full aspect-video object-cover group-hover:scale-105 transition duration-300">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                            <div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded flex items-center space-x-1">
+                                <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                                <span>LIVE</span>
+                            </div>
+                            <div class="absolute top-3 right-3">
+                                <span class="tier-${stream.tier === 'basic' ? '1' : stream.tier === 'pro' ? '2' : '3'} text-chain-dark text-xs font-bold px-2 py-1 rounded uppercase">${stream.tier}</span>
+                            </div>
+                            <div class="absolute bottom-0 left-0 right-0 p-4">
+                                <h3 class="font-bold text-white mb-1">${stream.title}</h3>
+                                <div class="flex items-center justify-between text-sm text-gray-300">
+                                    <div class="flex items-center space-x-2">
+                                        <img src="${stream.user.avatar}" class="w-6 h-6 rounded-full">
+                                        <span>${stream.user.first_name} ${stream.user.last_name}</span>
+                                    </div>
+                                    <div class="flex items-center space-x-1">
+                                        <i class="fas fa-user text-xs"></i>
+                                        <span>${stream.viewers}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                },
+
+                startStream() {
+                    alert('Live streaming would start here. Requires camera permissions.');
+                },
+
+                join(stream) {
+                    alert(`Joining ${stream.user.first_name}'s ${stream.tier} stream...`);
+                }
+            },
+
+            messages: {
+                load() {
+                    const list = document.getElementById('conversations-list');
+                    list.innerHTML = '';
+                    
+                    const convos = App.isDemo ? demoConversations : [];
+                    convos.forEach(convo => {
+                        const div = document.createElement('div');
+                        div.className = 'flex items-center space-x-3 p-4 hover:bg-chain-dark cursor-pointer transition border-b border-chain-gray last:border-0';
+                        div.onclick = () => App.messages.openChat(convo);
+                        div.innerHTML = `
+                            <div class="relative">
+                                <img src="${convo.user.avatar}" class="w-12 h-12 rounded-full">
+                                ${convo.unread > 0 ? `<span class="absolute -top-1 -right-1 w-4 h-4 bg-chain-yellow text-chain-dark text-xs rounded-full flex items-center justify-center font-bold">${convo.unread}</span>` : ''}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-baseline mb-1">
+                                    <h4 class="font-bold text-white truncate">${convo.user.first_name} ${convo.user.last_name}</h4>
+                                    <span class="text-xs text-gray-500">${convo.time}</span>
+                                </div>
+                                <p class="text-sm text-gray-400 truncate">${convo.last_message}</p>
+                            </div>
+                        `;
+                        list.appendChild(div);
+                    });
+                },
+
+                openChat(convo) {
+                    App.activeChat = convo;
+                    document.getElementById('no-chat-selected').classList.add('hidden');
+                    document.getElementById('chat-area').classList.remove('hidden');
+                    
+                    document.getElementById('chat-avatar').src = convo.user.avatar;
+                    document.getElementById('chat-name').textContent = `${convo.user.first_name} ${convo.user.last_name}`;
+                    
+                    const list = document.getElementById('messages-list');
+                    list.innerHTML = '';
+                    
+                    const messages = [
+                        { sender: 'them', text: 'Hey! How are you?', time: '2:30 PM' },
+                        { sender: 'me', text: 'Doing great! Just working on some new designs.', time: '2:32 PM' },
+                        { sender: 'them', text: convo.last_message, time: convo.time }
+                    ];
+                    
+                    messages.forEach(msg => {
+                        const div = document.createElement('div');
+                        div.className = `flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`;
+                        div.innerHTML = `
+                            <div class="${msg.sender === 'me' ? 'bg-chain-yellow text-chain-dark' : 'bg-chain-dark text-white'} rounded-2xl px-4 py-2 max-w-[70%]">
+                                <p>${msg.text}</p>
+                                <span class="text-xs opacity-70 block mt-1">${msg.time}</span>
+                            </div>
+                        `;
+                        list.appendChild(div);
+                    });
+                    
+                    list.scrollTop = list.scrollHeight;
+                },
+
+                send() {
+                    const input = document.getElementById('message-input');
+                    const text = input.value.trim();
+                    if (!text) return;
+                    
+                    const list = document.getElementById('messages-list');
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-end animate-slide-up';
+                    div.innerHTML = `
+                        <div class="bg-chain-yellow text-chain-dark rounded-2xl px-4 py-2 max-w-[70%]">
+                            <p>${App.utils.formatLinks(text)}</p>
+                            <span class="text-xs opacity-70 block mt-1">Just now</span>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                    list.scrollTop = list.scrollHeight;
+                    input.value = '';
+                }
+            },
+
+            profile: {
+                load() {
+                    if (!App.currentUser) return;
+                    
+                    document.getElementById('profile-name').textContent = `${App.currentUser.first_name} ${App.currentUser.last_name}`;
+                    document.getElementById('profile-username').textContent = `@${App.currentUser.username}`;
+                    document.getElementById('profile-bio').textContent = App.currentUser.bio || 'No bio yet';
+                    document.getElementById('profile-avatar').src = App.currentUser.avatar;
+                    
+                    document.getElementById('profile-posts').textContent = App.isDemo ? demoPosts.filter(p => p.user_id === App.currentUser.id).length : 0;
+                    document.getElementById('profile-followers').textContent = App.currentUser.followers || 0;
+                    document.getElementById('profile-following').textContent = App.currentUser.following || 0;
+                    document.getElementById('profile-subscribers').textContent = App.currentUser.subscribers || 0;
+                    
+                    const grid = document.getElementById('profile-posts-grid');
+                    grid.innerHTML = '';
+                    
+                    const userPosts = App.isDemo ? demoPosts.filter(p => p.user_id === App.currentUser.id) : [];
+                    userPosts.forEach(post => {
+                        const div = document.createElement('div');
+                        div.className = 'bg-chain-dark border border-chain-gray rounded-lg p-4';
+                        div.innerHTML = `
+                            <p class="${post.font_style} text-white mb-2">${post.content}</p>
+                            ${post.media.length ? `<img src="${post.media[0]}" class="w-full h-48 object-cover rounded-lg mt-2">` : ''}
+                            <div class="flex items-center space-x-4 mt-3 text-sm text-gray-400">
+                                <span><i class="fas fa-heart text-red-400 mr-1"></i> ${post.reactions.love}</span>
+                                <span><i class="fas fa-comment mr-1"></i> ${post.comments.length}</span>
+                            </div>
+                        `;
+                        grid.appendChild(div);
+                    });
+                },
+
+                toggleEdit() {
+                    alert('Edit Profile - Coming Soon\n\nFull version includes:\n- Profile/cover photo upload\n- Bio editing\n- Theme selection\n- Username changes');
+                },
+
+                toggleSpotify() {
+                    const widget = document.getElementById('spotify-widget');
+                    if (widget.classList.contains('hidden')) {
+                        widget.classList.remove('hidden');
+                        document.getElementById('spotify-track').textContent = '🎵 Currently vibing to: Midnight City - M83';
+                    } else {
+                        widget.classList.add('hidden');
+                    }
+                }
+            },
+
+            utils: {
+                timeAgo(date) {
+                    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+                    if (seconds < 60) return 'Just now';
+                    const minutes = Math.floor(seconds / 60);
+                    if (minutes < 60) return `${minutes}m ago`;
+                    const hours = Math.floor(minutes / 60);
+                    if (hours < 24) return `${hours}h ago`;
+                    const days = Math.floor(hours / 24);
+                    return `${days}d ago`;
+                },
+
+                formatLinks(text) {
+                    const urlRegex = /(https?:\/\/[^\s]+)/g;
+                    return text.replace(urlRegex, url => `<a href="${url}" target="_blank" class="message-link">${url}</a>`);
+                }
+            }
+        };
+
+        window.App = App;
+        document.addEventListener('DOMContentLoaded', () => App.init());
+    </script>
+</body>
+</html>
+
