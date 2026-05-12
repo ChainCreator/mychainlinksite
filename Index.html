@@ -1,217 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#000000">
-    <title>CHAIN🔗Link</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CHAIN ⛓️‍💥 Link</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* CSS Variables from Html safe.pdf and Index.html.pdf */
         :root {
-            --primary: #d4c76a;
-            --primary-hover: #c4b75a;
-            --accent: #e8d88a;
-            --danger: #e0245e;
-            --success: #17bf63;
-            --bg: #0d0d0d;
-            --bg-card: #1a1a1a;
-            --bg-tertiary: #222222;
-            --text: #e7e9ea;
-            --text-secondary: #71767b;
-            --border: #333333;
+            --bg-primary: #000000;
+            --bg-secondary: #121212;
+            --bg-tertiary: #1A1A1A;
+            --gold-gradient: linear-gradient(135deg, #FCD34D 0%, #FDE68A 50%, #D4A574 100%);
+            --gold-primary: #FCD34D;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3A3A3;
+            --border: #262626;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            --shadow-gold: 0 0 20px rgba(252, 211, 77, 0.3);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             margin: 0;
-            overflow-x: hidden;
+            line-height: 1.5;
         }
 
-        /* Glassmorphism Auth Screen */
-        .auth-container {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
-            padding: 20px;
+        /* Header Styling */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 60px; background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+            z-index: 1000; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px;
         }
 
-        .auth-card {
-            background: rgba(26, 26, 26, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .logo { font-size: 3rem; margin-bottom: 10px; }
-        
-        .btn-auth {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 25px;
-            border: none;
-            font-weight: bold;
+        .brand-title {
+            font-size: 1.5rem; font-weight: 900;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             cursor: pointer;
-            transition: transform 0.2s;
         }
 
-        .btn-google { background: white; color: black; }
-        .btn-primary { background: var(--primary); color: black; }
-
-        /* Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: rgba(13, 13, 13, 0.9);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            border-top: 1px solid var(--border);
+        /* Camera & Action Button */
+        .btn-gold {
+            background: var(--gold-gradient); color: #000; border: none;
+            padding: 10px 20px; border-radius: var(--radius-full);
+            font-weight: bold; cursor: pointer; transition: transform 0.2s;
         }
+        .btn-gold:hover { transform: scale(1.05); box-shadow: var(--shadow-gold); }
 
-        .nav-item { color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; }
-        .nav-item.active { color: var(--primary); }
+        /* Main Content Area */
+        .main-feed { max-width: 600px; margin: 80px auto; padding: 0 15px; }
+        .tagline { color: var(--text-secondary); text-align: center; margin-bottom: 2rem; }
 
-        /* Feed Styling */
-        .feed { padding: 20px 15px 80px 15px; max-width: 600px; margin: 0 auto; }
-        
-        .post-card {
-            background: var(--bg-card);
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border);
+        /* Camera Modal */
+        .camera-overlay {
+            display: none; position: fixed; inset: 0;
+            background: var(--bg-primary); z-index: 2000;
+            flex-direction: column; align-items: center; justify-content: center;
         }
+        .camera-overlay.active { display: flex; }
+        video, canvas { width: 100%; max-width: 500px; border-radius: var(--radius-md); border: 1px solid var(--border); }
 
-        .post-header { display: flex; align-items: center; margin-bottom: 10px; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); margin-right: 10px; }
-        
-        .verified-badge { color: var(--primary); margin-left: 5px; font-size: 0.8rem; }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            color: var(--text-secondary);
+        /* Navigation Tabs */
+        .tab-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 70px; background: var(--bg-secondary);
+            border-top: 1px solid var(--border); display: flex;
+            justify-content: space-around; align-items: center;
         }
-
-        /* Composer */
-        .composer {
-            background: var(--bg-card);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: var(--text);
-            font-size: 1.1rem;
-            resize: none;
-            outline: none;
-        }
-
-        .font-cursive { font-family: 'Brush Script MT', cursive; }
-        .font-mono { font-family: 'Courier New', monospace; }
     </style>
 </head>
 <body>
 
-    <div id="authScreen" class="auth-container">
-        <div class="auth-card">
-            <div class="logo">🔗</div>
-            <h1>CHAIN🔗Link</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">Be You. Connect. Create.</p>
-            <button class="btn-auth btn-google" onclick="showApp()">Login with Google</button>
-            <button class="btn-auth btn-primary" onclick="showApp()">Get Started</button>
+    <nav class="navbar">
+        <div class="brand-title">My CHAIN ⛓️‍💥 Link</div>
+        <button class="btn-gold" onclick="startCapture()">Capture</button>
+    </nav>
+
+    <div class="main-feed">
+        <div class="tagline">Link up with your chain ⛓🔗⛓</div>
+        <div id="posts-container">
+            </div>
+    </div>
+
+    <div id="cameraInterface" class="camera-overlay">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+        <div style="margin-top: 20px; display: flex; gap: 15px;">
+            <button class="btn-gold" onclick="capturePhoto()">Take Photo</button>
+            <button class="btn-gold" style="background: #333; color: #fff;" onclick="stopCapture()">Cancel</button>
         </div>
     </div>
 
-    <div id="mainApp" style="display: none;">
-        <div class="feed">
-            <div class="composer">
-                <textarea placeholder="What's happening?" id="postInput"></textarea>
-                <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-                    <button class="btn-auth btn-primary" style="width: auto; padding: 8px 20px;" onclick="addPost()">Post</button>
-                </div>
-            </div>
-
-            <div id="postContainer">
-                </div>
-        </div>
-
-        <nav class="bottom-nav">
-            <div class="nav-item active">🏠</div>
-            <div class="nav-item">🔍</div>
-            <div class="nav-item">📸</div>
-            <div class="nav-item">🔔</div>
-            <div class="nav-item">👤</div>
-        </nav>
+    <div class="tab-bar">
+        <span onclick="navigate('home')">🏠</span>
+        <span onclick="navigate('explore')">🔍</span>
+        <span onclick="navigate('notifications')">🔔</span>
+        <span onclick="navigate('profile')">👤</span>
     </div>
 
     <script>
-        function showApp() {
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            renderPosts();
-        }
+        // ========== PROJECT CREDENTIALS (from Supabase key.pdf) ==========
+        const SUPABASE_URL = 'https://vjaevzohcnejkaduvtno.supabase.com';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0ZG50cGhicHRjdXpmbmtxaGV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMjE4NTUsImV4cCI6MjA4NTg5Nzg1NX0.6WdINNX8fS33ZAGnaGVCcSxDNAr_H0g7drdwk2seYCg';
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let posts = [
-            { author: 'Sarah Chen', handle: '@sarah', content: 'Building something new! 🎨✨', likes: 24 },
-            { author: 'Marcus Johnson', handle: '@mj', content: 'The new interface looks clean. 🔗', likes: 156 }
-        ];
+        // ========== CAMERA-ONLY LOGIC ==========
+        let localStream = null;
 
-        function renderPosts() {
-            const container = document.getElementById('postContainer');
-            container.innerHTML = posts.map(post => `
-                <div class="post-card">
-                    <div class="post-header">
-                        <div class="avatar"></div>
-                        <div>
-                            <strong>${post.author}</strong> <span class="verified-badge">✓</span>
-                            <div style="color: var(--text-secondary); font-size: 0.8rem;">${post.handle}</div>
-                        </div>
-                    </div>
-                    <div>${post.content}</div>
-                    <div class="post-actions">
-                        <span>💬 2</span>
-                        <span>🔁 5</span>
-                        <span>❤️ ${post.likes}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function addPost() {
-            const input = document.getElementById('postInput');
-            if (input.value.trim()) {
-                posts.unshift({
-                    author: 'User',
-                    handle: '@you',
-                    content: input.value,
-                    likes: 0
-                });
-                input.value = '';
-                renderPosts();
+        async function startCapture() {
+            const overlay = document.getElementById('cameraInterface');
+            const video = document.getElementById('video');
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                video.srcObject = localStream;
+                overlay.classList.add('active');
+            } catch (err) {
+                alert("Camera access is required to post on My CHAIN Link.");
             }
         }
+
+        function capturePhoto() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const imageData = canvas.toDataURL('image/png');
+            console.log("Photo ready for Supabase upload:", imageData);
+            
+            // Proceed to Post creation UI
+            alert("Photo captured! Proceeding to post...");
+            stopCapture();
+        }
+
+        function stopCapture() {
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById('cameraInterface').classList.remove('active');
+        }
+
+        function navigate(page) {
+            console.log("Navigating to:", page);
+            // Feature logic for Explore, Notifications, Profile goes here
+        }
+
+        // Initialize and Load Posts
+        window.onload = () => {
+            console.log("My CHAIN ⛓️‍💥 Link initialized.");
+        };
     </script>
 </body>
 </html>
