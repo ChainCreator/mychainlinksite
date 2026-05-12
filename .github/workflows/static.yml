@@ -41,3 +41,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+          # In your repo folder
+      git add .
+      git commit -m "Clean version - removed bloat"
+      git push origin main
