@@ -38,11 +38,13 @@
         .stat-box span { display: block; font-weight: 800; font-size: 1.1rem; color: var(--primary); }
         .stat-box label { color: var(--muted); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
 
-        .btn-main { background: var(--primary); color: black; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn-main { background: var(--primary); color: black; border: none; padding: 15px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; font-size: 1rem; }
         .btn-outline { background: #222; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%; }
         
         .lock-screen { padding: 80px 20px; text-align: center; }
         .lock-screen i { font-size: 3.5rem; color: var(--primary); margin-bottom: 20px; }
+        
+        input { width: 100%; padding: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: white; margin-bottom: 10px; outline: none; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -50,10 +52,18 @@
     <div id="auth-page" style="position:fixed; inset:0; background:var(--bg); z-index:5000; display:flex; align-items:center; justify-content:center; padding:20px;">
         <div style="width:100%; max-width:350px; text-align:center;">
             <h1 style="color:var(--primary); font-size:2.2rem; margin-bottom:10px;">MyCHAIN⛓️Link</h1>
-            <p style="color:var(--muted); margin-bottom:30px; font-weight:500;">Connect. Create. Be you.</p>
-            <input type="email" id="email" placeholder="Email" style="width:100%; padding:15px; background:#1a1a1a; border:1px solid #333; border-radius:10px; color:white; margin-bottom:10px; outline:none;">
-            <input type="password" id="pass" placeholder="Password" style="width:100%; padding:15px; background:#1a1a1a; border:1px solid #333; border-radius:10px; color:white; margin-bottom:20px; outline:none;">
-            <button onclick="handleLogin()" class="btn-main">Enter MyCHAIN</button>
+            <p id="auth-slogan" style="color:var(--muted); margin-bottom:30px; font-weight:500;">Connect. Create. Be you.</p>
+            
+            <div id="auth-inputs">
+                <input type="email" id="email" placeholder="Email">
+                <input type="password" id="pass" placeholder="Password">
+                <button id="auth-button" onclick="handleAuth()" class="btn-main">Enter MyCHAIN</button>
+            </div>
+            
+            <p style="margin-top:20px; font-size:0.9rem; color:var(--muted);">
+                <span id="auth-toggle-text">New to the chain?</span> 
+                <span id="auth-toggle-link" style="color:var(--primary); cursor:pointer; font-weight:bold;" onclick="toggleAuthMode()">Sign Up</span>
+            </p>
         </div>
     </div>
 
@@ -72,7 +82,9 @@
         </header>
 
         <main id="home-view" class="view active">
-            <div id="feed-container" style="padding:15px;"></div>
+            <div id="feed-container" style="padding:15px;">
+                <p style="text-align:center; color:var(--muted); margin-top:50px;">Welcome to the Chain. Connect. Create. Be you.</p>
+            </div>
         </main>
 
         <main id="msg-view" class="view">
@@ -84,7 +96,6 @@
             </div>
             <div id="msg-content" style="display:none; padding:20px;">
                 <h3 style="color:var(--primary);">Conversations</h3>
-                <div style="color:var(--muted); margin-top:20px;">Your private lounge is active.</div>
             </div>
         </main>
 
@@ -92,8 +103,7 @@
             <div style="padding:40px 20px; text-align:center;">
                 <h2 style="color:var(--primary);">The Creator Vault</h2>
                 <div style="background:var(--card); padding:30px; border-radius:20px; border:1px solid var(--primary); margin-top:30px;">
-                    <h3 style="margin-bottom:5px;">Authentic Supporter</h3>
-                    <p style="font-size:0.8rem; color:var(--muted); margin-bottom:15px;">Connect. Create. Be you.</p>
+                    <h3>Authentic Supporter</h3>
                     <h1 style="margin:10px 0; font-size:2.5rem;">$4.99/mo</h1>
                     <ul style="list-style:none; padding:0; text-align:left; color:var(--muted); margin:25px 0;">
                         <li style="margin-bottom:12px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> Verified Badge ⛓️</li>
@@ -109,14 +119,12 @@
             <div class="profile-header">
                 <div class="avatar-circle">KJS</div>
                 <h2 style="margin:15px 0 5px 0;">Kendal Jenelle Symes ⛓️</h2>
-                <p style="color:var(--muted); font-size:0.9rem; font-weight:600; letter-spacing:0.5px;">Artist • Writer • Creator</p>
-                
+                <p style="color:var(--muted); font-size:0.9rem; font-weight:600;">Artist • Writer • Creator</p>
                 <div class="stat-row">
                     <div class="stat-box"><span>45</span><label>Posts</label></div>
                     <div class="stat-box"><span>1.2k</span><label>Followers</label></div>
                     <div class="stat-box"><span>850</span><label>Following</label></div>
                 </div>
-
                 <div style="display:flex; gap:10px; max-width:320px; margin:0 auto;">
                     <button class="btn-main">Follow</button>
                     <button class="btn-outline" onclick="switchTab('vault')">Subscribe</button>
@@ -135,16 +143,33 @@
     <script>
         const _supabase = supabase.createClient('https://vjaevzohcnejkaduvtno.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWV2em9oY25lamthZHV2dG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MTMzMDcsImV4cCI6MjA4NTk4OTMwN30.d6tcsct8aFqUZXBnR_3S7okNBvH6Csc1QBqGwlG6CWs');
         let isSubscriber = false;
+        let isSignUpMode = false;
 
-        async function handleLogin() {
+        function toggleAuthMode() {
+            isSignUpMode = !isSignUpMode;
+            document.getElementById('auth-button').innerText = isSignUpMode ? "Create Account" : "Enter MyCHAIN";
+            document.getElementById('auth-toggle-text').innerText = isSignUpMode ? "Already on the chain?" : "New to the chain?";
+            document.getElementById('auth-toggle-link').innerText = isSignUpMode ? "Login" : "Sign Up";
+        }
+
+        async function handleAuth() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('pass').value;
-            const { error } = await _supabase.auth.signInWithPassword({ email, password });
-            if (error) alert(error.message);
-            else {
-                document.getElementById('auth-page').style.display = 'none';
-                document.getElementById('policy-gate').style.display = 'flex';
+            
+            if (isSignUpMode) {
+                const { error } = await _supabase.auth.signUp({ email, password });
+                if (error) alert(error.message);
+                else alert("Check your email for the confirmation link!");
+            } else {
+                const { error } = await _supabase.auth.signInWithPassword({ email, password });
+                if (error) alert(error.message);
+                else showPolicy();
             }
+        }
+
+        function showPolicy() {
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('policy-gate').style.display = 'flex';
         }
 
         function unlockApp() {
@@ -155,13 +180,12 @@
 
         function switchTab(tabId) {
             if (tabId === 'msg' && !isSubscriber) {
-                alert("This feature is for MyCHAIN⛓️Link Supporters only.");
+                alert("Supporters only. Connect. Create. Be you.");
                 tabId = 'vault';
             }
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(tabId + '-view').classList.add('active');
-            
             const idx = {home:0, msg:1, vault:2, profile:3}[tabId];
             document.querySelectorAll('.nav-item')[idx].classList.add('active');
         }
@@ -176,7 +200,7 @@
                         isSubscriber = true;
                         document.getElementById('msg-lock').style.display = 'none';
                         document.getElementById('msg-content').style.display = 'block';
-                        alert("Verification Complete. Welcome to MyCHAIN⛓️Link Premium.");
+                        alert("Verified Supporter. Welcome.");
                         switchTab('home');
                     }
                 }
@@ -188,8 +212,7 @@
             if (session) {
                 const { data } = await _supabase.from('profiles').select('is_subscriber').eq('id', session.user.id).single();
                 if (data) isSubscriber = data.is_subscriber;
-                document.getElementById('auth-page').style.display = 'none';
-                document.getElementById('app-wrapper').style.display = 'block';
+                showPolicy();
             }
         });
     </script>
