@@ -117,13 +117,13 @@
 
         <main id="profile-view" class="view">
             <div class="profile-header">
-                <div class="avatar-circle">OFC</div>
-                <h2 style="margin:15px 0 5px 0;"> Official MyChain⛓️Link Builder,Developer⛓️</h2>
-                <p style="color:var(--muted); font-size:0.9rem; font-weight:600;">Artist • Writer • Creator</p>
+                <div class="avatar-circle" id="profile-avatar">?</div>
+                <h2 style="margin:15px 0 5px 0;" id="profile-name">Loading...</h2>
+                <p style="color:var(--muted); font-size:0.9rem; font-weight:600;" id="profile-bio">...</p>
                 <div class="stat-row">
-                    <div class="stat-box"><span>45</span><label>Posts</label></div>
-                    <div class="stat-box"><span>1.2k</span><label>Followers</label></div>
-                    <div class="stat-box"><span>850</span><label>Following</label></div>
+                    <div class="stat-box"><span id="stat-posts">0</span><label>Posts</label></div>
+                    <div class="stat-box"><span id="stat-followers">0</span><label>Followers</label></div>
+                    <div class="stat-box"><span id="stat-following">0</span><label>Following</label></div>
                 </div>
                 <div style="display:flex; gap:10px; max-width:320px; margin:0 auto;">
                     <button class="btn-main">Follow</button>
@@ -144,6 +144,7 @@
         const _supabase = supabase.createClient('https://vjaevzohcnejkaduvtno.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWV2em9oY25lamthZHV2dG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MTMzMDcsImV4cCI6MjA4NTk4OTMwN30.d6tcsct8aFqUZXBnR_3S7okNBvH6Csc1QBqGwlG6CWs');
         let isSubscriber = false;
         let isSignUpMode = false;
+        let currentUser = null;
 
         function toggleAuthMode() {
             isSignUpMode = !isSignUpMode;
@@ -157,9 +158,25 @@
             const password = document.getElementById('pass').value;
             
             if (isSignUpMode) {
-                const { error } = await _supabase.auth.signUp({ email, password });
+                const { data, error } = await _supabase.auth.signUp({ email, password });
                 if (error) alert(error.message);
-                else alert("Check your email for the confirmation link!");
+                else {
+                    // Create profile on sign up
+                    if (data.user) {
+                        await _supabase.from('profiles').insert([{
+                            id: data.user.id,
+                            username: email.split('@')[0],
+                            display_name: email.split('@')[0],
+                            bio: 'New to the chain.',
+                            avatar_url: null,
+                            posts_count: 0,
+                            followers_count: 0,
+                            following_count: 0,
+                            is_subscriber: false
+                        }]);
+                    }
+                    alert("Check your email for the confirmation link!");
+                }
             } else {
                 const { error } = await _supabase.auth.signInWithPassword({ email, password });
                 if (error) alert(error.message);
@@ -175,6 +192,7 @@
         function unlockApp() {
             document.getElementById('policy-gate').style.display = 'none';
             document.getElementById('app-wrapper').style.display = 'block';
+            loadProfile();
             initPaypal();
         }
 
@@ -188,6 +206,39 @@
             document.getElementById(tabId + '-view').classList.add('active');
             const idx = {home:0, msg:1, vault:2, profile:3}[tabId];
             document.querySelectorAll('.nav-item')[idx].classList.add('active');
+            if (tabId === 'profile') loadProfile();
+        }
+
+        async function loadProfile() {
+            const { data: { user } } = await _supabase.auth.getUser();
+            if (!user) return;
+            currentUser = user;
+            
+            const { data: profile, error } = await _supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+            
+            if (error || !profile) {
+                // Fallback if no profile row exists
+                document.getElementById('profile-name').innerText = user.email.split('@')[0];
+                document.getElementById('profile-bio').innerText = 'Connect. Create. Be you.';
+                document.getElementById('profile-avatar').innerText = user.email.charAt(0).toUpperCase();
+                document.getElementById('stat-posts').innerText = '0';
+                document.getElementById('stat-followers').innerText = '0';
+                document.getElementById('stat-following').innerText = '0';
+                return;
+            }
+            
+            document.getElementById('profile-name').innerText = profile.display_name || profile.username || user.email.split('@')[0];
+            document.getElementById('profile-bio').innerText = profile.bio || 'Connect. Create. Be you.';
+            document.getElementById('profile-avatar').innerText = profile.display_name 
+                ? profile.display_name.charAt(0).toUpperCase() 
+                : user.email.charAt(0).toUpperCase();
+            document.getElementById('stat-posts').innerText = profile.posts_count || 0;
+            document.getElementById('stat-followers').innerText = profile.followers_count || 0;
+            document.getElementById('stat-following').innerText = profile.following_count || 0;
         }
 
         function initPaypal() {
