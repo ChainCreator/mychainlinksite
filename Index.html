@@ -57,7 +57,7 @@
             <div id="auth-inputs">
                 <input type="email" id="email" placeholder="Email">
                 <input type="password" id="pass" placeholder="Password">
-                <button id="auth-button" onclick="handleAuth()" class="btn-main">GetConnected</button>
+                <button id="auth-button" onclick="handleAuth()" class="btn-main">Get Connected</button>
             </div>
             
             <p style="margin-top:20px; font-size:0.9rem; color:var(--muted);">
@@ -147,7 +147,7 @@
 
         function toggleAuthMode() {
             isSignUpMode = !isSignUpMode;
-            document.getElementById('auth-button').innerText = isSignUpMode ? "Create Account" : "Enter MyCHAIN";
+            document.getElementById('auth-button').innerText = isSignUpMode ? "Create Account" : "Get Connected";
             document.getElementById('auth-toggle-text').innerText = isSignUpMode ? "Already on the chain?" : "New to the chain?";
             document.getElementById('auth-toggle-link').innerText = isSignUpMode ? "Login" : "Sign Up";
         }
