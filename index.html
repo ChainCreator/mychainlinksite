@@ -1,0 +1,839 @@
+>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MyChainLink | Connect. Create. Be you. ⛓️‍💥</title>
+
+    <meta property="og:title" content="MyChainLink">
+    <meta property="og:description" content="Connect. Create. Be you.">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=7WEUUYSTA5HY8&vault=true&intent=subscription&currency=USD"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Better title font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           COLOR THEME: DARK CHARCOAL + GOLD RADIANT
+           ============================================
+           To change colors, edit these CSS variables below.
+
+           Current setup:
+           --bg: #1a1a1a       (dark charcoal background)
+           --card: #242424     (slightly lighter charcoal for cards)
+           --primary: #d4af37  (gold radiant - the main gold)
+           --primary-light: #f4d03f (lighter gold for hover effects)
+           --text: #e7e9ea     (off-white text)
+           --muted: #a0a0a0    (gray text)
+           --danger: #e0245e   (red for errors)
+           --border: #333333   (borders)
+        */
+        :root {
+            --primary: #e8c84b;        /* SOFTER YELLOW */
+            --primary-light: #f5e6a0;  /* LIGHTER YELLOW for hover */
+            --bg: #1a1a1a;             /* DARK CHARCOAL */
+            --card: #242424;            /* SLIGHTLY LIGHTER CHARCOAL */
+            --text: #e7e9ea;           /* OFF-WHITE TEXT */
+            --danger: #e0245e;         /* RED */
+            --muted: #a0a0a0;          /* GRAY TEXT */
+            --border: #333333;         /* BORDERS */
+            --input-bg: #2a2a2a;       /* INPUT BACKGROUND */
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            overflow: hidden; 
+        }
+
+        /* Better title font */
+        .brand-title { 
+            font-family: 'Orbitron', sans-serif; 
+            font-weight: 900; 
+            letter-spacing: 2px; 
+        }
+
+        /* View Logic */
+        .view { display: none; height: 100vh; overflow-y: auto; padding-bottom: 100px; }
+        .view.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Global UI */
+        header { 
+            position: sticky; 
+            top: 0; 
+            background: rgba(26,26,26,0.95); 
+            backdrop-filter: blur(10px); 
+            padding: 15px; 
+            border-bottom: 1px solid var(--border); 
+            z-index: 1000; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        .nav-bar { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: #111111; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 15px 0; 
+            border-top: 1px solid var(--border); 
+            z-index: 2000; 
+        }
+
+        .nav-item { 
+            color: var(--muted); 
+            font-size: 1.5rem; 
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
+
+        .nav-item.active { 
+            color: var(--primary); 
+            transform: scale(1.1); 
+        }
+
+        /* Profile & Stats */
+        .profile-header { padding: 40px 20px; text-align: center; }
+
+        .avatar-circle { 
+            width: 90px; 
+            height: 90px; 
+            border-radius: 50%; 
+            background: linear-gradient(45deg, var(--primary), var(--primary-light)); 
+            margin: 0 auto; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 2rem; 
+            color: #1a1a1a; 
+            font-weight: 900; 
+            border: 3px solid var(--border); 
+        }
+
+        .stat-row { 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            margin: 20px 0; 
+        }
+
+        .stat-box { 
+            background: none; 
+            border: none; 
+            color: white; 
+            text-align: center; 
+        }
+
+        .stat-box span { 
+            display: block; 
+            font-weight: 800; 
+            font-size: 1.1rem; 
+            color: var(--primary); 
+        }
+
+        .stat-box label { 
+            color: var(--muted); 
+            text-transform: uppercase; 
+            font-size: 0.7rem; 
+            letter-spacing: 1px; 
+        }
+
+        .btn-main { 
+            background: var(--primary); 
+            color: #1a1a1a; 
+            border: none; 
+            padding: 15px 25px; 
+            border-radius: 25px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            width: 100%; 
+            transition: 0.2s; 
+            font-size: 1rem; 
+        }
+
+        .btn-main:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-outline { 
+            background: var(--card); 
+            color: white; 
+            border: 1px solid var(--border); 
+            padding: 12px 25px; 
+            border-radius: 25px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            width: 100%; 
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+
+        .lock-screen { padding: 80px 20px; text-align: center; }
+        .lock-screen i { font-size: 3.5rem; color: var(--primary); margin-bottom: 20px; }
+
+        input { 
+            width: 100%; 
+            padding: 15px; 
+            background: var(--input-bg); 
+            border: 1px solid var(--border); 
+            border-radius: 10px; 
+            color: white; 
+            margin-bottom: 10px; 
+            outline: none; 
+            box-sizing: border-box; 
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        /* Auth page specific */
+        .auth-container {
+            position: fixed; 
+            inset: 0; 
+            background: var(--bg); 
+            z-index: 5000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px;
+        }
+
+        .auth-box {
+            width: 100%; 
+            max-width: 350px; 
+            text-align: center;
+        }
+
+        .auth-link {
+            color: var(--primary); 
+            cursor: pointer; 
+            font-weight: bold;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        .auth-error {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin: 5px 0 15px 0;
+            min-height: 20px;
+        }
+
+        .auth-success {
+            color: var(--primary);
+            font-size: 0.85rem;
+            margin: 5px 0 15px 0;
+        }
+
+        /* Modal / Overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 6000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .modal-box h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .modal-box p {
+            color: var(--muted);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: var(--primary);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            margin: 0 10px;
+        }
+
+        /* Back button */
+        .back-btn {
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         AUTH PAGE (Login / Sign Up / Forgot Password)
+         ============================================ -->
+    <div id="auth-page" class="auth-container">
+        <div class="auth-box">
+
+            <!-- LOGIN / SIGNUP VIEW -->
+            <div id="auth-main-view">
+                <h1 class="brand-title" style="color:var(--primary); font-size:2.2rem; margin-bottom:10px;">MyChainLink</h1>
+                <p id="auth-slogan" style="color:var(--muted); margin-bottom:30px; font-weight:500;">Connect. Create. Be you.</p>
+
+                <div id="auth-inputs">
+                    <input type="email" id="email" placeholder="Email">
+                    <input type="password" id="pass" placeholder="Password">
+                    <div id="auth-error" class="auth-error"></div>
+                    <button id="auth-button" onclick="handleAuth()" class="btn-main">Get Connected</button>
+                </div>
+
+                <p style="margin-top:20px; font-size:0.9rem; color:var(--muted);">
+                    <span id="auth-toggle-text">New to the chain?</span> 
+                    <span id="auth-toggle-link" class="auth-link" onclick="toggleAuthMode()">Sign Up</span>
+                </p>
+
+                <div class="divider">or</div>
+
+                <p style="font-size:0.85rem; color:var(--muted);">
+                    <span class="auth-link" onclick="showForgotPassword()">Forgot your password?</span>
+                </p>
+            </div>
+
+            <!-- FORGOT PASSWORD VIEW -->
+            <div id="auth-forgot-view" style="display:none;">
+                <div class="back-btn" onclick="showAuthMain()">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </div>
+                <h2 class="brand-title" style="color:var(--primary); font-size:1.5rem; margin-bottom:10px;">Reset Password</h2>
+                <p style="color:var(--muted); margin-bottom:25px; font-size:0.9rem;">
+                    Enter your email and we'll send you a reset link.
+                </p>
+                <input type="email" id="forgot-email" placeholder="Your email address">
+                <div id="forgot-error" class="auth-error"></div>
+                <div id="forgot-success" class="auth-success"></div>
+                <button onclick="handleForgotPassword()" class="btn-main">Send Reset Link</button>
+            </div>
+
+            <!-- RESET PASSWORD VIEW (from email link) -->
+            <div id="auth-reset-view" style="display:none;">
+                <h2 class="brand-title" style="color:var(--primary); font-size:1.5rem; margin-bottom:10px;">New Password</h2>
+                <p style="color:var(--muted); margin-bottom:25px; font-size:0.9rem;">
+                    Create a new password for your account.
+                </p>
+                <input type="password" id="new-pass" placeholder="New password">
+                <input type="password" id="confirm-new-pass" placeholder="Confirm new password">
+                <div id="reset-error" class="auth-error"></div>
+                <div id="reset-success" class="auth-success"></div>
+                <button onclick="handleResetPassword()" class="btn-main">Update Password</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================
+         CONFIRM CURRENT PASSWORD MODAL
+         ============================================ -->
+    <div id="confirm-password-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3><i class="fa-solid fa-lock" style="margin-right:8px;"></i>Confirm Password</h3>          <p>For your security, please enter your current password to continue.</p>
+            <input type="password" id="confirm-pass-input" placeholder="Current password">
+            <div id="confirm-pass-error" class="auth-error"></div>
+            <div style="display:flex; gap:10px;">
+                <button onclick="closeConfirmPasswordModal()" class="btn-outline" style="flex:1;">Cancel</button>
+                <button onclick="submitConfirmPassword()" class="btn-main" style="flex:1;">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         POLICY GATE
+         ============================================ -->
+    <div id="policy-gate" style="display:none; position:fixed; inset:0; background:var(--bg); z-index:4000; align-items:center; justify-content:center; padding:30px; text-align:center;">
+        <div>
+            <h2 class="brand-title" style="color:var(--primary);">Safety & Authenticity</h2>
+            <p style="line-height:1.6; margin:20px 0;">Welcome to <strong>My Chain Link</strong>.<br>We value raw truth. Harassment results in a permanent ban.</p>
+            <button onclick="unlockApp()" class="btn-main">I Agree to the Terms</button>
+        </div>
+    </div>
+
+    <!-- ============================================
+         APP WRAPPER
+         ============================================ -->
+    <div id="app-wrapper" style="display:none;">
+        <header>
+            <div class="brand-title" style="font-weight: 900; color: var(--primary);">MyChainLink</div>
+            <i class="fa-solid fa-bell" style="color: var(--primary);"></i>
+        </header>
+
+        <main id="home-view" class="view active">
+            <div id="feed-container" style="padding:15px;">
+                <p style="text-align:center; color:var(--muted); margin-top:50px;">Welcome to the Chain. Connect. Create. Be you.</p>
+            </div>
+        </main>
+
+        <main id="msg-view" class="view">
+            <div id="msg-lock" class="lock-screen">
+                <i class="fa-solid fa-message"></i>
+                <h3>Direct Messaging</h3>
+                <p style="color:var(--muted);">Private chats are exclusive to <strong>My Chain Link</strong> supporters.</p>
+                <button onclick="switchTab('vault')" class="btn-main" style="margin-top:20px; width:auto;">Unlock Access</button>
+            </div>
+            <div id="msg-content" style="display:none; padding:20px;">
+                <h3 style="color:var(--primary);">Conversations</h3>
+            </div>
+        </main>
+
+        <main id="vault-view" class="view">
+            <div style="padding:40px 20px; text-align:center;">
+                <h2 class="brand-title" style="color:var(--primary);">The Creator Vault</h2>
+                <div style="background:var(--card); padding:30px; border-radius:20px; border:1px solid var(--primary); margin-top:30px;">
+                    <h3>Authentic Supporter</h3>
+                    <h1 style="margin:10px 0; font-size:2.5rem; color:var(--primary);">$4.99/mo</h1>
+                    <ul style="list-style:none; padding:0; text-align:left; color:var(--muted); margin:25px 0;">
+                        <li style="margin-bottom:12px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> Verified Badge âï¸âð¥ï¸</li>
+                        <li style="margin-bottom:12px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> Direct Messaging</li>
+                        <li><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> Exclusive Live Access</li>
+                    </ul>
+                    <div id="paypal-btn-container"></div>
+                </div>
+            </div>
+        </main>
+
+        <main id="profile-view" class="view">
+            <div class="profile-header">
+                <div class="avatar-circle" id="profile-avatar">?</div>
+                <h2 style="margin:15px 0 5px 0;" id="profile-name">Loading...</h2>
+                <p style="color:var(--muted); font-size:0.9rem; font-weight:600;" id="profile-bio">...</p>
+                <div class="stat-row">
+                    <div class="stat-box"><span id="stat-posts">0</span><label>Posts</label></div>
+                    <div class="stat-box"><span id="stat-followers">0</span><label>Followers</label></div>
+                    <div class="stat-box"><span id="stat-following">0</span><label>Following</label></div>
+                </div>
+                <div style="display:flex; gap:10px; max-width:320px; margin:0 auto;">
+                    <button class="btn-main">Follow</button>
+                    <button class="btn-outline" onclick="switchTab('vault')">Subscribe</button>
+                </div>
+
+                <!-- Settings / Security Section -->
+                <div style="max-width:320px; margin:30px auto 0 auto; text-align:left;">
+                    <h3 style="color:var(--primary); font-size:1rem; margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+                        <i class="fa-solid fa-shield-halved" style="margin-right:8px;"></i>Security
+                    </h3>
+                    <button onclick="promptConfirmPassword(changePasswordAction)" class="btn-outline" style="margin-bottom:10px;">
+                        <i class="fa-solid fa-key" style="margin-right:8px;"></i>Change Password
+                    </button>
+                    <button onclick="promptConfirmPassword(deleteAccountAction)" class="btn-danger">
+                        <i class="fa-solid fa-trash" style="margin-right:8px;"></i>Delete Account
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <nav class="nav-bar">
+            <div class="nav-item active" onclick="switchTab('home')"><i class="fa-solid fa-house"></i></div>
+            <div class="nav-item" onclick="switchTab('msg')"><i class="fa-solid fa-message"></i></div>
+            <div class="nav-item" onclick="switchTab('vault')"><i class="fa-solid fa-gem"></i></div>
+            <div class="nav-item" onclick="switchTab('profile')"><i class="fa-solid fa-user"></i></div>
+        </nav>
+    </div>
+
+    <script>
+        const _supabase = supabase.createClient('https://vjaevzohcnejkaduvtno.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWV2em9oY25lamthZHV2dG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MTMzMDcsImV4cCI6MjA4NTk4OTMwN30.d6tcsct8aFqUZXBnR_3S7okNBvH6Csc1QBqGwlG6CWs');
+        let isSubscriber = false;
+        let isSignUpMode = false;
+        let currentUser = null;
+        let confirmPasswordCallback = null;  // Stores what action to run after password confirm
+
+        // ============================================
+        // AUTH MODE TOGGLE (Login <-> Sign Up)
+        // ============================================
+        function toggleAuthMode() {
+            isSignUpMode = !isSignUpMode;
+            document.getElementById('auth-button').innerText = isSignUpMode ? "Create Account" : "Get Connected";
+            document.getElementById('auth-toggle-text').innerText = isSignUpMode ? "Already on the chain?" : "New to the chain?";
+            document.getElementById('auth-toggle-link').innerText = isSignUpMode ? "Login" : "Sign Up";
+            document.getElementById('auth-error').innerText = '';
+        }
+
+        // ============================================
+        // MAIN AUTH (Login / Sign Up)
+        // ============================================
+        async function handleAuth() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('pass').value;
+            const errorDiv = document.getElementById('auth-error');
+
+            if (!email || !password) {
+                errorDiv.innerText = "Please enter both email and password.";
+                return;
+            }
+
+            errorDiv.innerText = '';
+
+            if (isSignUpMode) {
+                const { data, error } = await _supabase.auth.signUp({ email, password });
+                if (error) {
+                    errorDiv.innerText = error.message;
+                } else {
+                    errorDiv.innerText = "";
+                    alert("Check your email for the confirmation link!");
+                }
+            } else {
+                const { error } = await _supabase.auth.signInWithPassword({ email, password });
+                if (error) {
+                    errorDiv.innerText = error.message;
+                } else {
+                    showPolicy();
+                }
+            }
+        }
+
+        // ============================================
+        // FORGOT PASSWORD FLOW
+        // ============================================
+        function showForgotPassword() {
+            document.getElementById('auth-main-view').style.display = 'none';
+            document.getElementById('auth-forgot-view').style.display = 'block';
+            document.getElementById('forgot-error').innerText = '';
+            document.getElementById('forgot-success').innerText = '';
+            document.getElementById('forgot-email').value = document.getElementById('email').value;
+        }
+
+        function showAuthMain() {
+            document.getElementById('auth-forgot-view').style.display = 'none';
+            document.getElementById('auth-reset-view').style.display = 'none';
+            document.getElementById('auth-main-view').style.display = 'block';
+            document.getElementById('auth-error').innerText = '';
+        }
+
+        async function handleForgotPassword() {
+            const email = document.getElementById('forgot-email').value.trim();
+            const errorDiv = document.getElementById('forgot-error');
+            const successDiv = document.getElementById('forgot-success');
+
+            if (!email) {
+                errorDiv.innerText = "Please enter your email address.";
+                return;
+            }
+
+            errorDiv.innerText = '';
+
+            // Supabase sends a password reset email with a link
+            // The link redirects to your site with #access_token in the URL
+            const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + window.location.pathname
+            });
+
+            if (error) {
+                errorDiv.innerText = error.message;
+            } else {
+                successDiv.innerText = "Reset link sent! Check your email (and spam folder).";
+            }
+        }
+
+        // ============================================
+        // RESET PASSWORD (from email link)
+        // ============================================
+        async function handleResetPassword() {
+            const newPass = document.getElementById('new-pass').value;
+            const confirmPass = document.getElementById('confirm-new-pass').value;
+            const errorDiv = document.getElementById('reset-error');
+            const successDiv = document.getElementById('reset-success');
+
+            if (!newPass || !confirmPass) {
+                errorDiv.innerText = "Please fill in both fields.";
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                errorDiv.innerText = "Passwords do not match.";
+                return;
+            }
+
+            if (newPass.length < 6) {
+                errorDiv.innerText = "Password must be at least 6 characters.";
+                return;
+            }
+
+            errorDiv.innerText = '';
+
+            const { error } = await _supabase.auth.updateUser({ password: newPass });
+
+            if (error) {
+                errorDiv.innerText = error.message;
+            } else {
+                successDiv.innerText = "Password updated! Redirecting to login...";
+                setTimeout(() => {
+                    showAuthMain();
+                    document.getElementById('auth-slogan').innerText = "Password reset successful. Please log in.";
+                }, 2000);
+            }
+        }
+
+        // ============================================
+        // CHECK FOR PASSWORD RESET TOKEN IN URL
+        // ============================================
+        async function checkForPasswordReset() {
+            // Supabase puts #access_token and #type=recovery in the URL after email link click
+            const hash = window.location.hash;
+            if (hash && hash.includes('type=recovery')) {
+                // Show reset password view
+                document.getElementById('auth-main-view').style.display = 'none';
+                document.getElementById('auth-forgot-view').style.display = 'none';
+                document.getElementById('auth-reset-view').style.display = 'block';
+
+                // Clear the hash from URL so it doesn't stay there
+                history.replaceState(null, null, window.location.pathname + window.location.search);
+            }
+        }
+
+        // ============================================
+        // CONFIRM CURRENT PASSWORD MODAL
+        // ============================================
+        function promptConfirmPassword(callbackAction) {
+            confirmPasswordCallback = callbackAction;
+            document.getElementById('confirm-pass-input').value = '';
+            document.getElementById('confirm-pass-error').innerText = '';
+            document.getElementById('confirm-password-modal').classList.add('active');
+        }
+
+        function closeConfirmPasswordModal() {
+            document.getElementById('confirm-password-modal').classList.remove('active');
+            confirmPasswordCallback = null;
+        }
+
+        async function submitConfirmPassword() {
+            const password = document.getElementById('confirm-pass-input').value;
+            const errorDiv = document.getElementById('confirm-pass-error');
+
+            if (!password) {
+                errorDiv.innerText = "Please enter your password.";
+                return;
+            }
+
+            errorDiv.innerText = '';
+
+            // Verify the password by attempting a fresh login
+            const { data: { user } } = await _supabase.auth.getUser();
+            if (!user || !user.email) {
+                errorDiv.innerText = "Session error. Please log in again.";
+                return;
+            }
+
+            const { error } = await _supabase.auth.signInWithPassword({
+                email: user.email,
+                password: password
+            });
+
+            if (error) {
+                errorDiv.innerText = "Incorrect password. Please try again.";
+                return;
+            }
+
+            // Password is correct! Run the callback
+            closeConfirmPasswordModal();
+            if (confirmPasswordCallback) {
+                confirmPasswordCallback();
+            }
+        }
+
+        // ============================================
+        // ACTIONS THAT REQUIRE PASSWORD CONFIRMATION
+        // ============================================
+        function changePasswordAction() {
+            // Show a simple prompt for new password
+            const newPass = prompt("Enter your new password (min 6 characters):");
+            if (newPass && newPass.length >= 6) {
+                _supabase.auth.updateUser({ password: newPass }).then(({ error }) => {
+                    if (error) alert("Error: " + error.message);
+                    else alert("Password changed successfully!");
+                });
+            } else if (newPass) {
+                alert("Password must be at least 6 characters.");
+            }
+        }
+
+        function deleteAccountAction() {
+            if (confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+                // Note: Deleting a user requires admin privileges or an Edge Function
+                // This is a placeholder - you'll need a Supabase Edge Function for real deletion
+                alert("Account deletion request sent. Contact support to complete.");
+            }
+        }
+
+        // ============================================
+        // APP FLOW
+        // ============================================
+        function showPolicy() {
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('policy-gate').style.display = 'flex';
+        }
+
+        function unlockApp() {
+            document.getElementById('policy-gate').style.display = 'none';
+            document.getElementById('app-wrapper').style.display = 'block';
+            loadProfile();
+            initPaypal();
+        }
+
+        function switchTab(tabId) {
+            if (tabId === 'msg' && !isSubscriber) {
+                alert("Supporters only. Connect. Create. Be you.");
+                tabId = 'vault';
+            }
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(tabId + '-view').classList.add('active');
+            const idx = {home:0, msg:1, vault:2, profile:3}[tabId];
+            document.querySelectorAll('.nav-item')[idx].classList.add('active');
+            if (tabId === 'profile') loadProfile();
+        }
+
+        async function loadProfile() {
+            const { data: { user } } = await _supabase.auth.getUser();
+            if (!user) return;
+            currentUser = user;
+
+            const { data: profile, error } = await _supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+
+            if (error || !profile) {
+                document.getElementById('profile-name').innerText = user.email.split('@')[0];
+                document.getElementById('profile-bio').innerText = 'Connect. Create. Be you.';
+                document.getElementById('profile-avatar').innerText = user.email.charAt(0).toUpperCase();
+                document.getElementById('stat-posts').innerText = '0';
+                document.getElementById('stat-followers').innerText = '0';
+                document.getElementById('stat-following').innerText = '0';
+                return;
+            }
+
+            document.getElementById('profile-name').innerText = profile.display_name || profile.username || user.email.split('@')[0];
+            document.getElementById('profile-bio').innerText = profile.bio || 'Connect. Create. Be you.';
+            document.getElementById('profile-avatar').innerText = profile.display_name 
+                ? profile.display_name.charAt(0).toUpperCase() 
+                : user.email.charAt(0).toUpperCase();
+            document.getElementById('stat-posts').innerText = profile.posts_count || 0;
+            document.getElementById('stat-followers').innerText = profile.followers_count || 0;
+            document.getElementById('stat-following').innerText = profile.following_count || 0;
+        }
+
+        function initPaypal() {
+            paypal.Buttons({
+                createSubscription: (data, actions) => actions.subscription.create({ 'plan_id': 'P-7WEUUYSTA5HY8' }),
+                onApprove: async (data, actions) => {
+                    const { data: { user } } = await _supabase.auth.getUser();
+                    if (user) {
+                        await _supabase.from('profiles').update({ is_subscriber: true }).eq('id', user.id);
+                        isSubscriber = true;
+                        document.getElementById('msg-lock').style.display = 'none';
+                        document.getElementById('msg-content').style.display = 'block';
+                        alert("Verified Supporter. Welcome.");
+                        switchTab('home');
+                    }
+                }
+            }).render('#paypal-btn-container');
+        }
+
+        // ============================================
+        // ON PAGE LOAD
+        // ============================================
+        window.addEventListener('load', async () => {
+            // First check if this is a password reset link
+            await checkForPasswordReset();
+
+            // Then check for existing session
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                const { data } = await _supabase.from('profiles').select('is_subscriber').eq('id', session.user.id).single();
+                if (data) isSubscriber = data.is_subscriber;
+                showPolicy();
+            }
+        });
+    </script>
+</body>
+</html>
